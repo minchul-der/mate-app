@@ -1,0 +1,98 @@
+/* =============================================
+   메이트(Mate) — 공통 스타일 시트
+   모바일 375px 우선 설계
+   ============================================= */
+
+/* 구글 폰트 불러오기 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+/* ── 색상 변수 정의 ── */
+:root {
+  --color-bg:        #0B0F1E;        /* 메인 배경 (딥 네이비) */
+  --color-bg2:       #131829;        /* 보조 배경 */
+  --color-primary:   #6C63FF;        /* 메인 보라 */
+  --color-secondary: #4ECDC4;        /* 민트 포인트 */
+  --color-gold:      #F5C842;        /* 골드 강조 */
+  --color-white:     #FFFFFF;
+  --color-gray1:     #A0A8C0;        /* 보조 텍스트 */
+  --color-gray2:     #2A3050;        /* 카드 테두리 */
+  --color-card:      rgba(255,255,255,0.05);  /* 유리 카드 배경 */
+  --radius-card:     24px;
+  --radius-btn:      16px;
+  --font-main:       'Noto Sans KR', sans-serif;
+}
+
+/* ── 기본 리셋 ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-main);
+  background: var(--color-bg);
+  color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 앱 래퍼 (375px 중앙 정렬) ── */
+.app-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  height: 100dvh;           /* 동적 뷰포트 높이 */
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+/* ── 공통 버튼 ── */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, var(--color-primary), #9B5DE5);
+  border: none;
+  border-radius: var(--radius-btn);
+  color: var(--color-white);
+  font-family: var(--font-main);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 8px 24px rgba(108, 99, 255, 0.4);
+  letter-spacing: -0.3px;
+}
+.btn-primary:active {
+  transform: scale(0.97);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+}
+
+.btn-ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 16px 24px;
+  background: transparent;
+  border: 1.5px solid var(--color-gray2);
+  border-radius: var(--radius-btn);
+  color: var(--color-gray1);
+  font-family: var(--font-main);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:active {
+  border-color: var(--color-primary);
+  color: var(--color-white);
+}
