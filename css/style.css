@@ -3,49 +3,49 @@
    모바일 375px 우선 설계
    ============================================= */
 
-/* 구글 폰트 불러오기 */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@300;400;500;700;900&display=swap');
 
-/* ── 색상 변수 정의 ── */
+/* ── 색상 변수 ── */
 :root {
-  --color-bg:        #0B0F1E;        /* 메인 배경 (딥 네이비) */
-  --color-bg2:       #131829;        /* 보조 배경 */
-  --color-primary:   #6C63FF;        /* 메인 보라 */
-  --color-secondary: #4ECDC4;        /* 민트 포인트 */
-  --color-gold:      #F5C842;        /* 골드 강조 */
+  --color-bg:        #F7F8FA;        /* 메인 배경 (토스 오프화이트) */
+  --color-bg2:       #FFFFFF;        /* 카드 배경 */
+  --color-primary:   #00C47A;        /* 메인 그린 */
+  --color-primary-d: #00A868;        /* 진한 그린 (호버/그림자용) */
+  --color-primary-l: rgba(0,196,122,0.10); /* 연한 그린 (배경 강조) */
+  --color-secondary: #F5C842;        /* 골드 포인트 */
+  --color-text:      #191F28;        /* 메인 텍스트 */
+  --color-text2:     #4E5968;        /* 보조 텍스트 */
+  --color-gray1:     #8B95A1;        /* 플레이스홀더·캡션 */
+  --color-gray2:     #E8ECF0;        /* 테두리·구분선 */
   --color-white:     #FFFFFF;
-  --color-gray1:     #A0A8C0;        /* 보조 텍스트 */
-  --color-gray2:     #2A3050;        /* 카드 테두리 */
-  --color-card:      rgba(255,255,255,0.05);  /* 유리 카드 배경 */
   --radius-card:     24px;
   --radius-btn:      16px;
   --font-main:       'Noto Sans KR', sans-serif;
+  --shadow-card:     0 2px 20px rgba(0,0,0,0.07);
+  --shadow-btn:      0 6px 20px rgba(0,196,122,0.30);
 }
 
 /* ── 기본 리셋 ── */
 *, *::before, *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
   -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   overflow: hidden;
   font-family: var(--font-main);
   background: var(--color-bg);
-  color: var(--color-white);
+  color: var(--color-text);
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── 앱 래퍼 (375px 중앙 정렬) ── */
+/* ── 앱 래퍼 ── */
 .app-wrapper {
   position: relative;
-  width: 100%;
-  max-width: 430px;
-  height: 100dvh;           /* 동적 뷰포트 높이 */
+  width: 100%; max-width: 430px;
+  height: 100dvh;
   margin: 0 auto;
   overflow: hidden;
   background: var(--color-bg);
@@ -59,7 +59,7 @@ html, body {
   gap: 8px;
   width: 100%;
   padding: 18px 24px;
-  background: linear-gradient(135deg, var(--color-primary), #9B5DE5);
+  background: var(--color-primary);
   border: none;
   border-radius: var(--radius-btn);
   color: var(--color-white);
@@ -68,12 +68,12 @@ html, body {
   font-weight: 700;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 8px 24px rgba(108, 99, 255, 0.4);
+  box-shadow: var(--shadow-btn);
   letter-spacing: -0.3px;
 }
 .btn-primary:active {
   transform: scale(0.97);
-  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+  box-shadow: 0 3px 10px rgba(0,196,122,0.25);
 }
 
 .btn-ghost {
@@ -94,5 +94,5 @@ html, body {
 }
 .btn-ghost:active {
   border-color: var(--color-primary);
-  color: var(--color-white);
+  color: var(--color-primary);
 }
