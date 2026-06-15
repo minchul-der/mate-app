@@ -8,11 +8,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg:       #F0F4F8;
+      --bg:       #F7F8FA;
       --surface:  #FFFFFF;
       --surface2: #F2F5F9;
-      --green:    #00A86B;
-      --green-d:  #007A4D;
+      --green:    #00C47A;
+      --green-d:  #00A868;
       --green-l:  #E6F7F1;
       --amber:    #F59E0B;
       --amber-l:  #FEF3C7;
@@ -50,7 +50,7 @@
     }
     .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
     .back-btn {
-      width: 38px; height: 38px; border-radius: 10px;
+      width: 44px; height: 44px; border-radius: 10px;
       background: var(--surface2); border: none; color: var(--text3);
       font-size: 16px; cursor: pointer;
       display: flex; align-items: center; justify-content: center; transition: all 0.2s;
@@ -91,6 +91,16 @@
     }
     .sec-label::before { content: ''; display: block; width: 3px; height: 12px; background: var(--green); border-radius: 2px; }
     .sec-hint { font-size: 11px; color: var(--text3); margin-bottom: 7px; line-height: 1.4; }
+
+    /* 슬라이드 1 직업 선택 스크롤 유도 */
+    .scroll-nudge {
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      font-size: 11px; color: var(--green); font-weight: 700;
+      margin-bottom: 6px; animation: nudgeBounce 1.6s ease-in-out infinite;
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .scroll-nudge.show { opacity: 1; }
+    @keyframes nudgeBounce { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(4px); } }
 
     /* ════════════════════════════
        생년월일 3열 휠 피커
@@ -356,11 +366,11 @@
     <!-- ▶ 화면 1: 생년월일 + 직업 -->
     <div class="slide active" id="slide1">
       <div class="slide-title">기본 정보를<br /><span class="hi">알려주세요</span></div>
-      <div class="slide-sub">정부지원 나이 요건 확인에 사용되며 외부에 제공되지 않습니다</div>
+      <div class="slide-sub">내 나이에 맞는 혜택을 찾는 데만 써요 🔒</div>
 
       <div class="sec">
         <div class="sec-label">생년월일</div>
-        <div class="sec-hint">위아래로 천천히 드래그해서 선택하세요</div>
+        <div class="sec-hint">위아래로 천천히 밀면 날짜가 바뀌어요</div>
         <div class="date-picker-wrap" id="datePicker">
           <div class="wheel-hl"></div>
           <div class="wheel-fade-t"></div>
@@ -371,7 +381,8 @@
         </div>
       </div>
 
-      <div class="sec">
+      <div class="scroll-nudge" id="scrollNudge">⬇ 아래로 스크롤해서 직업도 선택해 주세요</div>
+      <div class="sec" id="jobSec">
         <div class="sec-label">직업</div>
         <div class="radio-list">
           <button class="radio-item" onclick="pick(this,'job','직장인')">
@@ -406,7 +417,7 @@
       <div class="region-picker">
         <div class="rg-col rg-sido" id="sidoList"></div>
         <div class="rg-col rg-sigungu" id="sigunguList">
-          <div class="rg-empty">← 왼쪽에서<br/>시 / 도를 먼저<br/>선택해 주세요</div>
+          <div class="rg-empty">← 왼쪽에서<br/>시 / 도를 먼저<br/>선택해 주세요<br/><br/>시·군·구까지<br/>선택하면 완료!</div>
         </div>
       </div>
 
@@ -421,7 +432,7 @@
 
       <div class="sec">
         <div class="sec-label">월 소득</div>
-        <div class="sec-hint">세후 실수령액 기준으로 선택해 주세요</div>
+        <div class="sec-hint">세후 실수령액 기준이에요 (대략적으로도 괜찮아요)</div>
         <div class="chip-grid">
           <button class="chip-btn" onclick="pickChip(this,'income','100만원 미만')">100만원<br/>미만</button>
           <button class="chip-btn" onclick="pickChip(this,'income','100~200만원')">100~200<br/>만원</button>
@@ -460,9 +471,11 @@
           </button>
           <button class="grid-item" onclick="pickGrid(this,'housing','전세')">
             <span class="grid-icon">🔑</span>전세
+            <span class="grid-sub">보증금 계약</span>
           </button>
           <button class="grid-item" onclick="pickGrid(this,'housing','월세')">
             <span class="grid-icon">📋</span>월세
+            <span class="grid-sub">매달 월세 납부</span>
           </button>
           <button class="grid-item" onclick="pickGrid(this,'housing','공공임대')">
             <span class="grid-icon">🏛️</span>공공임대
@@ -538,7 +551,7 @@
             <div class="style-title-row">
               <span class="style-icon">🛡️</span>
               <span class="style-name">안전 추구형</span>
-              <span class="style-badge badge-low">Low Risk</span>
+              <span class="style-badge badge-low">안심형</span>
             </div>
             <div class="style-desc">수익이 낮더라도 원금을 지키는 게 더 중요해요</div>
           </button>
@@ -546,7 +559,7 @@
             <div class="style-title-row">
               <span class="style-icon">⚖️</span>
               <span class="style-name">균형 추구형</span>
-              <span class="style-badge badge-mid">Mid Risk</span>
+              <span class="style-badge badge-mid">균형형</span>
             </div>
             <div class="style-desc">안정성과 수익성을 균형 있게 고려해요</div>
           </button>
@@ -554,7 +567,7 @@
             <div class="style-title-row">
               <span class="style-icon">🚀</span>
               <span class="style-name">수익 추구형</span>
-              <span class="style-badge badge-high">High Risk</span>
+              <span class="style-badge badge-high">도전형</span>
             </div>
             <div class="style-desc">리스크를 감수하고 높은 수익을 목표로 해요</div>
           </button>
@@ -934,6 +947,24 @@ function goToResult() {
 
 updateHeader();
 checkSlide();
+
+/* 슬라이드 1: 날짜 피커 조작 후 직업 스크롤 넛지 표시 */
+(function() {
+  const nudge = document.getElementById('scrollNudge');
+  const slide1 = document.getElementById('slide1');
+  let nudgeShown = false;
+  function maybeShowNudge() {
+    if (nudgeShown || ans.job) return;
+    nudgeShown = true;
+    nudge.classList.add('show');
+    setTimeout(() => { nudge.classList.remove('show'); }, 4000);
+  }
+  [yearCol, monthCol, dayCol].forEach(col => {
+    col.addEventListener('touchend', maybeShowNudge, { passive: true });
+    col.addEventListener('mouseup', maybeShowNudge);
+  });
+  slide1.addEventListener('scroll', () => { nudge.classList.remove('show'); });
+})();
 </script>
 </body>
 </html>
