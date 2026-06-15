@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>메이트 — 내 맞춤 혜택</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #F7F8FA;
+      --surface:  #FFFFFF;
+      --surface2: #F2F5F9;
+      --green:    #00C47A;
+      --green-d:  #00A868;
+      --green-l:  #E6F7F1;
+      --amber:    #F59E0B;
+      --amber-l:  #FEF3C7;
+      --blue:     #3B82F6;
+      --blue-l:   #EFF6FF;
+      --coral:    #F97316;
+      --coral-l:  #FFF0E6;
+      --navy:     #1A2332;
+      --text2:    #4A5568;
+      --text3:    #8896A6;
+      --border:   #DDE4EE;
+      --radius:   16px;
+      --font:     'Noto Sans KR', sans-serif;
+      --shadow:   0 2px 16px rgba(0,0,0,0.07);
+      --shadow-btn: 0 6px 20px rgba(0,196,122,0.30);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg); font-family: var(--font);
+      color: var(--navy); overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app {
+      width: 100%; max-width: 430px;
+      min-height: 100dvh; margin: 0 auto;
+      display: flex; flex-direction: column;
+      background: var(--bg);
+    }
+
+    /* ── 히어로 헤더 ── */
+    .hero {
+      background: var(--green);
+      padding: 52px 20px 28px;
+      position: relative; overflow: hidden;
+      flex-shrink: 0;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: -30px; left: 0; right: 0;
+      height: 60px; background: var(--bg);
+      border-radius: 30px 30px 0 0;
+    }
+    .hero-logo {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+    }
+    .hero-logo-icon {
+      width: 32px; height: 32px; background: rgba(255,255,255,0.25);
+      border-radius: 9px; display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 900; color: #fff; letter-spacing: -1px;
+    }
+    .hero-logo-text { font-size: 17px; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
+
+    .hero-title { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -0.8px; line-height: 1.3; margin-bottom: 14px; }
+
+    /* 사용자 상황 요약 태그 */
+    .profile-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .profile-chip {
+      padding: 5px 12px;
+      background: rgba(255,255,255,0.20);
+      border-radius: 100px;
+      font-size: 12px; font-weight: 600; color: #fff;
+    }
+
+    /* ── 혜택 카드 영역 ── */
+    .cards-section {
+      flex: 1; padding: 44px 20px 20px;
+    }
+
+    .section-title {
+      font-size: 13px; font-weight: 800; color: var(--text3);
+      letter-spacing: 0.4px; text-transform: uppercase;
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .section-title::before {
+      content: ''; display: block; width: 3px; height: 12px;
+      background: var(--green); border-radius: 2px;
+    }
+
+    /* ── 혜택 카드 ── */
+    .benefit-card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+      position: relative; overflow: hidden;
+      border: 1px solid transparent;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .benefit-card:active { transform: scale(0.99); box-shadow: 0 1px 8px rgba(0,0,0,0.07); }
+
+    /* 카드 상단 컬러 라인 */
+    .benefit-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--card-color, var(--green));
+      border-radius: 3px 3px 0 0;
+    }
+
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+    .card-category {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 11px; font-weight: 700;
+      background: var(--cat-bg, var(--green-l));
+      color: var(--cat-color, var(--green-d));
+    }
+    .card-match {
+      font-size: 11px; font-weight: 700;
+      color: var(--green); padding: 4px 10px;
+      background: var(--green-l); border-radius: 100px;
+    }
+    .card-match.partial { color: var(--amber); background: var(--amber-l); }
+
+    .card-name { font-size: 17px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 6px; line-height: 1.3; }
+
+    .card-desc { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 14px; word-break: keep-all; }
+
+    /* Before/After 비교 */
+    .before-after {
+      display: flex; gap: 6px; align-items: stretch; margin-bottom: 14px;
+    }
+    .ba-box {
+      flex: 1; padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+    .ba-box.before { background: #FEF2F2; }
+    .ba-box.after  { background: var(--green-l); }
+    .ba-label { font-weight: 700; margin-bottom: 4px; }
+    .ba-box.before .ba-label { color: #DC2626; }
+    .ba-box.after  .ba-label { color: var(--green-d); }
+    .ba-value { font-size: 15px; font-weight: 900; }
+    .ba-box.before .ba-value { color: var(--navy); }
+    .ba-box.after  .ba-value { color: var(--green-d); }
+    .ba-sub { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+    .ba-arrow {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: var(--green); flex-shrink: 0;
+    }
+
+    /* 조건 체크 */
+    .cond-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+    .cond-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--text2);
+    }
+    .cond-icon { font-size: 13px; flex-shrink: 0; }
+
+    /* 카드 CTA */
+    .card-cta {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 12px; border-top: 1px solid var(--border);
+    }
+    .card-cta-label { font-size: 12px; color: var(--text3); }
+    .card-btn {
+      padding: 8px 16px;
+      background: var(--green); color: white;
+      border: none; border-radius: 10px;
+      font-family: var(--font); font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .card-btn:active { transform: scale(0.97); }
+    .card-btn.secondary {
+      background: var(--surface2); color: var(--text2);
+      border: 1px solid var(--border);
+    }
+
+    /* ── 다음 액션 섹션 ── */
+    .action-section { padding: 0 20px 20px; }
+
+    .action-row { display: flex; gap: 10px; }
+    .action-btn {
+      flex: 1; padding: 16px 12px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      cursor: pointer; transition: all 0.15s; text-align: center;
+    }
+    .action-btn:active { border-color: var(--green); background: var(--green-l); }
+    .action-icon { font-size: 24px; }
+    .action-label { font-size: 12px; font-weight: 700; color: var(--navy); }
+    .action-sub { font-size: 10px; color: var(--text3); word-break: keep-all; }
+
+    /* ── 하단 여백 ── */
+    .bottom-pad { height: 40px; }
+
+    /* ── 로딩 화면 ── */
+    .loading-screen {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 100; transition: opacity 0.5s;
+    }
+    .loading-screen.hidden { opacity: 0; pointer-events: none; }
+    .loading-spinner {
+      width: 48px; height: 48px;
+      border: 4px solid var(--border);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .loading-sub { font-size: 13px; color: var(--text3); }
+
+    /* ── 카드 등장 애니메이션 ── */
+    .benefit-card { opacity: 0; transform: translateY(20px); }
+    .benefit-card.visible {
+      opacity: 1; transform: translateY(0);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 로딩 화면 -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">맞춤 혜택을 찾는 중이에요</div>
+  <div class="loading-sub">잠깐만 기다려 주세요 🌿</div>
+</div>
+
+<div class="app" id="appMain" style="display:none;">
+
+  <!-- 히어로 헤더 -->
+  <div class="hero">
+    <div class="hero-logo">
+      <div class="hero-logo-icon">M</div>
+      <span class="hero-logo-text">mate.</span>
+    </div>
+    <div class="hero-title" id="heroTitle">내 상황에 딱 맞는<br />혜택을 찾았어요 🎉</div>
+    <div class="profile-chips" id="profileChips">
+      <!-- JS로 사용자 프로필 태그 채워짐 -->
+    </div>
+  </div>
+
+  <!-- 혜택 카드 영역 -->
+  <div class="cards-section">
+    <div class="section-title">지금 받을 수 있는 혜택</div>
+    <div id="benefitCards">
+      <!-- JS로 카드 생성 -->
+    </div>
+  </div>
+
+  <!-- 다음 액션 -->
+  <div class="action-section">
+    <div class="section-title">더 알아보기</div>
+    <div class="action-row">
+      <button class="action-btn" onclick="goTo('saving.html')">
+        <span class="action-icon">💰</span>
+        <span class="action-label">저축법</span>
+        <span class="action-sub">돈 모이는 구조 만들기</span>
+      </button>
+      <button class="action-btn" onclick="goTo('benefit.html')">
+        <span class="action-icon">🏛️</span>
+        <span class="action-label">정부지원</span>
+        <span class="action-sub">내 조건 맞춤 검색</span>
+      </button>
+      <button class="action-btn" onclick="goTo('learn.html')">
+        <span class="action-icon">📈</span>
+        <span class="action-label">투자 공부</span>
+        <span class="action-sub">개념부터 천천히</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="bottom-pad"></div>
+</div>
+
+<script>
+/* ══════════════════════════════════
+   온보딩 답변 로드
+   ══════════════════════════════════ */
+const raw = localStorage.getItem('mateAnswers');
+const ans = raw ? JSON.parse(raw) : null;
+
+/* 데이터 없으면 온보딩으로 */
+if (!ans) {
+  window.location.href = 'onboarding.html';
+}
+
+/* ══════════════════════════════════
+   사용자 프로필 태그 생성
+   ══════════════════════════════════ */
+function buildProfile(a) {
+  const now = new Date();
+  const age = now.getFullYear() - a.birthYear;
+  const tags = [];
+  tags.push(`만 ${age}세`);
+  if (a.job) tags.push(a.job);
+  if (a.sido) tags.push(a.sido + (a.sigungu ? ' ' + a.sigungu : ''));
+  if (a.income) tags.push(a.income);
+  if (a.housing) tags.push(a.housing);
+  return tags;
+}
+
+/* ══════════════════════════════════
+   혜택 카드 로직
+   — 온보딩 답변 기반으로 3장 결정
+   ══════════════════════════════════ */
+function selectCards(a) {
+  const now = new Date();
+  const age = now.getFullYear() - a.birthYear;
+  const cards = [];
+
+  /* ── 카드 1: 목표 기반 핵심 혜택 ── */
+  if (a.goal === '비상금' || !a.goal) {
+    const incomeOk = ['100만원 미만','100~200만원','200~300만원'].includes(a.income);
+    cards.push({
+      id: 'emergency',
+      color: '#00C47A',
+      catBg: '#E6F7F1', catColor: '#00A868',
+      category: '💰 비상금·저축',
+      name: '청년도약계좌',
+      match: incomeOk ? '✅ 신청 가능' : '🔸 조건 확인 필요',
+      matchClass: incomeOk ? '' : 'partial',
+      desc: '월 최대 70만원 납입 시 정부가 매달 최대 2만4천원을 보태주는 청년 전용 적금이에요.',
+      before: { label: 'BEFORE', value: '연 3%대', sub: '일반 적금 기준' },
+      after:  { label: 'AFTER',  value: '연 6%+', sub: '정부 기여금 포함 시' },
+      conds: [
+        { icon: age <= 34 ? '✅' : '❌', text: `나이 조건: 만 19~34세 (현재 만 ${age}세)` },
+        { icon: a.job === '직장인' ? '✅' : '🔸', text: '소득 조건: 총급여 7,500만원 이하' },
+        { icon: '🔸', text: '가입 기간: 5년 (중도 해지 시 혜택 일부 소멸)' },
+      ],
+      ctaLabel: '금융위원회 공식 안내',
+      ctaAction: () => window.open('https://www.fss.or.kr', '_blank'),
+    });
+  } else if (a.goal === '내집마련') {
+    const ageOk = age >= 19 && age <= 34;
+    cards.push({
+      id: 'housing',
+      color: '#3B82F6',
+      catBg: '#EFF6FF', catColor: '#1D4ED8',
+      category: '🏠 내 집 마련',
+      name: '청년 주택드림 청약통장',
+      match: ageOk ? '✅ 신청 가능' : '🔸 조건 확인 필요',
+      matchClass: ageOk ? '' : 'partial',
+      desc: '청약을 준비하면서 이자까지 챙기는 청년 전용 통장. 최대 연 4.5% 금리 + 청약 1순위 자격.',
+      before: { label: 'BEFORE', value: '청약 준비 없음', sub: '내 집 마련 막막한 상태' },
+      after:  { label: 'AFTER',  value: '1순위 청약 자격', sub: '24개월 이상 유지 시' },
+      conds: [
+        { icon: ageOk ? '✅' : '❌', text: `나이 조건: 만 19~34세 (현재 만 ${age}세)` },
+        { icon: a.housing === '월세' || a.housing === '전세' ? '✅' : '🔸', text: '무주택자 조건' },
+        { icon: '✅', text: '월 최소 2만원부터 자유 납입' },
+      ],
+      ctaLabel: '주택도시기금 안내 보기',
+      ctaAction: () => window.open('https://nhuf.molit.go.kr', '_blank'),
+    });
+  } else if (a.goal === '부채상환') {
+    cards.push({
+      id: 'debt',
+      color: '#F97316',
+      catBg: '#FFF0E6', catColor: '#C2410C',
+      category: '✂️ 부채 상환',
+      name: '햇살론 Youth',
+      match: '🔸 조건 확인 필요',
+      matchClass: 'partial',
+      desc: '고금리 대출을 저금리로 전환해주는 청년 전용 서민금융 상품. 연 3.5% 수준.',
+      before: { label: 'BEFORE', value: '연 15~20%', sub: '카드론·저축은행 기준' },
+      after:  { label: 'AFTER',  value: '연 3.5%', sub: '햇살론 Youth 기준' },
+      conds: [
+        { icon: age <= 34 ? '✅' : '❌', text: `나이 조건: 만 34세 이하 (현재 만 ${age}세)` },
+        { icon: '🔸', text: '연소득 3,500만원 이하 또는 신용점수 하위 20%' },
+        { icon: '✅', text: '최대 1,200만원까지 대출 가능' },
+      ],
+      ctaLabel: '서민금융진흥원 안내',
+      ctaAction: () => window.open('https://www.kinfa.or.kr', '_blank'),
+    });
+  } else {
+    /* 기타 목표 — 청년내일저축계좌 */
+    cards.push({
+      id: 'saving_acct',
+      color: '#00C47A',
+      catBg: '#E6F7F1', catColor: '#00A868',
+      category: '💰 정부 지원 저축',
+      name: '청년내일저축계좌',
+      match: '🔸 조건 확인 필요',
+      matchClass: 'partial',
+      desc: '월 10만원 저축하면 정부가 10~30만원을 추가 적립해주는 복지부 사업. 3년 만기 시 최대 1,440만원.',
+      before: { label: 'BEFORE', value: '내 저축만', sub: '월 10만원 × 36개월 = 360만원' },
+      after:  { label: 'AFTER',  value: '정부 매칭 포함', sub: '최대 360+1,080 = 1,440만원' },
+      conds: [
+        { icon: age <= 34 ? '✅' : '❌', text: `나이 조건: 만 15~34세 (현재 만 ${age}세)` },
+        { icon: '🔸', text: '소득 조건: 기준 중위소득 100% 이하' },
+        { icon: '✅', text: '근로·사업소득이 있어야 신청 가능' },
+      ],
+      ctaLabel: '복지로 신청 안내',
+      ctaAction: () => window.open('https://www.bokjiro.go.kr', '_blank'),
+    });
+  }
+
+  /* ── 카드 2: 지역 기반 주거 혜택 ── */
+  const isSeoul = a.sido === '서울';
+  const isMetro = ['서울','경기','인천','부산','대구','광주','대전','울산'].includes(a.sido);
+  cards.push({
+    id: 'region',
+    color: '#F59E0B',
+    catBg: '#FEF3C7', catColor: '#B45309',
+    category: '🏛️ 지역 주거 지원',
+    name: isSeoul ? '서울 청년월세 지원' : (isMetro ? '청년 전·월세 보증금 대출' : '중소기업 청년 전세대출'),
+    match: '🔸 조건 확인 필요',
+    matchClass: 'partial',
+    desc: isSeoul
+      ? '서울 거주 청년에게 월 최대 20만원, 최장 12개월 월세를 지원해요. 매년 모집 공고를 확인하세요.'
+      : (isMetro
+        ? '전세·월세 보증금을 저금리로 대출해주는 상품. 연 1~2%대 금리로 최대 3천만원.'
+        : '중소기업 재직 청년에게 전세보증금을 연 1.5%로 대출해드려요. 최대 1억원.'),
+    before: { label: 'BEFORE', value: '월세 그대로', sub: '매달 지출로만 사라짐' },
+    after:  {
+      label: 'AFTER',
+      value: isSeoul ? '월 -20만원' : '연 1~2% 대출',
+      sub: isSeoul ? '12개월 최대 240만원 지원' : '보증금 부담 대폭 경감',
+    },
+    conds: [
+      { icon: a.sido ? '✅' : '🔸', text: `거주지: ${a.sido || '지역 정보 없음'}${a.sigungu ? ' ' + a.sigungu : ''}` },
+      { icon: a.housing === '월세' ? '✅' : '🔸', text: '현재 월세 거주자 우선 (전세도 일부 가능)' },
+      { icon: '🔸', text: '소득·자산 기준 충족 필요' },
+    ],
+    ctaLabel: '해당 기관 안내 보기',
+    ctaAction: () => {},
+  });
+
+  /* ── 카드 3: 성향·목표 기반 장기 전략 ── */
+  const isConservative = a.style === '안전';
+  cards.push({
+    id: 'longterm',
+    color: '#8B5CF6',
+    catBg: '#F3F0FF', catColor: '#6D28D9',
+    category: '🌅 장기 전략',
+    name: isConservative ? 'ISA 계좌 + 연금저축' : 'ETF 적립식 투자',
+    match: '✅ 지금 바로 시작 가능',
+    matchClass: '',
+    desc: isConservative
+      ? '세금 혜택이 있는 ISA 계좌로 예·적금을 운용하고, 연금저축으로 노후를 준비하세요. 리스크 없이 절세 효과만.'
+      : '매달 소액으로 ETF를 적립하면 시장 평균 수익을 안정적으로 추구할 수 있어요. 장기적으로 인플레이션을 이길 가능성이 높아요.',
+    before: { label: 'BEFORE', value: '일반 저축', sub: '이자 수익에 15.4% 세금 납부' },
+    after:  {
+      label: 'AFTER',
+      value: isConservative ? 'ISA 비과세 혜택' : '복리 + 절세',
+      sub: isConservative ? '연간 200만원 이자·배당 비과세' : '장기 투자 시 세금 이연 효과',
+    },
+    conds: [
+      { icon: '✅', text: '나이·소득 무관, 누구나 개설 가능' },
+      { icon: '✅', text: isConservative ? '원금 보장 상품도 편입 가능' : '월 1만원 소액부터 시작 가능' },
+      { icon: '🔸', text: '의무 보유 기간 3년 (중도 해지 시 혜택 일부 소멸)' },
+    ],
+    ctaLabel: '메이트 투자 공부 시작',
+    ctaAction: () => goTo('learn.html'),
+  });
+
+  return cards;
+}
+
+/* ══════════════════════════════════
+   카드 HTML 생성
+   ══════════════════════════════════ */
+function renderCard(card, delay) {
+  const el = document.createElement('div');
+  el.className = 'benefit-card';
+  el.style.setProperty('--card-color', card.color);
+  el.innerHTML = `
+    <div class="card-top">
+      <div class="card-category" style="background:${card.catBg};color:${card.catColor};">${card.category}</div>
+      <div class="card-match ${card.matchClass}">${card.match}</div>
+    </div>
+    <div class="card-name">${card.name}</div>
+    <div class="card-desc">${card.desc}</div>
+    <div class="before-after">
+      <div class="ba-box before">
+        <div class="ba-label">${card.before.label}</div>
+        <div class="ba-value">${card.before.value}</div>
+        <div class="ba-sub">${card.before.sub}</div>
+      </div>
+      <div class="ba-arrow">→</div>
+      <div class="ba-box after">
+        <div class="ba-label">${card.after.label}</div>
+        <div class="ba-value">${card.after.value}</div>
+        <div class="ba-sub">${card.after.sub}</div>
+      </div>
+    </div>
+    <div class="cond-list">
+      ${card.conds.map(c => `
+        <div class="cond-item">
+          <span class="cond-icon">${c.icon}</span>
+          <span>${c.text}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="card-cta">
+      <span class="card-cta-label">신청 전 조건을 꼭 확인하세요</span>
+      <button class="card-btn" onclick="(${card.ctaAction.toString()})()">자세히 →</button>
+    </div>
+  `;
+  setTimeout(() => el.classList.add('visible'), delay);
+  return el;
+}
+
+/* ══════════════════════════════════
+   화면 구성
+   ══════════════════════════════════ */
+function buildResult() {
+  if (!ans) return;
+
+  /* 프로필 태그 */
+  const chips = buildProfile(ans);
+  document.getElementById('profileChips').innerHTML =
+    chips.map(t => `<div class="profile-chip">${t}</div>`).join('');
+
+  /* 혜택 카드 */
+  const cards = selectCards(ans);
+  const container = document.getElementById('benefitCards');
+  cards.forEach((card, i) => {
+    container.appendChild(renderCard(card, 200 + i * 150));
+  });
+}
+
+/* ══════════════════════════════════
+   네비게이션
+   ══════════════════════════════════ */
+function goTo(path) {
+  document.querySelector('.app').style.cssText = 'opacity:0;transition:opacity 0.3s';
+  setTimeout(() => { window.location.href = path; }, 300);
+}
+
+/* ══════════════════════════════════
+   초기화 (로딩 → 결과 표시)
+   ══════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  buildResult();
+  setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hidden');
+    document.getElementById('appMain').style.display = 'flex';
+  }, 1200);
+});
+</script>
+</body>
+</html>

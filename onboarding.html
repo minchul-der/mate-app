@@ -845,13 +845,50 @@ function updateBadge() {
 /* ══════════════════════════════════
    선택 핸들러
    ══════════════════════════════════ */
+/* 학생 선택 시 슬라이드 3 소득 칩 범위 변환 */
+const DEFAULT_INCOME_LABELS = ['100만원\n미만','100~200\n만원','200~300\n만원','300~400\n만원','400~500\n만원','500만원\n이상'];
+const DEFAULT_INCOME_VALS   = ['100만원 미만','100~200만원','200~300만원','300~400만원','400~500만원','500만원 이상'];
+const STUDENT_INCOME_LABELS = ['없음·장학금','50만원\n미만','50~100\n만원','100~200\n만원','알바\n병행','기타'];
+const STUDENT_INCOME_VALS   = ['없음','50만원 미만','50~100만원','100~200만원','아르바이트 병행','기타'];
+
+function adaptIncomeChips(isStudent) {
+  const chips = document.querySelectorAll('#slide3 .chip-btn');
+  const labels = isStudent ? STUDENT_INCOME_LABELS : DEFAULT_INCOME_LABELS;
+  const vals   = isStudent ? STUDENT_INCOME_VALS   : DEFAULT_INCOME_VALS;
+  chips.forEach((chip, i) => {
+    chip.innerHTML = labels[i].replace('\n','<br/>');
+    chip.onclick = () => pickChip(chip, 'income', vals[i]);
+    chip.classList.remove('selected');
+  });
+  ans.income = null; checkSlide();
+}
+
+/* 성향 추론 알고리즘 */
+function deriveProfile() {
+  const age = new Date().getFullYear() - ans.birthYear;
+  let safe = 0, aggr = 0;
+  if (['비상금','부채상환'].includes(ans.goal)) safe += 3;
+  if (ans.goal === '여행취미') aggr += 2;
+  const incScore = {'100만원 미만':-2,'100~200만원':-1,'50만원 미만':-2,'없음':-3,'200~300만원':0,'300~400만원':1,'400~500만원':2,'500만원 이상':3}[ans.income]||0;
+  if (incScore < 0) safe += Math.abs(incScore); else aggr += incScore;
+  if (age < 27) aggr += 2; else if (age > 33) safe += 1;
+  if (['월세','공공임대','비주택'].includes(ans.housing)) safe += 2;
+  if (ans.housing === '자가') aggr += 1;
+  if (['프리랜서','학생'].includes(ans.job)) safe += 2;
+  if (!ans.style) {
+    ans._derivedStyle = safe >= 5 ? '안전' : aggr >= 5 ? '적극' : '균형';
+  }
+}
+
 function pick(btn,key,val) {
   btn.closest('.radio-list').querySelectorAll('.radio-item').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected'); ans[key]=val; checkSlide();
+  btn.classList.add('selected'); ans[key]=val;
+  if (key === 'job') adaptIncomeChips(val === '학생');
+  deriveProfile(); checkSlide();
 }
 function pickChip(btn,key,val) {
   btn.closest('.chip-grid').querySelectorAll('.chip-btn').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected'); ans[key]=val; checkSlide();
+  btn.classList.add('selected'); ans[key]=val; deriveProfile(); checkSlide();
 }
 function pickGrid(btn,key,val) {
   btn.closest('.grid-2col').querySelectorAll('.grid-item').forEach(b=>b.classList.remove('selected'));
@@ -937,6 +974,7 @@ function updateHeader() {
    완료
    ══════════════════════════════════ */
 function showComplete() {
+  deriveProfile();
   localStorage.setItem('mateAnswers', JSON.stringify(ans));
   document.getElementById('completeScreen').classList.add('show');
 }
