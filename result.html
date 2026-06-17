@@ -243,6 +243,92 @@
     /* ── 하단 여백 ── */
     .bottom-pad { height: 40px; }
 
+    /* ── 로그인 상태 헤더 ── */
+    .auth-header-btn {
+      background: rgba(255,255,255,0.20);
+      border: none; border-radius: 20px;
+      padding: 6px 12px 6px 10px;
+      font-family: var(--font); font-size: 12px; font-weight: 700;
+      color: #fff; cursor: pointer;
+      display: flex; align-items: center; gap: 5px;
+      transition: background 0.15s;
+    }
+    .auth-header-btn:active { background: rgba(255,255,255,0.30); }
+    .auth-avatar {
+      width: 20px; height: 20px;
+      background: rgba(255,255,255,0.35); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 900;
+    }
+
+    /* ── D-Day 뱃지 ── */
+    .dday-badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 8px; border-radius: 99px;
+      font-size: 11px; font-weight: 700;
+      margin-left: 4px;
+    }
+
+    /* ── 알림 버튼 ── */
+    .alarm-btn {
+      padding: 7px 12px;
+      border-radius: 10px; border: 1.5px solid var(--border);
+      background: none; cursor: pointer;
+      font-family: var(--font); font-size: 12px; font-weight: 700;
+      color: var(--text3); transition: all 0.15s;
+      display: flex; align-items: center; gap: 4px;
+      flex-shrink: 0;
+    }
+    .alarm-btn[data-alarm-on="true"] {
+      border-color: var(--green); background: var(--green-l);
+      color: var(--green-d);
+    }
+    .alarm-btn:active { transform: scale(0.97); }
+    .alarm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── 비로그인 알림 모달 ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.45);
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+    .modal-overlay.hidden { display: none; }
+    .modal-sheet {
+      background: #fff; border-radius: 24px 24px 0 0;
+      padding: 28px 20px 48px; width: 100%; max-width: 430px;
+    }
+    .modal-handle {
+      width: 40px; height: 4px; background: var(--border);
+      border-radius: 99px; margin: 0 auto 24px;
+    }
+    .modal-icon { font-size: 40px; text-align: center; margin-bottom: 12px; }
+    .modal-title {
+      font-size: 18px; font-weight: 900; letter-spacing: -0.5px;
+      margin-bottom: 6px; text-align: center;
+    }
+    .modal-sub {
+      font-size: 13px; color: var(--text3);
+      text-align: center; margin-bottom: 28px; line-height: 1.6;
+    }
+    .modal-btns { display: flex; flex-direction: column; gap: 10px; }
+    .btn-modal-primary {
+      padding: 15px; border-radius: 14px; border: none; cursor: pointer;
+      font-family: var(--font); font-size: 15px; font-weight: 900;
+      background: var(--green); color: #fff;
+      box-shadow: var(--shadow-btn); transition: all 0.2s;
+    }
+    .btn-modal-primary:active { opacity: 0.88; }
+    .btn-modal-secondary {
+      padding: 14px; border-radius: 14px; cursor: pointer;
+      font-family: var(--font); font-size: 14px; font-weight: 700;
+      background: none; border: 1.5px solid var(--border);
+      color: var(--navy); transition: all 0.2s;
+    }
+    .btn-modal-ghost {
+      padding: 10px; border: none; background: none; cursor: pointer;
+      font-family: var(--font); font-size: 13px; color: var(--text3);
+    }
+
     /* ── 로딩 화면 ── */
     .loading-screen {
       position: fixed; inset: 0;
@@ -282,11 +368,31 @@
 
 <div class="app" id="appMain" style="display:none;">
 
+  <!-- 비로그인 알림 모달 -->
+  <div class="modal-overlay hidden" id="loginModal" onclick="closeLoginModal(event)">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-icon">🔔</div>
+      <div class="modal-title">혜택을 놓치지 마세요!</div>
+      <div class="modal-sub">로그인하면 마감 전에 알림을 받고<br>내 혜택 목록을 저장할 수 있어요.</div>
+      <div class="modal-btns">
+        <button class="btn-modal-primary" onclick="goToLogin('register')">3초 가입하기</button>
+        <button class="btn-modal-secondary" onclick="goToLogin('login')">이미 계정이 있어요</button>
+        <button class="btn-modal-ghost" onclick="closeLoginModal()">나중에</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 히어로 헤더 -->
   <div class="hero">
-    <div class="hero-logo">
-      <div class="hero-logo-icon">M</div>
-      <span class="hero-logo-text">mate.</span>
+    <div class="hero-logo" style="justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="hero-logo-icon">M</div>
+        <span class="hero-logo-text">mate.</span>
+      </div>
+      <button class="auth-header-btn" id="authBtn" onclick="handleAuthBtnClick()">
+        <span id="authBtnInner">로그인</span>
+      </button>
     </div>
     <div class="hero-title" id="heroTitle">내 상황에 딱 맞는<br />혜택을 찾았어요 🎉</div>
     <div class="profile-chips" id="profileChips">
@@ -331,6 +437,14 @@
 
   <div class="bottom-pad"></div>
 </div>
+
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="scripts/firebase-config.js"></script>
+<script src="scripts/auth.js"></script>
+<script src="scripts/alarm.js"></script>
 
 <script>
 /* ══════════════════════════════════
@@ -585,7 +699,10 @@ function renderCard(card, profile, delay) {
       <div class="card-category" style="background:${card.cat_bg};color:${card.cat_color};">
         ${card.category_icon} ${card.category_label}
       </div>
-      <div class="card-match ${matchCls}">${matchTxt}</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        ${card.deadline ? `<span class="dday-badge" id="dday-${card.id}" data-deadline="${card.deadline}"></span>` : ''}
+        <div class="card-match ${matchCls}">${matchTxt}</div>
+      </div>
     </div>
     <div class="card-name">${card.name}</div>
     <div class="card-desc">${card.description}</div>
@@ -610,7 +727,10 @@ function renderCard(card, profile, delay) {
         </div>`).join('')}
     </div>
     <div class="card-cta">
-      <span class="card-cta-label">신청 전 조건을 꼭 확인하세요</span>
+      <button class="alarm-btn" id="alarm-${card.id}"
+        data-alarm-on="false" data-id="${card.id}"
+        data-name="${card.name}" data-deadline="${card.deadline||''}"
+        onclick="handleAlarm(this)">🔔 알림</button>
       <button class="card-btn" onclick="goTo('benefit.html?id=${card.id}')">자세히 →</button>
     </div>
   `;
@@ -715,6 +835,109 @@ function scrollToBenefits() {
 })();
 
 window.addEventListener('DOMContentLoaded', init);
+
+/* ══════════════════════════════════
+   Firebase Auth + Alarm 초기화
+   ══════════════════════════════════ */
+(function initFirebase() {
+  try {
+    MateAuth.init();
+    MateAlarm.init();
+  } catch(e) {
+    // Firebase 미설정 시 무시 (기능만 비활성화)
+    return;
+  }
+
+  MateAuth.onAuthStateChanged(async user => {
+    updateAuthBtn(user);
+    if (user) {
+      // D-Day 뱃지 렌더
+      renderAllDday();
+      // 저장된 알림 상태 반영
+      try {
+        const alarms = await MateAlarm.getUserAlarms(user.uid);
+        const ids = new Set(alarms.map(a => a.benefit_id));
+        document.querySelectorAll('.alarm-btn').forEach(btn => {
+          const on = ids.has(btn.dataset.id);
+          btn.dataset.alarmOn = on;
+          btn.textContent = on ? '🔔 ON' : '🔔 알림';
+        });
+      } catch {}
+    } else {
+      renderAllDday();
+    }
+  });
+})();
+
+/* 로그인 상태 헤더 버튼 업데이트 */
+function updateAuthBtn(user) {
+  const inner = document.getElementById('authBtnInner');
+  if (!inner) return;
+  if (user) {
+    const name = user.displayName || '나';
+    inner.innerHTML = `<span class="auth-avatar">${name.charAt(0)}</span> ${name}님`;
+  } else {
+    inner.textContent = '로그인';
+  }
+}
+
+function handleAuthBtnClick() {
+  const user = MateAuth.getCurrentUser();
+  if (user) {
+    location.href = 'mypage.html';
+  } else {
+    goToLogin('login');
+  }
+}
+
+/* 알림 버튼 처리 */
+async function handleAlarm(btn) {
+  let user;
+  try { user = MateAuth.getCurrentUser(); } catch { user = null; }
+
+  if (!user) {
+    document.getElementById('loginModal').classList.remove('hidden');
+    return;
+  }
+
+  btn.disabled = true;
+  try {
+    const currently = btn.dataset.alarmOn === 'true';
+    const next      = !currently;
+    await MateAlarm.setAlarm(btn.dataset.id, btn.dataset.name, btn.dataset.deadline || null, next);
+    btn.dataset.alarmOn = next;
+    btn.textContent = next ? '🔔 ON' : '🔔 알림';
+  } catch(e) {
+    // 조용히 실패
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+/* D-Day 뱃지 전체 렌더 */
+function renderAllDday() {
+  document.querySelectorAll('[id^="dday-"]').forEach(el => {
+    const deadline = el.dataset.deadline;
+    if (!deadline) { el.style.display = 'none'; return; }
+    try {
+      const info = MateAlarm.getDDayInfo(deadline);
+      if (!info) { el.style.display = 'none'; return; }
+      el.textContent = info.label;
+      el.style.background = info.bg;
+      el.style.color = info.color;
+    } catch {}
+  });
+}
+
+/* 로그인 모달 */
+function goToLogin(tab) {
+  document.getElementById('loginModal').classList.add('hidden');
+  location.href = `login.html?redirect=result&tab=${tab}`;
+}
+function closeLoginModal(e) {
+  if (!e || e.target.id === 'loginModal')
+    document.getElementById('loginModal').classList.add('hidden');
+}
 </script>
 </body>
 </html>

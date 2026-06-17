@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>메이트 — 마이페이지</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    html, body { overflow: auto; height: auto; }
+    .app-wrapper { overflow: auto; height: auto; min-height: 100dvh; background: var(--color-bg); }
+
+    /* ── 헤더 ── */
+    .page-header {
+      display: flex; align-items: center;
+      padding: 52px 20px 0;
+      gap: 4px;
+    }
+    .back-btn {
+      background: none; border: none; cursor: pointer;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 12px; color: var(--color-text);
+      font-size: 20px; flex-shrink: 0;
+    }
+    .back-btn:active { background: var(--color-gray2); }
+    .page-title {
+      font-size: 18px; font-weight: 900;
+      letter-spacing: -0.5px; color: var(--color-text);
+      flex: 1;
+    }
+
+    /* ── 섹션 공통 ── */
+    .section {
+      padding: 0 16px;
+      margin-top: 20px;
+    }
+    .section-label {
+      font-size: 12px; font-weight: 700;
+      color: var(--color-gray1); letter-spacing: 0.5px;
+      padding: 0 4px; margin-bottom: 8px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    /* ── 프로필 카드 ── */
+    .profile-card {
+      padding: 24px 20px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .avatar {
+      width: 56px; height: 56px; flex-shrink: 0;
+      background: var(--color-primary-l);
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; font-weight: 900;
+      color: var(--color-primary);
+    }
+    .profile-info { flex: 1; min-width: 0; }
+    .profile-name {
+      font-size: 18px; font-weight: 900;
+      letter-spacing: -0.5px; color: var(--color-text);
+    }
+    .profile-email {
+      font-size: 13px; color: var(--color-gray1);
+      margin-top: 3px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .profile-since {
+      font-size: 11px; color: var(--color-gray1);
+      margin-top: 4px;
+    }
+    .btn-edit-profile {
+      flex-shrink: 0;
+      padding: 8px 14px;
+      background: none; border: 1.5px solid var(--color-gray2);
+      border-radius: 10px; cursor: pointer;
+      font-family: var(--font-main);
+      font-size: 12px; font-weight: 700; color: var(--color-text2);
+      transition: all 0.2s;
+    }
+    .btn-edit-profile:active { background: var(--color-gray2); }
+
+    /* ── 온보딩 요약 칩 ── */
+    .onboarding-chips {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      padding: 0 20px 20px;
+    }
+    .chip-tag {
+      padding: 5px 12px;
+      background: var(--color-primary-l);
+      border-radius: 99px;
+      font-size: 12px; font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    /* ── 리스트 아이템 (메뉴 행) ── */
+    .menu-row {
+      display: flex; align-items: center;
+      padding: 16px 20px;
+      cursor: pointer; transition: background 0.15s;
+      border-bottom: 1px solid var(--color-bg);
+    }
+    .menu-row:last-child { border-bottom: none; }
+    .menu-row:active { background: var(--color-bg); }
+    .menu-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: var(--color-bg);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; margin-right: 12px;
+    }
+    .menu-body { flex: 1; min-width: 0; }
+    .menu-title { font-size: 15px; font-weight: 700; color: var(--color-text); }
+    .menu-desc  { font-size: 12px; color: var(--color-gray1); margin-top: 2px; }
+    .menu-arrow { font-size: 16px; color: var(--color-gray1); flex-shrink: 0; }
+
+    /* ── 알림 목록 ── */
+    .alarm-empty {
+      padding: 32px 20px; text-align: center;
+    }
+    .alarm-empty-icon { font-size: 40px; margin-bottom: 10px; }
+    .alarm-empty-title {
+      font-size: 15px; font-weight: 700; color: var(--color-text2);
+      margin-bottom: 4px;
+    }
+    .alarm-empty-sub { font-size: 13px; color: var(--color-gray1); }
+
+    .alarm-item {
+      display: flex; align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--color-bg);
+      gap: 12px;
+    }
+    .alarm-item:last-child { border-bottom: none; }
+    .alarm-body { flex: 1; min-width: 0; }
+    .alarm-name {
+      font-size: 14px; font-weight: 700; color: var(--color-text);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .alarm-badges { display: flex; gap: 6px; margin-top: 5px; align-items: center; }
+    .dday-badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 8px; border-radius: 99px;
+      font-size: 11px; font-weight: 700;
+    }
+    .alarm-toggle-btn {
+      flex-shrink: 0;
+      padding: 7px 12px;
+      border-radius: 10px; border: none; cursor: pointer;
+      font-family: var(--font-main);
+      font-size: 12px; font-weight: 700;
+      transition: all 0.2s;
+    }
+    .alarm-toggle-btn[data-on="true"] {
+      background: var(--color-primary-l);
+      color: var(--color-primary);
+    }
+    .alarm-toggle-btn[data-on="false"] {
+      background: var(--color-bg);
+      color: var(--color-gray1);
+    }
+
+    .alarm-detail-btn {
+      flex-shrink: 0; width: 32px; height: 32px;
+      background: none; border: none; cursor: pointer;
+      font-size: 18px; color: var(--color-gray1);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── 계정 관리 항목 ── */
+    .danger-row { cursor: pointer; }
+    .danger-row .menu-title { color: #EF4444; }
+    .danger-row .menu-icon { background: #FEF2F2; }
+
+    /* ── 비밀번호 변경 ── */
+    .pw-change-form {
+      padding: 16px 20px;
+      display: none;
+      flex-direction: column; gap: 12px;
+    }
+    .pw-change-form.open { display: flex; }
+    .field-input {
+      width: 100%; padding: 13px 16px;
+      border: 1.5px solid var(--color-gray2);
+      border-radius: 12px;
+      font-family: var(--font-main);
+      font-size: 14px; color: var(--color-text);
+      background: var(--color-bg);
+      outline: none; transition: border-color 0.2s;
+    }
+    .field-input:focus { border-color: var(--color-primary); }
+
+    .btn-save-pw {
+      padding: 13px; border-radius: 12px;
+      background: var(--color-primary); border: none; cursor: pointer;
+      font-family: var(--font-main);
+      font-size: 14px; font-weight: 900; color: #fff;
+      transition: all 0.2s;
+    }
+    .btn-save-pw:active { opacity: 0.85; }
+    .pw-err {
+      font-size: 12px; color: #EF4444; display: none;
+    }
+
+    /* ── 하단 여백 ── */
+    .bottom-pad { height: 60px; }
+
+    /* ── 확인 모달 ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.45);
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+    .modal-overlay.hidden { display: none; }
+    .modal-sheet {
+      background: #fff; border-radius: 24px 24px 0 0;
+      padding: 28px 20px 48px; width: 100%; max-width: 430px;
+    }
+    .modal-handle {
+      width: 40px; height: 4px;
+      background: var(--color-gray2); border-radius: 99px;
+      margin: 0 auto 24px;
+    }
+    .modal-icon { font-size: 40px; text-align: center; margin-bottom: 12px; }
+    .modal-title {
+      font-size: 18px; font-weight: 900;
+      letter-spacing: -0.5px; margin-bottom: 6px; text-align: center;
+    }
+    .modal-sub {
+      font-size: 13px; color: var(--color-gray1);
+      text-align: center; margin-bottom: 28px; line-height: 1.6;
+    }
+    .modal-btns { display: flex; flex-direction: column; gap: 10px; }
+    .btn-modal-danger {
+      padding: 15px; border-radius: 14px; border: none; cursor: pointer;
+      font-family: var(--font-main);
+      font-size: 15px; font-weight: 900;
+      background: #EF4444; color: #fff; transition: all 0.2s;
+    }
+    .btn-modal-danger:active { opacity: 0.85; }
+    .btn-modal-cancel {
+      padding: 15px; border-radius: 14px; border: none; cursor: pointer;
+      font-family: var(--font-main);
+      font-size: 15px; font-weight: 700;
+      background: var(--color-bg); color: var(--color-text2);
+    }
+    .btn-modal-cancel:active { background: var(--color-gray2); }
+
+    /* ── 토스트 ── */
+    .toast {
+      position: fixed; bottom: 30px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #191F28; color: #fff;
+      border-radius: 12px; padding: 12px 20px;
+      font-size: 13px; font-weight: 500;
+      white-space: nowrap; z-index: 300;
+      opacity: 0; transition: all 0.3s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── 로딩 스켈레톤 ── */
+    .skel {
+      background: linear-gradient(90deg, var(--color-gray2) 25%, #f0f0f0 50%, var(--color-gray2) 75%);
+      background-size: 200% 100%;
+      animation: skel-shimmer 1.2s infinite;
+      border-radius: 8px;
+    }
+    @keyframes skel-shimmer { to { background-position: -200% 0; } }
+  </style>
+</head>
+
+<body>
+  <div class="app-wrapper">
+
+    <!-- 헤더 -->
+    <div class="page-header">
+      <button class="back-btn" onclick="history.back()">←</button>
+      <div class="page-title">마이페이지</div>
+    </div>
+
+    <!-- 프로필 섹션 -->
+    <div class="section" id="profileSection">
+      <div class="section-label">내 프로필</div>
+      <div class="card">
+        <div class="profile-card">
+          <div class="avatar" id="avatarEl">...</div>
+          <div class="profile-info">
+            <div class="profile-name" id="profileName">불러오는 중</div>
+            <div class="profile-email" id="profileEmail"></div>
+            <div class="profile-since" id="profileSince"></div>
+          </div>
+          <button class="btn-edit-profile" onclick="location.href='index.html'">온보딩 수정</button>
+        </div>
+        <div class="onboarding-chips" id="onboardingChips"></div>
+      </div>
+    </div>
+
+    <!-- 알림 설정 혜택 -->
+    <div class="section" id="alarmSection">
+      <div class="section-label">알림 설정한 혜택</div>
+      <div class="card" id="alarmList">
+        <div class="alarm-empty">
+          <div class="alarm-empty-icon">🔔</div>
+          <div class="alarm-empty-title">알림 설정한 혜택이 없어요</div>
+          <div class="alarm-empty-sub">혜택 결과 화면에서 알림을 설정해보세요</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 계정 관리 -->
+    <div class="section">
+      <div class="section-label">계정 관리</div>
+      <div class="card">
+        <!-- 비밀번호 변경 -->
+        <div class="menu-row" onclick="togglePwChange()">
+          <div class="menu-icon">🔑</div>
+          <div class="menu-body">
+            <div class="menu-title">비밀번호 변경</div>
+          </div>
+          <span class="menu-arrow" id="pwArrow">›</span>
+        </div>
+        <div class="pw-change-form" id="pwChangeForm">
+          <input class="field-input" type="password" id="newPw1"
+            placeholder="새 비밀번호 (8자+, 영문+숫자+특수문자)" />
+          <input class="field-input" type="password" id="newPw2"
+            placeholder="새 비밀번호 확인" />
+          <span class="pw-err" id="pwChangeErr"></span>
+          <button class="btn-save-pw" onclick="doChangePw()">비밀번호 저장</button>
+        </div>
+
+        <!-- 로그아웃 -->
+        <div class="menu-row" onclick="doLogout()">
+          <div class="menu-icon">🚪</div>
+          <div class="menu-body">
+            <div class="menu-title">로그아웃</div>
+          </div>
+          <span class="menu-arrow">›</span>
+        </div>
+
+        <!-- 회원탈퇴 -->
+        <div class="menu-row danger-row" onclick="openDeleteModal()">
+          <div class="menu-icon">⚠️</div>
+          <div class="menu-body">
+            <div class="menu-title">회원탈퇴</div>
+            <div class="menu-desc">계정과 모든 데이터가 삭제돼요</div>
+          </div>
+          <span class="menu-arrow">›</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-pad"></div>
+
+    <!-- 회원탈퇴 확인 모달 -->
+    <div class="modal-overlay hidden" id="deleteModal" onclick="closeDeleteModal(event)">
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-icon">😢</div>
+        <div class="modal-title">정말 탈퇴하시겠어요?</div>
+        <div class="modal-sub">
+          저장된 알림 설정과 계정 정보가 모두 삭제되며<br>복구할 수 없어요.
+        </div>
+        <div class="modal-btns">
+          <button class="btn-modal-danger" onclick="doDeleteAccount()">탈퇴하기</button>
+          <button class="btn-modal-cancel" onclick="closeDeleteModal()">취소</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 토스트 -->
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <!-- Firebase SDK (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="scripts/firebase-config.js"></script>
+  <script src="scripts/auth.js"></script>
+  <script src="scripts/alarm.js"></script>
+
+  <script>
+    MateAuth.init();
+    MateAlarm.init();
+
+    /* ── 인증 가드 + 초기 로드 ── */
+    MateAuth.onAuthStateChanged(async user => {
+      if (!user) {
+        location.href = 'login.html?redirect=mypage';
+        return;
+      }
+      await loadProfile(user);
+      await loadAlarms(user.uid);
+    });
+
+    /* ── 프로필 로드 ── */
+    async function loadProfile(user) {
+      const profile = await MateAuth.getUserProfile(user.uid);
+      const name = profile?.name || user.displayName || '사용자';
+
+      document.getElementById('avatarEl').textContent = name.charAt(0);
+      document.getElementById('profileName').textContent = name;
+      document.getElementById('profileEmail').textContent = user.email;
+
+      if (profile?.created_at?.toDate) {
+        const d = profile.created_at.toDate();
+        document.getElementById('profileSince').textContent =
+          `가입일: ${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+      }
+
+      // 온보딩 칩
+      const ob = profile?.onboarding || JSON.parse(localStorage.getItem('mateAnswers') || '{}');
+      const chips = buildOnboardingChips(ob);
+      const chipContainer = document.getElementById('onboardingChips');
+      if (chips.length > 0) {
+        chipContainer.innerHTML = chips.map(c =>
+          `<span class="chip-tag">${c}</span>`
+        ).join('');
+      } else {
+        chipContainer.style.display = 'none';
+      }
+    }
+
+    function buildOnboardingChips(ob) {
+      const chips = [];
+      if (ob.age)            chips.push(`만 ${ob.age}세`);
+      if (ob.job)            chips.push(ob.job);
+      if (ob.region)         chips.push(ob.region);
+      if (ob.income_monthly) chips.push(`월 ${ob.income_monthly}만원`);
+      if (ob.goals?.length)  chips.push(...ob.goals.slice(0,2));
+      return chips;
+    }
+
+    /* ── 알림 목록 로드 ── */
+    async function loadAlarms(uid) {
+      const alarms = await MateAlarm.getUserAlarms(uid);
+      const list   = document.getElementById('alarmList');
+
+      if (!alarms.length) return;
+
+      list.innerHTML = alarms.map(a => {
+        const deadline = a.deadline?.toDate?.() || null;
+        const ddayStr  = deadline
+          ? deadline.toISOString().slice(0,10) : null;
+        const dday = ddayStr ? MateAlarm.getDDayInfo(ddayStr) : null;
+        const ddayBadge = dday
+          ? `<span class="dday-badge" style="background:${dday.bg};color:${dday.color}">${dday.label}</span>`
+          : '';
+
+        return `
+        <div class="alarm-item">
+          <div class="alarm-body">
+            <div class="alarm-name">${a.benefit_name}</div>
+            <div class="alarm-badges">
+              ${ddayBadge}
+              ${deadline ? `<span style="font-size:11px;color:var(--color-gray1)">${deadline.toLocaleDateString('ko-KR')} 마감</span>` : ''}
+            </div>
+          </div>
+          <button class="alarm-toggle-btn" data-on="true"
+            data-id="${a.benefit_id}" data-name="${a.benefit_name}" data-deadline="${ddayStr||''}"
+            onclick="toggleAlarm(this)">🔔 ON</button>
+          <button class="alarm-detail-btn"
+            onclick="location.href='benefit.html?id=${a.benefit_id}'">›</button>
+        </div>`;
+      }).join('');
+    }
+
+    /* ── 알림 토글 ── */
+    async function toggleAlarm(btn) {
+      const currently = btn.dataset.on === 'true';
+      const next      = !currently;
+      btn.disabled = true;
+      try {
+        await MateAlarm.setAlarm(btn.dataset.id, btn.dataset.name, btn.dataset.deadline || null, next);
+        btn.dataset.on = String(next);
+        btn.textContent = next ? '🔔 ON' : '🔕 OFF';
+      } catch(e) {
+        showToast('오류가 발생했어요. 다시 시도해주세요');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    /* ── 비밀번호 변경 UI ── */
+    function togglePwChange() {
+      const form = document.getElementById('pwChangeForm');
+      const arrow = document.getElementById('pwArrow');
+      const open = form.classList.toggle('open');
+      arrow.textContent = open ? '˅' : '›';
+    }
+
+    async function doChangePw() {
+      const pw1 = document.getElementById('newPw1').value;
+      const pw2 = document.getElementById('newPw2').value;
+      const errEl = document.getElementById('pwChangeErr');
+      errEl.style.display = 'none';
+
+      if (pw1.length < 8 || !/[a-zA-Z]/.test(pw1) || !/[0-9]/.test(pw1) || !/[^a-zA-Z0-9]/.test(pw1)) {
+        errEl.textContent = '8자 이상, 영문+숫자+특수문자 포함'; errEl.style.display = 'block'; return;
+      }
+      if (pw1 !== pw2) {
+        errEl.textContent = '비밀번호가 일치하지 않아요'; errEl.style.display = 'block'; return;
+      }
+
+      try {
+        await MateAuth.updatePassword(pw1);
+        document.getElementById('newPw1').value = '';
+        document.getElementById('newPw2').value = '';
+        togglePwChange();
+        showToast('비밀번호가 변경되었어요 ✅');
+      } catch(e) {
+        if (e.code === 'auth/requires-recent-login') {
+          errEl.textContent = '보안을 위해 재로그인 후 다시 시도해주세요';
+        } else {
+          errEl.textContent = '오류가 발생했어요. 다시 시도해주세요';
+        }
+        errEl.style.display = 'block';
+      }
+    }
+
+    /* ── 로그아웃 ── */
+    async function doLogout() {
+      await MateAuth.signOut();
+      location.href = 'index.html';
+    }
+
+    /* ── 회원탈퇴 모달 ── */
+    function openDeleteModal() {
+      document.getElementById('deleteModal').classList.remove('hidden');
+    }
+    function closeDeleteModal(e) {
+      if (!e || e.target.id === 'deleteModal')
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
+    async function doDeleteAccount() {
+      try {
+        await MateAuth.deleteAccount();
+        localStorage.removeItem('mateAnswers');
+        location.href = 'index.html';
+      } catch(e) {
+        closeDeleteModal();
+        if (e.code === 'auth/requires-recent-login') {
+          showToast('보안을 위해 재로그인 후 다시 시도해주세요');
+        } else {
+          showToast('오류가 발생했어요. 잠시 후 다시 시도해주세요');
+        }
+      }
+    }
+
+    /* ── 토스트 ── */
+    function showToast(msg, duration=2800) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), duration);
+    }
+  </script>
+</body>
+</html>

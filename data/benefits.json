@@ -4,7 +4,21 @@
     "total_count": 25,
     "version": "1.1.0",
     "note": "API 연동 전 수동 등록 예시 데이터. required_docs·apply_period 필드 추가.",
-    "sources": ["금융위원회","보건복지부","국토교통부","고용노동부","서울특별시","경기도","주택도시기금","LH공사","중소벤처기업부","문화체육관광부","한국장학재단","서민금융진흥원","창업진흥원"]
+    "sources": [
+      "금융위원회",
+      "보건복지부",
+      "국토교통부",
+      "고용노동부",
+      "서울특별시",
+      "경기도",
+      "주택도시기금",
+      "LH공사",
+      "중소벤처기업부",
+      "문화체육관광부",
+      "한국장학재단",
+      "서민금융진흥원",
+      "창업진흥원"
+    ]
   },
   "benefits": [
     {
@@ -27,24 +41,74 @@
       "after_sub": "정부 기여금 포함 시",
       "apply_period": "매월 1~10일 (은행 앱에서 신청)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "소득확인증명서", "validity": "직전 연도 기준", "issue_site": "홈택스", "issue_url": "https://www.hometax.go.kr" },
-        { "name": "재직증명서 (직장인)", "validity": "1개월 이내", "issue_site": "회사 인사팀", "issue_url": "" }
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "소득확인증명서",
+          "validity": "직전 연도 기준",
+          "issue_site": "홈택스",
+          "issue_url": "https://www.hometax.go.kr"
+        },
+        {
+          "name": "재직증명서 (직장인)",
+          "validity": "1개월 이내",
+          "issue_site": "회사 인사팀",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 34,
-        "jobs": ["직장인","자영업","프리랜서"],
-        "regions": [], "housing_types": [],
+        "age_min": 19,
+        "age_max": 34,
+        "jobs": [
+          "직장인",
+          "자영업",
+          "프리랜서"
+        ],
+        "regions": [],
+        "housing_types": [],
         "income_max_monthly": 625,
-        "goals": ["비상금","노후준비","여행취미"]
+        "goals": [
+          "비상금",
+          "노후준비",
+          "여행취미"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 19~34세", "field": "age", "rule": "range", "min": 19, "max": 34},
-        {"text": "소득: 총급여 7,500만원 이하 (월 625만원)", "field": "income_monthly", "rule": "max", "value": 625},
-        {"text": "직업: 근로·사업소득이 있어야 가입 가능", "field": "job", "rule": "include", "values": ["직장인","자영업","프리랜서"]}
+        {
+          "text": "나이: 만 19~34세",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 34
+        },
+        {
+          "text": "소득: 총급여 7,500만원 이하 (월 625만원)",
+          "field": "income_monthly",
+          "rule": "max",
+          "value": 625
+        },
+        {
+          "text": "직업: 근로·사업소득이 있어야 가입 가능",
+          "field": "job",
+          "rule": "include",
+          "values": [
+            "직장인",
+            "자영업",
+            "프리랜서"
+          ]
+        }
       ],
-      "tags": ["저축","정부지원","청년"],
-      "priority_boost": 15
+      "tags": [
+        "저축",
+        "정부지원",
+        "청년"
+      ],
+      "priority_boost": 15,
+      "deadline": "2026-07-10"
     },
     {
       "id": "youth_tomorrow_savings",
@@ -66,24 +130,73 @@
       "after_sub": "정부 최대 1,080만원 추가",
       "apply_period": "연 1~2회 공고 (복지로 공지 확인)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "가족관계증명서", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "소득확인서", "validity": "최신 발급본", "issue_site": "복지로 또는 주민센터", "issue_url": "https://www.bokjiro.go.kr" }
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "가족관계증명서",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "소득확인서",
+          "validity": "최신 발급본",
+          "issue_site": "복지로 또는 주민센터",
+          "issue_url": "https://www.bokjiro.go.kr"
+        }
       ],
       "filter": {
-        "age_min": 15, "age_max": 34,
-        "jobs": ["직장인","자영업","프리랜서"],
-        "regions": [], "housing_types": [],
+        "age_min": 15,
+        "age_max": 34,
+        "jobs": [
+          "직장인",
+          "자영업",
+          "프리랜서"
+        ],
+        "regions": [],
+        "housing_types": [],
         "income_max_monthly": 222,
-        "goals": ["비상금","노후준비"]
+        "goals": [
+          "비상금",
+          "노후준비"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 15~34세", "field": "age", "rule": "range", "min": 15, "max": 34},
-        {"text": "소득: 기준 중위소득 100% 이하 (1인 약 222만원/월)", "field": "income_monthly", "rule": "max", "value": 222},
-        {"text": "직업: 근로·사업소득 필수", "field": "job", "rule": "include", "values": ["직장인","자영업","프리랜서"]}
+        {
+          "text": "나이: 만 15~34세",
+          "field": "age",
+          "rule": "range",
+          "min": 15,
+          "max": 34
+        },
+        {
+          "text": "소득: 기준 중위소득 100% 이하 (1인 약 222만원/월)",
+          "field": "income_monthly",
+          "rule": "max",
+          "value": 222
+        },
+        {
+          "text": "직업: 근로·사업소득 필수",
+          "field": "job",
+          "rule": "include",
+          "values": [
+            "직장인",
+            "자영업",
+            "프리랜서"
+          ]
+        }
       ],
-      "tags": ["저축","복지","정부매칭"],
-      "priority_boost": 8
+      "tags": [
+        "저축",
+        "복지",
+        "정부매칭"
+      ],
+      "priority_boost": 8,
+      "deadline": "2026-09-30"
     },
     {
       "id": "haessallon_youth",
@@ -105,23 +218,57 @@
       "after_sub": "이자 부담 대폭 경감",
       "apply_period": "상시 신청 가능 (은행·농협·신협 방문)",
       "required_docs": [
-        { "name": "신분증", "validity": "유효 기간 내", "issue_site": "지참 (발급 불필요)", "issue_url": "" },
-        { "name": "소득증빙서류 (근로소득원천징수영수증 등)", "validity": "직전 연도 기준", "issue_site": "홈택스", "issue_url": "https://www.hometax.go.kr" }
+        {
+          "name": "신분증",
+          "validity": "유효 기간 내",
+          "issue_site": "지참 (발급 불필요)",
+          "issue_url": ""
+        },
+        {
+          "name": "소득증빙서류 (근로소득원천징수영수증 등)",
+          "validity": "직전 연도 기준",
+          "issue_site": "홈택스",
+          "issue_url": "https://www.hometax.go.kr"
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 34,
+        "age_min": 19,
+        "age_max": 34,
         "jobs": [],
-        "regions": [], "housing_types": [],
+        "regions": [],
+        "housing_types": [],
         "income_max_monthly": 292,
-        "goals": ["부채상환"]
+        "goals": [
+          "부채상환"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 34세 이하", "field": "age", "rule": "range", "min": 19, "max": 34},
-        {"text": "소득: 연 3,500만원 이하 또는 신용점수 하위 20%", "field": "income_monthly", "rule": "max", "value": 292},
-        {"text": "한도: 최대 1,200만원 대출 가능", "field": "info", "rule": "none"}
+        {
+          "text": "나이: 만 34세 이하",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 34
+        },
+        {
+          "text": "소득: 연 3,500만원 이하 또는 신용점수 하위 20%",
+          "field": "income_monthly",
+          "rule": "max",
+          "value": 292
+        },
+        {
+          "text": "한도: 최대 1,200만원 대출 가능",
+          "field": "info",
+          "rule": "none"
+        }
       ],
-      "tags": ["대출전환","저금리","서민금융"],
-      "priority_boost": 20
+      "tags": [
+        "대출전환",
+        "저금리",
+        "서민금융"
+      ],
+      "priority_boost": 20,
+      "deadline": null
     },
     {
       "id": "isa_account",
@@ -143,22 +290,52 @@
       "after_sub": "초과분도 9.9% 분리과세",
       "apply_period": "상시 (증권사·은행 앱에서 즉시 개설)",
       "required_docs": [
-        { "name": "신분증", "validity": "유효 기간 내", "issue_site": "지참 (발급 불필요)", "issue_url": "" }
+        {
+          "name": "신분증",
+          "validity": "유효 기간 내",
+          "issue_site": "지참 (발급 불필요)",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 65,
+        "age_min": 19,
+        "age_max": 65,
         "jobs": [],
-        "regions": [], "housing_types": [],
+        "regions": [],
+        "housing_types": [],
         "income_max_monthly": 0,
-        "goals": ["노후준비","여행취미","기타"]
+        "goals": [
+          "노후준비",
+          "여행취미",
+          "기타"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 19세 이상 (성인 누구나)", "field": "age", "rule": "range", "min": 19, "max": 65},
-        {"text": "소득: 제한 없음 (서민형은 소득 기준 추가 혜택)", "field": "info", "rule": "none"},
-        {"text": "의무 보유: 3년 (중도 해지 시 비과세 혜택 소멸)", "field": "info", "rule": "none"}
+        {
+          "text": "나이: 만 19세 이상 (성인 누구나)",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 65
+        },
+        {
+          "text": "소득: 제한 없음 (서민형은 소득 기준 추가 혜택)",
+          "field": "info",
+          "rule": "none"
+        },
+        {
+          "text": "의무 보유: 3년 (중도 해지 시 비과세 혜택 소멸)",
+          "field": "info",
+          "rule": "none"
+        }
       ],
-      "tags": ["절세","비과세","투자"],
-      "priority_boost": 5
+      "tags": [
+        "절세",
+        "비과세",
+        "투자"
+      ],
+      "priority_boost": 5,
+      "deadline": null
     },
     {
       "id": "youth_tomorrow_fill",
@@ -180,24 +357,69 @@
       "after_sub": "2년 만기 수령액",
       "apply_period": "상시 (입사 후 6개월 이내 신청 필수)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "재직증명서", "validity": "1개월 이내", "issue_site": "회사 인사팀", "issue_url": "" },
-        { "name": "소득확인서 (건강보험 납부확인서)", "validity": "1개월 이내", "issue_site": "건강보험공단", "issue_url": "https://www.nhis.or.kr" }
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "재직증명서",
+          "validity": "1개월 이내",
+          "issue_site": "회사 인사팀",
+          "issue_url": ""
+        },
+        {
+          "name": "소득확인서 (건강보험 납부확인서)",
+          "validity": "1개월 이내",
+          "issue_site": "건강보험공단",
+          "issue_url": "https://www.nhis.or.kr"
+        }
       ],
       "filter": {
-        "age_min": 15, "age_max": 34,
-        "jobs": ["직장인"],
-        "regions": [], "housing_types": [],
+        "age_min": 15,
+        "age_max": 34,
+        "jobs": [
+          "직장인"
+        ],
+        "regions": [],
+        "housing_types": [],
         "income_max_monthly": 350,
-        "goals": ["노후준비","비상금"]
+        "goals": [
+          "노후준비",
+          "비상금"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 34세 이하", "field": "age", "rule": "range", "min": 15, "max": 34},
-        {"text": "직업: 중소·중견기업 재직 중 (직장인)", "field": "job", "rule": "include", "values": ["직장인"]},
-        {"text": "소득: 월 급여 350만원 이하", "field": "income_monthly", "rule": "max", "value": 350}
+        {
+          "text": "나이: 만 34세 이하",
+          "field": "age",
+          "rule": "range",
+          "min": 15,
+          "max": 34
+        },
+        {
+          "text": "직업: 중소·중견기업 재직 중 (직장인)",
+          "field": "job",
+          "rule": "include",
+          "values": [
+            "직장인"
+          ]
+        },
+        {
+          "text": "소득: 월 급여 350만원 이하",
+          "field": "income_monthly",
+          "rule": "max",
+          "value": 350
+        }
       ],
-      "tags": ["재직청년","중소기업","정부매칭"],
-      "priority_boost": 12
+      "tags": [
+        "재직청년",
+        "중소기업",
+        "정부매칭"
+      ],
+      "priority_boost": 12,
+      "deadline": "2026-07-31"
     },
     {
       "id": "youth_dream_account",
@@ -219,24 +441,70 @@
       "after_sub": "연 4.5% 금리 + 청약 가점",
       "apply_period": "상시 (은행 앱 또는 영업점 방문)",
       "required_docs": [
-        { "name": "신분증", "validity": "유효 기간 내", "issue_site": "지참 (발급 불필요)", "issue_url": "" },
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" }
+        {
+          "name": "신분증",
+          "validity": "유효 기간 내",
+          "issue_site": "지참 (발급 불필요)",
+          "issue_url": ""
+        },
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 34,
+        "age_min": 19,
+        "age_max": 34,
         "jobs": [],
         "regions": [],
-        "housing_types": ["월세","전세","공공임대","비주택","무상거주"],
+        "housing_types": [
+          "월세",
+          "전세",
+          "공공임대",
+          "비주택",
+          "무상거주"
+        ],
         "income_max_monthly": 625,
-        "goals": ["내집마련"]
+        "goals": [
+          "내집마련"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 19~34세", "field": "age", "rule": "range", "min": 19, "max": 34},
-        {"text": "주거: 무주택자 (자가 제외)", "field": "housing", "rule": "include", "values": ["월세","전세","공공임대","비주택","무상거주"]},
-        {"text": "소득: 연 7,500만원 이하", "field": "income_monthly", "rule": "max", "value": 625}
+        {
+          "text": "나이: 만 19~34세",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 34
+        },
+        {
+          "text": "주거: 무주택자 (자가 제외)",
+          "field": "housing",
+          "rule": "include",
+          "values": [
+            "월세",
+            "전세",
+            "공공임대",
+            "비주택",
+            "무상거주"
+          ]
+        },
+        {
+          "text": "소득: 연 7,500만원 이하",
+          "field": "income_monthly",
+          "rule": "max",
+          "value": 625
+        }
       ],
-      "tags": ["청약","주거","무주택"],
-      "priority_boost": 20
+      "tags": [
+        "청약",
+        "주거",
+        "무주택"
+      ],
+      "priority_boost": 20,
+      "deadline": null
     },
     {
       "id": "seoul_youth_rent",
@@ -258,25 +526,73 @@
       "after_sub": "12개월 최대 240만원 지원",
       "apply_period": "연 1회 (4~5월경, 서울시 몽땅정보통 공고)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "3개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "임대차계약서 사본", "validity": "현재 계약 기준", "issue_site": "원본 지참 후 사본 제출", "issue_url": "" },
-        { "name": "통장 사본", "validity": "최신본", "issue_site": "해당 은행", "issue_url": "" }
+        {
+          "name": "주민등록등본",
+          "validity": "3개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "임대차계약서 사본",
+          "validity": "현재 계약 기준",
+          "issue_site": "원본 지참 후 사본 제출",
+          "issue_url": ""
+        },
+        {
+          "name": "통장 사본",
+          "validity": "최신본",
+          "issue_site": "해당 은행",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 39,
+        "age_min": 19,
+        "age_max": 39,
         "jobs": [],
-        "regions": ["서울"],
-        "housing_types": ["월세"],
+        "regions": [
+          "서울"
+        ],
+        "housing_types": [
+          "월세"
+        ],
         "income_max_monthly": 333,
-        "goals": ["비상금","내집마련"]
+        "goals": [
+          "비상금",
+          "내집마련"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 19~39세", "field": "age", "rule": "range", "min": 19, "max": 39},
-        {"text": "거주지: 서울특별시 거주 필수", "field": "region", "rule": "include", "values": ["서울"]},
-        {"text": "주거: 월세 거주 (보증금 5,000만원 이하)", "field": "housing", "rule": "include", "values": ["월세"]}
+        {
+          "text": "나이: 만 19~39세",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 39
+        },
+        {
+          "text": "거주지: 서울특별시 거주 필수",
+          "field": "region",
+          "rule": "include",
+          "values": [
+            "서울"
+          ]
+        },
+        {
+          "text": "주거: 월세 거주 (보증금 5,000만원 이하)",
+          "field": "housing",
+          "rule": "include",
+          "values": [
+            "월세"
+          ]
+        }
       ],
-      "tags": ["서울","월세","주거지원"],
-      "priority_boost": 18
+      "tags": [
+        "서울",
+        "월세",
+        "주거지원"
+      ],
+      "priority_boost": 18,
+      "deadline": "2026-07-05"
     },
     {
       "id": "national_youth_rent",
@@ -298,25 +614,68 @@
       "after_sub": "12개월 최대 240만원",
       "apply_period": "공고 확인 필요 (정부24에서 검색)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "가족관계증명서", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "임대차계약서", "validity": "현재 계약 기준", "issue_site": "원본 지참 후 사본 제출", "issue_url": "" }
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "가족관계증명서",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "임대차계약서",
+          "validity": "현재 계약 기준",
+          "issue_site": "원본 지참 후 사본 제출",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 34,
+        "age_min": 19,
+        "age_max": 34,
         "jobs": [],
         "regions": [],
-        "housing_types": ["월세"],
+        "housing_types": [
+          "월세"
+        ],
         "income_max_monthly": 292,
-        "goals": ["비상금"]
+        "goals": [
+          "비상금"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 19~34세", "field": "age", "rule": "range", "min": 19, "max": 34},
-        {"text": "주거: 월세 독립 거주 (부모와 별거)", "field": "housing", "rule": "include", "values": ["월세"]},
-        {"text": "소득: 기준 중위소득 60% 이하 (1인 약 133만원/월)", "field": "income_monthly", "rule": "max", "value": 133}
+        {
+          "text": "나이: 만 19~34세",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 34
+        },
+        {
+          "text": "주거: 월세 독립 거주 (부모와 별거)",
+          "field": "housing",
+          "rule": "include",
+          "values": [
+            "월세"
+          ]
+        },
+        {
+          "text": "소득: 기준 중위소득 60% 이하 (1인 약 133만원/월)",
+          "field": "income_monthly",
+          "rule": "max",
+          "value": 133
+        }
       ],
-      "tags": ["월세","전국","주거지원"],
-      "priority_boost": 12
+      "tags": [
+        "월세",
+        "전국",
+        "주거지원"
+      ],
+      "priority_boost": 12,
+      "deadline": "2026-06-25"
     },
     {
       "id": "sme_youth_lease",
@@ -338,26 +697,78 @@
       "after_sub": "최대 1억원 대출",
       "apply_period": "상시 (우리·신한·국민은행 등 방문)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "재직증명서", "validity": "1개월 이내", "issue_site": "회사 인사팀", "issue_url": "" },
-        { "name": "건강보험료 납부확인서", "validity": "1개월 이내", "issue_site": "건강보험공단", "issue_url": "https://www.nhis.or.kr" },
-        { "name": "전세계약서", "validity": "현재 계약 기준", "issue_site": "임대인에게 수령", "issue_url": "" }
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "재직증명서",
+          "validity": "1개월 이내",
+          "issue_site": "회사 인사팀",
+          "issue_url": ""
+        },
+        {
+          "name": "건강보험료 납부확인서",
+          "validity": "1개월 이내",
+          "issue_site": "건강보험공단",
+          "issue_url": "https://www.nhis.or.kr"
+        },
+        {
+          "name": "전세계약서",
+          "validity": "현재 계약 기준",
+          "issue_site": "임대인에게 수령",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 34,
-        "jobs": ["직장인"],
+        "age_min": 19,
+        "age_max": 34,
+        "jobs": [
+          "직장인"
+        ],
         "regions": [],
-        "housing_types": ["전세"],
+        "housing_types": [
+          "전세"
+        ],
         "income_max_monthly": 417,
-        "goals": ["내집마련"]
+        "goals": [
+          "내집마련"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 34세 이하", "field": "age", "rule": "range", "min": 19, "max": 34},
-        {"text": "직업: 중소기업 재직 중 (직장인)", "field": "job", "rule": "include", "values": ["직장인"]},
-        {"text": "주거: 전세 거주 (보증금 2억원 이하)", "field": "housing", "rule": "include", "values": ["전세"]}
+        {
+          "text": "나이: 만 34세 이하",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 34
+        },
+        {
+          "text": "직업: 중소기업 재직 중 (직장인)",
+          "field": "job",
+          "rule": "include",
+          "values": [
+            "직장인"
+          ]
+        },
+        {
+          "text": "주거: 전세 거주 (보증금 2억원 이하)",
+          "field": "housing",
+          "rule": "include",
+          "values": [
+            "전세"
+          ]
+        }
       ],
-      "tags": ["전세","중소기업","저금리"],
-      "priority_boost": 15
+      "tags": [
+        "전세",
+        "중소기업",
+        "저금리"
+      ],
+      "priority_boost": 15,
+      "deadline": null
     },
     {
       "id": "youth_buttimok",
@@ -379,25 +790,68 @@
       "after_sub": "최대 7,000만원",
       "apply_period": "상시 (우리·신한·국민 등 은행 방문)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "소득확인서 (근로소득원천징수영수증)", "validity": "직전 연도 기준", "issue_site": "홈택스", "issue_url": "https://www.hometax.go.kr" },
-        { "name": "전세계약서", "validity": "현재 계약 기준", "issue_site": "임대인에게 수령", "issue_url": "" }
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "소득확인서 (근로소득원천징수영수증)",
+          "validity": "직전 연도 기준",
+          "issue_site": "홈택스",
+          "issue_url": "https://www.hometax.go.kr"
+        },
+        {
+          "name": "전세계약서",
+          "validity": "현재 계약 기준",
+          "issue_site": "임대인에게 수령",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 34,
+        "age_min": 19,
+        "age_max": 34,
         "jobs": [],
         "regions": [],
-        "housing_types": ["전세"],
+        "housing_types": [
+          "전세"
+        ],
         "income_max_monthly": 417,
-        "goals": ["내집마련"]
+        "goals": [
+          "내집마련"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 19~34세", "field": "age", "rule": "range", "min": 19, "max": 34},
-        {"text": "주거: 전세 거주 예정 (무주택자)", "field": "housing", "rule": "include", "values": ["전세"]},
-        {"text": "소득: 연 5,000만원 이하 (월 417만원)", "field": "income_monthly", "rule": "max", "value": 417}
+        {
+          "text": "나이: 만 19~34세",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 34
+        },
+        {
+          "text": "주거: 전세 거주 예정 (무주택자)",
+          "field": "housing",
+          "rule": "include",
+          "values": [
+            "전세"
+          ]
+        },
+        {
+          "text": "소득: 연 5,000만원 이하 (월 417만원)",
+          "field": "income_monthly",
+          "rule": "max",
+          "value": 417
+        }
       ],
-      "tags": ["전세","저금리","무주택"],
-      "priority_boost": 10
+      "tags": [
+        "전세",
+        "저금리",
+        "무주택"
+      ],
+      "priority_boost": 10,
+      "deadline": null
     },
     {
       "id": "lh_youth_lease",
@@ -419,25 +873,75 @@
       "after_sub": "본인 부담 최소화",
       "apply_period": "연 2회 공고 (3월·9월경, LH 청약플러스)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "가족관계증명서", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "소득·재산 확인서류", "validity": "최신 발급본", "issue_site": "주민센터 방문", "issue_url": "" }
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "가족관계증명서",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "소득·재산 확인서류",
+          "validity": "최신 발급본",
+          "issue_site": "주민센터 방문",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 39,
+        "age_min": 19,
+        "age_max": 39,
         "jobs": [],
         "regions": [],
-        "housing_types": ["월세","전세","비주택","무상거주"],
+        "housing_types": [
+          "월세",
+          "전세",
+          "비주택",
+          "무상거주"
+        ],
         "income_max_monthly": 292,
-        "goals": ["내집마련","비상금"]
+        "goals": [
+          "내집마련",
+          "비상금"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 19~39세", "field": "age", "rule": "range", "min": 19, "max": 39},
-        {"text": "주거: 무주택 (자가·전세 소유자 제외)", "field": "housing", "rule": "include", "values": ["월세","전세","비주택","무상거주"]},
-        {"text": "소득: 기준 중위소득 100% 이하", "field": "income_monthly", "rule": "max", "value": 222}
+        {
+          "text": "나이: 만 19~39세",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 39
+        },
+        {
+          "text": "주거: 무주택 (자가·전세 소유자 제외)",
+          "field": "housing",
+          "rule": "include",
+          "values": [
+            "월세",
+            "전세",
+            "비주택",
+            "무상거주"
+          ]
+        },
+        {
+          "text": "소득: 기준 중위소득 100% 이하",
+          "field": "income_monthly",
+          "rule": "max",
+          "value": 222
+        }
       ],
-      "tags": ["공공임대","LH","저렴"],
-      "priority_boost": 8
+      "tags": [
+        "공공임대",
+        "LH",
+        "저렴"
+      ],
+      "priority_boost": 8,
+      "deadline": "2026-09-15"
     },
     {
       "id": "happy_housing",
@@ -459,25 +963,72 @@
       "after_sub": "교통 요지 저렴 거주",
       "apply_period": "수시 공고 (LH 청약플러스 앱 알림 설정 권장)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "가족관계증명서", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "재학증명서 (학생의 경우)", "validity": "1개월 이내", "issue_site": "학교 학생처 또는 포털", "issue_url": "" }
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "가족관계증명서",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "재학증명서 (학생의 경우)",
+          "validity": "1개월 이내",
+          "issue_site": "학교 학생처 또는 포털",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 39,
+        "age_min": 19,
+        "age_max": 39,
         "jobs": [],
         "regions": [],
-        "housing_types": ["월세","비주택","무상거주"],
+        "housing_types": [
+          "월세",
+          "비주택",
+          "무상거주"
+        ],
         "income_max_monthly": 0,
-        "goals": ["내집마련","비상금"]
+        "goals": [
+          "내집마련",
+          "비상금"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 19~39세 (청년 유형)", "field": "age", "rule": "range", "min": 19, "max": 39},
-        {"text": "자격: 대학생·취업준비생·청년 (무주택)", "field": "housing", "rule": "include", "values": ["월세","비주택","무상거주"]},
-        {"text": "기간: 최대 6년 거주 가능 (2년씩 재계약)", "field": "info", "rule": "none"}
+        {
+          "text": "나이: 만 19~39세 (청년 유형)",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 39
+        },
+        {
+          "text": "자격: 대학생·취업준비생·청년 (무주택)",
+          "field": "housing",
+          "rule": "include",
+          "values": [
+            "월세",
+            "비주택",
+            "무상거주"
+          ]
+        },
+        {
+          "text": "기간: 최대 6년 거주 가능 (2년씩 재계약)",
+          "field": "info",
+          "rule": "none"
+        }
       ],
-      "tags": ["행복주택","공공임대","역세권"],
-      "priority_boost": 6
+      "tags": [
+        "행복주택",
+        "공공임대",
+        "역세권"
+      ],
+      "priority_boost": 6,
+      "deadline": "2026-07-20"
     },
     {
       "id": "national_employ_1",
@@ -499,25 +1050,69 @@
       "after_sub": "최대 6개월 = 300만원",
       "apply_period": "상시 (고용24 온라인 또는 고용센터 방문)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "가족관계증명서", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "소득확인서", "validity": "최신 발급본", "issue_site": "주민센터 방문", "issue_url": "" }
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "가족관계증명서",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "소득확인서",
+          "validity": "최신 발급본",
+          "issue_site": "주민센터 방문",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 15, "age_max": 69,
-        "jobs": ["기타"],
+        "age_min": 15,
+        "age_max": 69,
+        "jobs": [
+          "기타"
+        ],
         "regions": [],
         "housing_types": [],
         "income_max_monthly": 133,
-        "goals": ["비상금","기타"]
+        "goals": [
+          "비상금",
+          "기타"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 15~69세 (청년 15~34세 우대)", "field": "age", "rule": "range", "min": 15, "max": 69},
-        {"text": "소득: 기준 중위소득 60% 이하 (1인 약 133만원/월)", "field": "income_monthly", "rule": "max", "value": 133},
-        {"text": "직업: 구직 중·미취업 상태", "field": "job", "rule": "include", "values": ["기타"]}
+        {
+          "text": "나이: 만 15~69세 (청년 15~34세 우대)",
+          "field": "age",
+          "rule": "range",
+          "min": 15,
+          "max": 69
+        },
+        {
+          "text": "소득: 기준 중위소득 60% 이하 (1인 약 133만원/월)",
+          "field": "income_monthly",
+          "rule": "max",
+          "value": 133
+        },
+        {
+          "text": "직업: 구직 중·미취업 상태",
+          "field": "job",
+          "rule": "include",
+          "values": [
+            "기타"
+          ]
+        }
       ],
-      "tags": ["취업","구직수당","저소득"],
-      "priority_boost": 15
+      "tags": [
+        "취업",
+        "구직수당",
+        "저소득"
+      ],
+      "priority_boost": 15,
+      "deadline": null
     },
     {
       "id": "national_employ_2",
@@ -539,23 +1134,56 @@
       "after_sub": "조기 취업 성공 시 수당",
       "apply_period": "상시 (고용24 온라인 또는 고용센터 방문)",
       "required_docs": [
-        { "name": "신분증", "validity": "유효 기간 내", "issue_site": "지참 (발급 불필요)", "issue_url": "" }
+        {
+          "name": "신분증",
+          "validity": "유효 기간 내",
+          "issue_site": "지참 (발급 불필요)",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 15, "age_max": 69,
-        "jobs": ["기타"],
+        "age_min": 15,
+        "age_max": 69,
+        "jobs": [
+          "기타"
+        ],
         "regions": [],
         "housing_types": [],
         "income_max_monthly": 0,
-        "goals": ["비상금","기타"]
+        "goals": [
+          "비상금",
+          "기타"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 15~69세", "field": "age", "rule": "range", "min": 15, "max": 69},
-        {"text": "직업: 구직 중·미취업 상태", "field": "job", "rule": "include", "values": ["기타"]},
-        {"text": "소득: 1유형과 달리 소득 기준 없음", "field": "info", "rule": "none"}
+        {
+          "text": "나이: 만 15~69세",
+          "field": "age",
+          "rule": "range",
+          "min": 15,
+          "max": 69
+        },
+        {
+          "text": "직업: 구직 중·미취업 상태",
+          "field": "job",
+          "rule": "include",
+          "values": [
+            "기타"
+          ]
+        },
+        {
+          "text": "소득: 1유형과 달리 소득 기준 없음",
+          "field": "info",
+          "rule": "none"
+        }
       ],
-      "tags": ["취업","청년","구직지원"],
-      "priority_boost": 10
+      "tags": [
+        "취업",
+        "청년",
+        "구직지원"
+      ],
+      "priority_boost": 10,
+      "deadline": null
     },
     {
       "id": "youth_challenge",
@@ -577,24 +1205,62 @@
       "after_sub": "맞춤 취업 지원 동시 제공",
       "apply_period": "상시 (지역 고용센터 방문 신청)",
       "required_docs": [
-        { "name": "신분증", "validity": "유효 기간 내", "issue_site": "지참 (발급 불필요)", "issue_url": "" },
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" }
+        {
+          "name": "신분증",
+          "validity": "유효 기간 내",
+          "issue_site": "지참 (발급 불필요)",
+          "issue_url": ""
+        },
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        }
       ],
       "filter": {
-        "age_min": 18, "age_max": 34,
-        "jobs": ["기타"],
+        "age_min": 18,
+        "age_max": 34,
+        "jobs": [
+          "기타"
+        ],
         "regions": [],
         "housing_types": [],
         "income_max_monthly": 0,
-        "goals": ["비상금","기타"]
+        "goals": [
+          "비상금",
+          "기타"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 18~34세", "field": "age", "rule": "range", "min": 18, "max": 34},
-        {"text": "직업: 6개월 이상 미취업 청년", "field": "job", "rule": "include", "values": ["기타"]},
-        {"text": "참여 기간: 최대 3개월 (연장 가능)", "field": "info", "rule": "none"}
+        {
+          "text": "나이: 만 18~34세",
+          "field": "age",
+          "rule": "range",
+          "min": 18,
+          "max": 34
+        },
+        {
+          "text": "직업: 6개월 이상 미취업 청년",
+          "field": "job",
+          "rule": "include",
+          "values": [
+            "기타"
+          ]
+        },
+        {
+          "text": "참여 기간: 최대 3개월 (연장 가능)",
+          "field": "info",
+          "rule": "none"
+        }
       ],
-      "tags": ["취업포기청년","맞춤지원","수당"],
-      "priority_boost": 8
+      "tags": [
+        "취업포기청년",
+        "맞춤지원",
+        "수당"
+      ],
+      "priority_boost": 8,
+      "deadline": null
     },
     {
       "id": "youth_job_incentive",
@@ -616,23 +1282,56 @@
       "after_sub": "기업에 연 720만원 지급",
       "apply_period": "상시 (기업이 고용24에서 신청)",
       "required_docs": [
-        { "name": "기업이 신청하는 지원금 (근로자 본인 서류 불필요)", "validity": "", "issue_site": "고용24 (기업 담당자 신청)", "issue_url": "https://www.work24.go.kr" }
+        {
+          "name": "기업이 신청하는 지원금 (근로자 본인 서류 불필요)",
+          "validity": "",
+          "issue_site": "고용24 (기업 담당자 신청)",
+          "issue_url": "https://www.work24.go.kr"
+        }
       ],
       "filter": {
-        "age_min": 15, "age_max": 39,
-        "jobs": ["기타"],
+        "age_min": 15,
+        "age_max": 39,
+        "jobs": [
+          "기타"
+        ],
         "regions": [],
         "housing_types": [],
         "income_max_monthly": 0,
-        "goals": ["비상금","기타"]
+        "goals": [
+          "비상금",
+          "기타"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 15~39세", "field": "age", "rule": "range", "min": 15, "max": 39},
-        {"text": "자격: 취업 취약계층 (장기실업·저학력 등)", "field": "job", "rule": "include", "values": ["기타"]},
-        {"text": "방식: 기업이 신청 → 채용 기회 늘어남", "field": "info", "rule": "none"}
+        {
+          "text": "나이: 만 15~39세",
+          "field": "age",
+          "rule": "range",
+          "min": 15,
+          "max": 39
+        },
+        {
+          "text": "자격: 취업 취약계층 (장기실업·저학력 등)",
+          "field": "job",
+          "rule": "include",
+          "values": [
+            "기타"
+          ]
+        },
+        {
+          "text": "방식: 기업이 신청 → 채용 기회 늘어남",
+          "field": "info",
+          "rule": "none"
+        }
       ],
-      "tags": ["취업","장려금","중소기업"],
-      "priority_boost": 6
+      "tags": [
+        "취업",
+        "장려금",
+        "중소기업"
+      ],
+      "priority_boost": 6,
+      "deadline": null
     },
     {
       "id": "youth_startup_school",
@@ -654,24 +1353,65 @@
       "after_sub": "자금 + 멘토링 + 시설 지원",
       "apply_period": "연 1회 공고 (1~2월경, K-Startup 공지)",
       "required_docs": [
-        { "name": "사업계획서", "validity": "신청 시 직접 작성", "issue_site": "K-Startup 양식 다운로드", "issue_url": "https://www.k-startup.go.kr" },
-        { "name": "사업자등록증 (기존 창업자)", "validity": "최신본", "issue_site": "국세청 홈택스", "issue_url": "https://www.hometax.go.kr" }
+        {
+          "name": "사업계획서",
+          "validity": "신청 시 직접 작성",
+          "issue_site": "K-Startup 양식 다운로드",
+          "issue_url": "https://www.k-startup.go.kr"
+        },
+        {
+          "name": "사업자등록증 (기존 창업자)",
+          "validity": "최신본",
+          "issue_site": "국세청 홈택스",
+          "issue_url": "https://www.hometax.go.kr"
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 39,
-        "jobs": ["자영업","기타"],
+        "age_min": 19,
+        "age_max": 39,
+        "jobs": [
+          "자영업",
+          "기타"
+        ],
         "regions": [],
         "housing_types": [],
         "income_max_monthly": 0,
-        "goals": ["여행취미","기타","비상금"]
+        "goals": [
+          "여행취미",
+          "기타",
+          "비상금"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 39세 이하", "field": "age", "rule": "range", "min": 19, "max": 39},
-        {"text": "자격: 창업 3년 이내 또는 예비 창업자", "field": "info", "rule": "none"},
-        {"text": "직업: 자영업·예비창업자 우대", "field": "job", "rule": "include", "values": ["자영업","기타"]}
+        {
+          "text": "나이: 만 39세 이하",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 39
+        },
+        {
+          "text": "자격: 창업 3년 이내 또는 예비 창업자",
+          "field": "info",
+          "rule": "none"
+        },
+        {
+          "text": "직업: 자영업·예비창업자 우대",
+          "field": "job",
+          "rule": "include",
+          "values": [
+            "자영업",
+            "기타"
+          ]
+        }
       ],
-      "tags": ["창업","지원금","멘토링"],
-      "priority_boost": 15
+      "tags": [
+        "창업",
+        "지원금",
+        "멘토링"
+      ],
+      "priority_boost": 15,
+      "deadline": "2026-02-28"
     },
     {
       "id": "startup_package",
@@ -693,24 +1433,63 @@
       "after_sub": "자금 + 교육 + 네트워크",
       "apply_period": "연 1회 공고 (2~3월경, K-Startup 공지)",
       "required_docs": [
-        { "name": "사업계획서", "validity": "신청 시 직접 작성", "issue_site": "K-Startup 양식 다운로드", "issue_url": "https://www.k-startup.go.kr" },
-        { "name": "사업자등록증", "validity": "최신본", "issue_site": "국세청 홈택스", "issue_url": "https://www.hometax.go.kr" }
+        {
+          "name": "사업계획서",
+          "validity": "신청 시 직접 작성",
+          "issue_site": "K-Startup 양식 다운로드",
+          "issue_url": "https://www.k-startup.go.kr"
+        },
+        {
+          "name": "사업자등록증",
+          "validity": "최신본",
+          "issue_site": "국세청 홈택스",
+          "issue_url": "https://www.hometax.go.kr"
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 49,
-        "jobs": ["자영업"],
+        "age_min": 19,
+        "age_max": 49,
+        "jobs": [
+          "자영업"
+        ],
         "regions": [],
         "housing_types": [],
         "income_max_monthly": 0,
-        "goals": ["여행취미","기타","비상금"]
+        "goals": [
+          "여행취미",
+          "기타",
+          "비상금"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 제한 없음 (청년 가점 적용)", "field": "age", "rule": "range", "min": 19, "max": 49},
-        {"text": "직업: 업력 3년 이내 창업자 (자영업)", "field": "job", "rule": "include", "values": ["자영업"]},
-        {"text": "선발 경쟁: 매년 공모, 사업계획서 심사", "field": "info", "rule": "none"}
+        {
+          "text": "나이: 제한 없음 (청년 가점 적용)",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 49
+        },
+        {
+          "text": "직업: 업력 3년 이내 창업자 (자영업)",
+          "field": "job",
+          "rule": "include",
+          "values": [
+            "자영업"
+          ]
+        },
+        {
+          "text": "선발 경쟁: 매년 공모, 사업계획서 심사",
+          "field": "info",
+          "rule": "none"
+        }
       ],
-      "tags": ["창업","초기","사업화자금"],
-      "priority_boost": 10
+      "tags": [
+        "창업",
+        "초기",
+        "사업화자금"
+      ],
+      "priority_boost": 10,
+      "deadline": "2026-03-15"
     },
     {
       "id": "seoul_youth_allowance",
@@ -732,24 +1511,67 @@
       "after_sub": "최대 6개월 = 300만원",
       "apply_period": "연 1~2회 공고 (서울시 몽땅정보통 알림 설정 권장)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "자기소개서·활동계획서", "validity": "신청 시 직접 작성", "issue_site": "서울청년포털 양식", "issue_url": "https://youth.seoul.go.kr" }
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "자기소개서·활동계획서",
+          "validity": "신청 시 직접 작성",
+          "issue_site": "서울청년포털 양식",
+          "issue_url": "https://youth.seoul.go.kr"
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 34,
-        "jobs": ["기타"],
-        "regions": ["서울"],
+        "age_min": 19,
+        "age_max": 34,
+        "jobs": [
+          "기타"
+        ],
+        "regions": [
+          "서울"
+        ],
         "housing_types": [],
         "income_max_monthly": 333,
-        "goals": ["비상금","기타"]
+        "goals": [
+          "비상금",
+          "기타"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 19~34세", "field": "age", "rule": "range", "min": 19, "max": 34},
-        {"text": "거주지: 서울특별시 거주 필수", "field": "region", "rule": "include", "values": ["서울"]},
-        {"text": "직업: 미취업 상태 (구직 중)", "field": "job", "rule": "include", "values": ["기타"]}
+        {
+          "text": "나이: 만 19~34세",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 34
+        },
+        {
+          "text": "거주지: 서울특별시 거주 필수",
+          "field": "region",
+          "rule": "include",
+          "values": [
+            "서울"
+          ]
+        },
+        {
+          "text": "직업: 미취업 상태 (구직 중)",
+          "field": "job",
+          "rule": "include",
+          "values": [
+            "기타"
+          ]
+        }
       ],
-      "tags": ["서울","수당","미취업"],
-      "priority_boost": 18
+      "tags": [
+        "서울",
+        "수당",
+        "미취업"
+      ],
+      "priority_boost": 18,
+      "deadline": "2026-07-14"
     },
     {
       "id": "gyeonggi_basic_income",
@@ -771,23 +1593,57 @@
       "after_sub": "분기별 25만원 지역화폐",
       "apply_period": "분기별 신청 (3월·6월·9월·12월)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" }
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        }
       ],
       "filter": {
-        "age_min": 24, "age_max": 24,
+        "age_min": 24,
+        "age_max": 24,
         "jobs": [],
-        "regions": ["경기"],
+        "regions": [
+          "경기"
+        ],
         "housing_types": [],
         "income_max_monthly": 0,
-        "goals": ["비상금","여행취미","기타"]
+        "goals": [
+          "비상금",
+          "여행취미",
+          "기타"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 24세 (해당 연도 기준)", "field": "age", "rule": "range", "min": 24, "max": 24},
-        {"text": "거주지: 경기도 3년 이상 계속 거주", "field": "region", "rule": "include", "values": ["경기"]},
-        {"text": "소득·직업 제한 없음 (누구나 신청 가능)", "field": "info", "rule": "none"}
+        {
+          "text": "나이: 만 24세 (해당 연도 기준)",
+          "field": "age",
+          "rule": "range",
+          "min": 24,
+          "max": 24
+        },
+        {
+          "text": "거주지: 경기도 3년 이상 계속 거주",
+          "field": "region",
+          "rule": "include",
+          "values": [
+            "경기"
+          ]
+        },
+        {
+          "text": "소득·직업 제한 없음 (누구나 신청 가능)",
+          "field": "info",
+          "rule": "none"
+        }
       ],
-      "tags": ["경기도","기본소득","지역화폐"],
-      "priority_boost": 20
+      "tags": [
+        "경기도",
+        "기본소득",
+        "지역화폐"
+      ],
+      "priority_boost": 20,
+      "deadline": "2026-06-30"
     },
     {
       "id": "housing_benefit",
@@ -809,25 +1665,73 @@
       "after_sub": "지역·가구별 차등 지급",
       "apply_period": "상시 (주민센터 방문 또는 복지로 온라인)",
       "required_docs": [
-        { "name": "주민등록등본", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "임대차계약서", "validity": "현재 계약 기준", "issue_site": "원본 지참 후 사본 제출", "issue_url": "" },
-        { "name": "금융정보 제공 동의서", "validity": "신청 시 작성", "issue_site": "주민센터에서 수령·작성", "issue_url": "" }
+        {
+          "name": "주민등록등본",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "임대차계약서",
+          "validity": "현재 계약 기준",
+          "issue_site": "원본 지참 후 사본 제출",
+          "issue_url": ""
+        },
+        {
+          "name": "금융정보 제공 동의서",
+          "validity": "신청 시 작성",
+          "issue_site": "주민센터에서 수령·작성",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 65,
+        "age_min": 19,
+        "age_max": 65,
         "jobs": [],
         "regions": [],
-        "housing_types": ["월세","전세","비주택"],
+        "housing_types": [
+          "월세",
+          "전세",
+          "비주택"
+        ],
         "income_max_monthly": 107,
-        "goals": ["비상금","기타"]
+        "goals": [
+          "비상금",
+          "기타"
+        ]
       },
       "condition_checks": [
-        {"text": "소득: 기준 중위소득 48% 이하 (1인 약 107만원/월)", "field": "income_monthly", "rule": "max", "value": 107},
-        {"text": "나이: 만 19세 이상 독립 거주 청년", "field": "age", "rule": "range", "min": 19, "max": 65},
-        {"text": "주거: 임차 거주 (월세·전세 등)", "field": "housing", "rule": "include", "values": ["월세","전세","비주택"]}
+        {
+          "text": "소득: 기준 중위소득 48% 이하 (1인 약 107만원/월)",
+          "field": "income_monthly",
+          "rule": "max",
+          "value": 107
+        },
+        {
+          "text": "나이: 만 19세 이상 독립 거주 청년",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 65
+        },
+        {
+          "text": "주거: 임차 거주 (월세·전세 등)",
+          "field": "housing",
+          "rule": "include",
+          "values": [
+            "월세",
+            "전세",
+            "비주택"
+          ]
+        }
       ],
-      "tags": ["기초생활","주거급여","저소득"],
-      "priority_boost": 12
+      "tags": [
+        "기초생활",
+        "주거급여",
+        "저소득"
+      ],
+      "priority_boost": 12,
+      "deadline": null
     },
     {
       "id": "youth_mental_health",
@@ -849,23 +1753,51 @@
       "after_sub": "본인 부담 최소화",
       "apply_period": "상시 (정신건강복지센터 방문 또는 복지로 온라인)",
       "required_docs": [
-        { "name": "신분증", "validity": "유효 기간 내", "issue_site": "지참 (발급 불필요)", "issue_url": "" }
+        {
+          "name": "신분증",
+          "validity": "유효 기간 내",
+          "issue_site": "지참 (발급 불필요)",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 19, "age_max": 34,
+        "age_min": 19,
+        "age_max": 34,
         "jobs": [],
         "regions": [],
         "housing_types": [],
         "income_max_monthly": 0,
-        "goals": ["비상금","기타"]
+        "goals": [
+          "비상금",
+          "기타"
+        ]
       },
       "condition_checks": [
-        {"text": "나이: 만 19~34세", "field": "age", "rule": "range", "min": 19, "max": 34},
-        {"text": "소득·직업 제한 없음 (우울·불안 등 신청 가능)", "field": "info", "rule": "none"},
-        {"text": "신청: 정신건강복지센터 방문 또는 복지로 온라인", "field": "info", "rule": "none"}
+        {
+          "text": "나이: 만 19~34세",
+          "field": "age",
+          "rule": "range",
+          "min": 19,
+          "max": 34
+        },
+        {
+          "text": "소득·직업 제한 없음 (우울·불안 등 신청 가능)",
+          "field": "info",
+          "rule": "none"
+        },
+        {
+          "text": "신청: 정신건강복지센터 방문 또는 복지로 온라인",
+          "field": "info",
+          "rule": "none"
+        }
       ],
-      "tags": ["심리상담","정신건강","바우처"],
-      "priority_boost": 8
+      "tags": [
+        "심리상담",
+        "정신건강",
+        "바우처"
+      ],
+      "priority_boost": 8,
+      "deadline": null
     },
     {
       "id": "culture_nuri",
@@ -887,24 +1819,60 @@
       "after_sub": "문화·여행·스포츠 전용 바우처",
       "apply_period": "매년 2~3월 (읍·면·동 주민센터 또는 문화누리 앱)",
       "required_docs": [
-        { "name": "신분증", "validity": "유효 기간 내", "issue_site": "지참 (발급 불필요)", "issue_url": "" },
-        { "name": "수급자 증명서 (차상위계층 확인서)", "validity": "최신 발급본", "issue_site": "주민센터 방문", "issue_url": "" }
+        {
+          "name": "신분증",
+          "validity": "유효 기간 내",
+          "issue_site": "지참 (발급 불필요)",
+          "issue_url": ""
+        },
+        {
+          "name": "수급자 증명서 (차상위계층 확인서)",
+          "validity": "최신 발급본",
+          "issue_site": "주민센터 방문",
+          "issue_url": ""
+        }
       ],
       "filter": {
-        "age_min": 6, "age_max": 65,
+        "age_min": 6,
+        "age_max": 65,
         "jobs": [],
         "regions": [],
         "housing_types": [],
         "income_max_monthly": 107,
-        "goals": ["여행취미","기타","비상금"]
+        "goals": [
+          "여행취미",
+          "기타",
+          "비상금"
+        ]
       },
       "condition_checks": [
-        {"text": "자격: 기초생활수급자 또는 차상위계층", "field": "income_monthly", "rule": "max", "value": 107},
-        {"text": "나이: 6세 이상 누구나 (개인별 발급)", "field": "age", "rule": "range", "min": 6, "max": 65},
-        {"text": "사용처: 영화·공연·전시·숙박·스포츠 등", "field": "info", "rule": "none"}
+        {
+          "text": "자격: 기초생활수급자 또는 차상위계층",
+          "field": "income_monthly",
+          "rule": "max",
+          "value": 107
+        },
+        {
+          "text": "나이: 6세 이상 누구나 (개인별 발급)",
+          "field": "age",
+          "rule": "range",
+          "min": 6,
+          "max": 65
+        },
+        {
+          "text": "사용처: 영화·공연·전시·숙박·스포츠 등",
+          "field": "info",
+          "rule": "none"
+        }
       ],
-      "tags": ["문화","여행","바우처","저소득"],
-      "priority_boost": 10
+      "tags": [
+        "문화",
+        "여행",
+        "바우처",
+        "저소득"
+      ],
+      "priority_boost": 10,
+      "deadline": "2026-12-31"
     },
     {
       "id": "national_scholarship",
@@ -926,25 +1894,68 @@
       "after_sub": "소득 구간별 차등 지급",
       "apply_period": "연 2회 (1학기: 11~12월 / 2학기: 5~6월 신청)",
       "required_docs": [
-        { "name": "재학증명서", "validity": "1개월 이내", "issue_site": "학교 학생처 또는 학교 포털", "issue_url": "" },
-        { "name": "가족관계증명서", "validity": "1개월 이내", "issue_site": "정부24", "issue_url": "https://www.gov.kr" },
-        { "name": "소득분위 확인 (자동 산정)", "validity": "재단 자동 조회", "issue_site": "한국장학재단 (별도 서류 불필요)", "issue_url": "https://www.kosaf.go.kr" }
+        {
+          "name": "재학증명서",
+          "validity": "1개월 이내",
+          "issue_site": "학교 학생처 또는 학교 포털",
+          "issue_url": ""
+        },
+        {
+          "name": "가족관계증명서",
+          "validity": "1개월 이내",
+          "issue_site": "정부24",
+          "issue_url": "https://www.gov.kr"
+        },
+        {
+          "name": "소득분위 확인 (자동 산정)",
+          "validity": "재단 자동 조회",
+          "issue_site": "한국장학재단 (별도 서류 불필요)",
+          "issue_url": "https://www.kosaf.go.kr"
+        }
       ],
       "filter": {
-        "age_min": 17, "age_max": 35,
-        "jobs": ["학생"],
+        "age_min": 17,
+        "age_max": 35,
+        "jobs": [
+          "학생"
+        ],
         "regions": [],
         "housing_types": [],
         "income_max_monthly": 0,
-        "goals": ["비상금","기타"]
+        "goals": [
+          "비상금",
+          "기타"
+        ]
       },
       "condition_checks": [
-        {"text": "직업: 대학교 재학·입학 예정자", "field": "job", "rule": "include", "values": ["학생"]},
-        {"text": "나이: 제한 없음 (대학 재학 기간)", "field": "age", "rule": "range", "min": 17, "max": 35},
-        {"text": "성적: 직전 학기 C학점 이상 (80점 이상)", "field": "info", "rule": "none"}
+        {
+          "text": "직업: 대학교 재학·입학 예정자",
+          "field": "job",
+          "rule": "include",
+          "values": [
+            "학생"
+          ]
+        },
+        {
+          "text": "나이: 제한 없음 (대학 재학 기간)",
+          "field": "age",
+          "rule": "range",
+          "min": 17,
+          "max": 35
+        },
+        {
+          "text": "성적: 직전 학기 C학점 이상 (80점 이상)",
+          "field": "info",
+          "rule": "none"
+        }
       ],
-      "tags": ["장학금","대학생","학비"],
-      "priority_boost": 18
+      "tags": [
+        "장학금",
+        "대학생",
+        "학비"
+      ],
+      "priority_boost": 18,
+      "deadline": "2026-06-27"
     }
   ]
 }
