@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>메이트 — 돈 모으는 법</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:      #F7F8FA;
+      --white:   #FFFFFF;
+      --green:   #00C47A;
+      --green-d: #00A868;
+      --green-l: #E6F7F1;
+      --navy:    #1A2332;
+      --text2:   #4A5568;
+      --text3:   #8896A6;
+      --gray2:   #DDE4EE;
+      --font:    'Noto Sans KR', sans-serif;
+      --shadow:  0 4px 24px rgba(0,0,0,0.08);
+      --shadow-btn: 0 6px 20px rgba(0,196,122,0.30);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg); font-family: var(--font);
+      color: var(--navy); overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    .app {
+      width: 100%; max-width: 430px; height: 100dvh;
+      margin: 0 auto; display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+    }
+
+    /* ── 배경 블롭 ── */
+    .blob-wrap { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(70px); }
+    .blob-1 { width: 260px; height: 260px; background: rgba(0,196,122,0.12); top: -80px; right: -60px; }
+    .blob-2 { width: 180px; height: 180px; background: rgba(0,196,122,0.08); bottom: 100px; left: -50px; }
+    .blob-3 { width: 140px; height: 140px; background: rgba(245,158,11,0.08); top: 40%; right: -30px; }
+
+    /* ── 상단 바 ── */
+    .top-bar {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 52px 24px 0; flex-shrink: 0;
+    }
+    .logo { display: flex; align-items: center; gap: 8px; }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--green); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; font-weight: 900; color: #fff; letter-spacing: -1px;
+      box-shadow: 0 3px 10px rgba(0,196,122,0.35);
+    }
+    .logo-text { font-size: 20px; font-weight: 900; letter-spacing: -1px; color: var(--navy); }
+    .logo-text span { color: var(--green); }
+    .skip-btn {
+      font-size: 14px; color: var(--text3);
+      background: none; border: none; cursor: pointer;
+      font-family: var(--font); padding: 8px 12px;
+      transition: color 0.2s;
+    }
+    .skip-btn:active { color: var(--green); }
+
+    /* ── 카드 영역 ── */
+    .cards-area {
+      flex: 1; position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px 0; overflow: hidden;
+    }
+    .cards-track {
+      display: flex; width: 100%; height: 100%;
+      transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+    }
+    .cards-track.swiping { transition: none; }
+    .slide {
+      min-width: 100%; height: 100%;
+      padding: 0 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── 카드 박스 ── */
+    .card-box {
+      width: 100%;
+      background: var(--white);
+      border-radius: 28px;
+      padding: 32px 24px 28px;
+      box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+    }
+    .card-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: var(--card-accent, var(--green));
+      border-radius: 4px 4px 0 0;
+    }
+
+    /* 카드 이모지 */
+    .card-emoji {
+      font-size: 44px; display: block; margin-bottom: 16px;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+
+    /* 카드 태그 */
+    .card-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 12px; border-radius: 100px;
+      font-size: 12px; font-weight: 700; margin-bottom: 12px;
+    }
+
+    /* 카드 제목 */
+    .card-title {
+      font-size: 25px; font-weight: 900;
+      line-height: 1.3; letter-spacing: -0.8px;
+      margin-bottom: 12px; word-break: keep-all;
+    }
+    .card-title .hi { color: var(--green); }
+
+    /* 카드 설명 */
+    .card-desc {
+      font-size: 14px; line-height: 1.8;
+      color: var(--text2); word-break: keep-all;
+    }
+    .card-desc strong { color: var(--navy); font-weight: 700; }
+
+    /* ── 리스트 (카드1·3) ── */
+    .rule-list { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+    .rule-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px; border-radius: 14px;
+      background: var(--bg);
+    }
+    .rule-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      margin-top: 6px; flex-shrink: 0;
+    }
+    .rule-text {
+      font-size: 13px; color: var(--text2); line-height: 1.6; word-break: keep-all;
+    }
+    .rule-text strong { color: var(--navy); font-weight: 700; }
+
+    /* ── 50/30/20 바 (카드3) ── */
+    .budget-bar {
+      display: flex; border-radius: 10px; overflow: hidden; margin: 16px 0 4px;
+      height: 16px;
+    }
+    .bar-seg { height: 100%; transition: flex 0.3s; }
+    .budget-legend { display: flex; gap: 12px; margin-top: 10px; }
+    .leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); }
+    .leg-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+    /* ── 계좌 박스 (카드2) ── */
+    .account-card {
+      margin-top: 16px; padding: 16px;
+      background: var(--green-l); border-radius: 16px;
+    }
+    .ac-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .ac-label { font-size: 12px; color: var(--text3); font-weight: 600; }
+    .ac-val { font-size: 15px; font-weight: 900; color: var(--green-d); }
+    .ac-val span { font-size: 11px; color: var(--text3); font-weight: 400; margin-left: 2px; }
+    .ac-divider { height: 1px; background: rgba(0,0,0,0.07); margin: 10px 0; }
+
+    /* ── CTA 카드 (카드4) ── */
+    .cta-title {
+      font-size: 28px; font-weight: 900;
+      letter-spacing: -1px; line-height: 1.25; margin-bottom: 12px;
+      word-break: keep-all;
+    }
+    .cta-title .hi { color: var(--green); }
+    .cta-desc {
+      font-size: 14px; color: var(--text2); line-height: 1.75; word-break: keep-all;
+      margin-bottom: 24px;
+    }
+    .cta-btn {
+      width: 100%; padding: 18px;
+      background: var(--green); color: white;
+      border: none; border-radius: 16px;
+      font-family: var(--font); font-size: 16px; font-weight: 900;
+      cursor: pointer; letter-spacing: -0.3px;
+      box-shadow: var(--shadow-btn);
+      transition: all 0.15s;
+    }
+    .cta-btn:active { transform: scale(0.98); box-shadow: none; }
+
+    /* ── 하단 바 ── */
+    .bottom-area {
+      position: relative; z-index: 1;
+      padding: 0 20px 40px; flex-shrink: 0;
+    }
+    .dots {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; margin-bottom: 16px;
+    }
+    .dot {
+      width: 7px; height: 7px; border-radius: 100px;
+      background: var(--gray2);
+      transition: all 0.3s ease;
+    }
+    .dot.active { width: 22px; background: var(--green); }
+
+    .nav-row { display: flex; gap: 10px; }
+    .prev-btn {
+      width: 52px; height: 52px; flex-shrink: 0;
+      border-radius: 14px; background: var(--white);
+      border: 1.5px solid var(--gray2); color: var(--text3);
+      font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .prev-btn:active { border-color: var(--green); color: var(--green); }
+    .prev-btn:disabled { opacity: 0.3; cursor: default; }
+    .next-btn {
+      flex: 1; height: 52px; border-radius: 14px;
+      background: var(--green); border: none; color: white;
+      font-family: var(--font); font-size: 16px; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.2s; box-shadow: var(--shadow-btn);
+      letter-spacing: -0.3px;
+    }
+    .next-btn:active { transform: scale(0.98); box-shadow: none; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="blob-wrap">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- 상단 바 -->
+  <div class="top-bar">
+    <div class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-text">mate<span>.</span></span>
+    </div>
+    <button class="skip-btn" onclick="goResult()">건너뛰기</button>
+  </div>
+
+  <!-- 카드 트랙 -->
+  <div class="cards-area">
+    <div class="cards-track" id="track">
+
+      <!-- ── 카드 1: 비상금 만들기 ── -->
+      <div class="slide">
+        <div class="card-box" style="--card-accent:#00C47A">
+          <span class="card-emoji">🛡️</span>
+          <div class="card-tag" style="background:#E6F7F1;color:#00A868">
+            ✦ 첫 번째 목표
+          </div>
+          <h2 class="card-title">
+            비상금, 있으신가요?<br />
+            <span class="hi">3개월치 생활비</span>
+          </h2>
+          <p class="card-desc">
+            모든 저축은 비상금 확보 후 시작해요.<br />
+            비상금 없이 투자하면, 급한 일 생길 때 마이너스가 됩니다.
+          </p>
+          <div class="rule-list">
+            <div class="rule-item">
+              <div class="rule-dot" style="background:#00C47A"></div>
+              <span class="rule-text"><strong>목표 금액:</strong> 월 생활비 × 3개월 (최소), 6개월이면 더욱 안심</span>
+            </div>
+            <div class="rule-item">
+              <div class="rule-dot" style="background:#F59E0B"></div>
+              <span class="rule-text"><strong>보관 방법:</strong> CMA나 파킹 통장에 넣어두면 이자도 붙어요</span>
+            </div>
+            <div class="rule-item">
+              <div class="rule-dot" style="background:#8B5CF6"></div>
+              <span class="rule-text"><strong>절대 건드리지 말 것:</strong> 비상금은 '진짜 비상시'에만 사용</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 카드 2: 청년도약계좌 ── -->
+      <div class="slide">
+        <div class="card-box" style="--card-accent:#3B82F6">
+          <span class="card-emoji">📈</span>
+          <div class="card-tag" style="background:#EFF6FF;color:#1D4ED8">
+            ✦ 정부가 돈을 얹어준다
+          </div>
+          <h2 class="card-title">
+            국가가 매달<br />
+            <span class="hi" style="color:#3B82F6">기여금</span>을 줘요
+          </h2>
+          <p class="card-desc">
+            <strong>청년도약계좌</strong>는 만 19~34세 청년이 월 최대 70만원을 저축하면,
+            정부가 매달 최대 2만4천원을 추가 적립해주는 상품이에요.
+          </p>
+          <div class="account-card">
+            <div class="ac-row">
+              <span class="ac-label">월 납입</span>
+              <span class="ac-val">최대 70만원<span>/월</span></span>
+            </div>
+            <div class="ac-row">
+              <span class="ac-label">정부 기여금</span>
+              <span class="ac-val" style="color:#3B82F6">최대 +2.4만원<span>/월</span></span>
+            </div>
+            <div class="ac-divider"></div>
+            <div class="ac-row">
+              <span class="ac-label">5년 만기 예상</span>
+              <span class="ac-val">최대 5,000만원</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 카드 3: 50/30/20 법칙 ── -->
+      <div class="slide">
+        <div class="card-box" style="--card-accent:#F59E0B">
+          <span class="card-emoji">🥧</span>
+          <div class="card-tag" style="background:#FEF3C7;color:#B45309">
+            ✦ 예산 짜는 공식
+          </div>
+          <h2 class="card-title">
+            월급을 딱<br />
+            <span class="hi" style="color:#F59E0B">3등분</span>하세요
+          </h2>
+          <p class="card-desc">
+            소득을 어떻게 나눌지 모르겠다면,<br />
+            <strong>50/30/20 법칙</strong>부터 시작해 보세요.
+          </p>
+          <div class="budget-bar" style="margin-top:20px">
+            <div class="bar-seg" style="flex:50;background:#1A2332"></div>
+            <div class="bar-seg" style="flex:30;background:#F59E0B"></div>
+            <div class="bar-seg" style="flex:20;background:#00C47A"></div>
+          </div>
+          <div class="budget-legend">
+            <div class="leg-item"><div class="leg-dot" style="background:#1A2332"></div>50% 필수지출</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#F59E0B"></div>30% 자유소비</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#00C47A"></div>20% 저축·투자</div>
+          </div>
+          <div class="rule-list">
+            <div class="rule-item">
+              <div class="rule-dot" style="background:#1A2332"></div>
+              <span class="rule-text"><strong>50% 필수:</strong> 월세, 교통비, 식비, 통신비 등 꼭 필요한 지출</span>
+            </div>
+            <div class="rule-item">
+              <div class="rule-dot" style="background:#F59E0B"></div>
+              <span class="rule-text"><strong>30% 자유:</strong> 취미, 외식, 쇼핑 — 죄책감 없이 쓰는 돈</span>
+            </div>
+            <div class="rule-item">
+              <div class="rule-dot" style="background:#00C47A"></div>
+              <span class="rule-text"><strong>20% 저축:</strong> 받는 날 바로 이체, 없다 생각하고 모으기</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 카드 4: CTA ── -->
+      <div class="slide">
+        <div class="card-box" style="--card-accent:#00C47A">
+          <span class="card-emoji">🚀</span>
+          <div class="card-tag" style="background:#E6F7F1;color:#00A868">
+            ✦ 준비 완료
+          </div>
+          <p class="cta-title">
+            나에게 맞는<br />
+            <span class="hi">정부 지원</span>도<br />
+            확인해 볼까요?
+          </p>
+          <p class="cta-desc">
+            방금 배운 저축 방법에 더해, 내 상황에 딱 맞는
+            정부 지원금·청년 혜택을 메이트가 직접 추천해 드려요.
+          </p>
+          <button class="cta-btn" onclick="goResult()">
+            내 맞춤 혜택 확인하기 →
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 하단 닷 + 버튼 -->
+  <div class="bottom-area">
+    <div class="dots" id="dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="nav-row">
+      <button class="prev-btn" id="prevBtn" onclick="go(-1)" disabled>←</button>
+      <button class="next-btn" id="nextBtn" onclick="go(1)">다음 <span>→</span></button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const TOTAL = 4;
+let cur = 0;
+let dragX = 0, dragStart = 0, isDragging = false;
+
+const track  = document.getElementById('track');
+const dots   = document.querySelectorAll('.dot');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+function update(idx) {
+  cur = Math.max(0, Math.min(TOTAL - 1, idx));
+  track.style.transform = `translateX(-${cur * 100}%)`;
+  dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+  prevBtn.disabled = cur === 0;
+  nextBtn.textContent = cur === TOTAL - 1 ? '처음으로' : '다음';
+  if (cur < TOTAL - 1) nextBtn.innerHTML = '다음 <span>→</span>';
+  else nextBtn.innerHTML = '처음으로 ↩';
+}
+
+function go(dir) {
+  if (cur === TOTAL - 1 && dir === 1) goResult();
+  else update(cur + dir);
+}
+
+function goResult() {
+  const app = document.querySelector('.app');
+  app.style.transition = 'opacity 0.35s ease';
+  app.style.opacity = '0';
+  setTimeout(() => { location.href = 'result.html'; }, 350);
+}
+
+/* ── 스와이프 (터치) ── */
+track.addEventListener('touchstart', e => {
+  dragStart = e.touches[0].clientX;
+  isDragging = true;
+  track.classList.add('swiping');
+}, { passive: true });
+
+track.addEventListener('touchmove', e => {
+  if (!isDragging) return;
+  dragX = e.touches[0].clientX - dragStart;
+  track.style.transform = `translateX(calc(-${cur * 100}% + ${dragX}px))`;
+}, { passive: true });
+
+track.addEventListener('touchend', () => {
+  isDragging = false;
+  track.classList.remove('swiping');
+  if (dragX < -50) go(1);
+  else if (dragX > 50) go(-1);
+  else update(cur);
+  dragX = 0;
+});
+
+/* ── 스와이프 (마우스) ── */
+track.addEventListener('mousedown', e => {
+  dragStart = e.clientX;
+  isDragging = true;
+  track.classList.add('swiping');
+  e.preventDefault();
+});
+
+document.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  dragX = e.clientX - dragStart;
+  track.style.transform = `translateX(calc(-${cur * 100}% + ${dragX}px))`;
+});
+
+document.addEventListener('mouseup', () => {
+  if (!isDragging) return;
+  isDragging = false;
+  track.classList.remove('swiping');
+  if (dragX < -50) go(1);
+  else if (dragX > 50) go(-1);
+  else update(cur);
+  dragX = 0;
+});
+
+update(0);
+</script>
+</body>
+</html>
