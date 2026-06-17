@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>메이트 — 혜택 상세</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #F7F8FA;
+      --surface:  #FFFFFF;
+      --surface2: #F2F5F9;
+      --green:    #00C47A;
+      --green-d:  #00A868;
+      --green-l:  #E6F7F1;
+      --amber:    #F59E0B;
+      --amber-l:  #FEF3C7;
+      --navy:     #1A2332;
+      --text2:    #4A5568;
+      --text3:    #8896A6;
+      --border:   #DDE4EE;
+      --radius:   16px;
+      --font:     'Noto Sans KR', sans-serif;
+      --shadow:   0 2px 16px rgba(0,0,0,0.07);
+      --shadow-btn: 0 6px 20px rgba(0,196,122,0.30);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      width: 100%; background: var(--bg);
+      font-family: var(--font); color: var(--navy);
+      overflow-x: hidden; -webkit-font-smoothing: antialiased;
+    }
+    .app {
+      width: 100%; max-width: 430px; min-height: 100dvh;
+      margin: 0 auto; display: flex; flex-direction: column;
+      background: var(--bg);
+    }
+
+    /* ── 상단 바 ── */
+    .top-bar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(247,248,250,0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; gap: 12px;
+      padding: 52px 20px 16px;
+    }
+    .back-btn {
+      width: 40px; height: 40px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 18px; flex-shrink: 0;
+      transition: all 0.15s; color: var(--navy);
+    }
+    .back-btn:active { background: var(--surface2); transform: scale(0.96); }
+    .top-logo { font-size: 16px; font-weight: 900; letter-spacing: -0.5px; }
+
+    /* ── 히어로 배너 ── */
+    .hero-banner {
+      margin: 4px 20px 20px;
+      border-radius: 20px;
+      padding: 24px 20px 20px;
+      position: relative; overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .hero-color-bar {
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      border-radius: 4px 4px 0 0;
+    }
+    .hero-category {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 100px;
+      font-size: 11px; font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .hero-name {
+      font-size: 24px; font-weight: 900;
+      letter-spacing: -0.8px; line-height: 1.25;
+      margin-bottom: 6px;
+    }
+    .hero-source { font-size: 12px; color: var(--text3); font-weight: 600; }
+
+    /* ── 공통 섹션 ── */
+    .section {
+      margin: 0 20px 14px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .sec-title {
+      font-size: 11px; font-weight: 800; color: var(--text3);
+      letter-spacing: 0.5px; text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .sec-title::before {
+      content: ''; display: block; width: 3px; height: 12px;
+      background: var(--green); border-radius: 2px;
+    }
+    .desc-text {
+      font-size: 14px; color: var(--text2);
+      line-height: 1.75; word-break: keep-all;
+    }
+
+    /* ── Before / After ── */
+    .before-after {
+      display: flex; gap: 8px; align-items: stretch;
+    }
+    .ba-box {
+      flex: 1; padding: 14px 12px; border-radius: 12px;
+    }
+    .ba-box.before { background: #FEF2F2; }
+    .ba-box.after  { background: var(--green-l); }
+    .ba-label { font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+    .ba-box.before .ba-label { color: #DC2626; }
+    .ba-box.after  .ba-label { color: var(--green-d); }
+    .ba-value { font-size: 18px; font-weight: 900; margin-bottom: 4px; line-height: 1.2; }
+    .ba-box.before .ba-value { color: var(--navy); }
+    .ba-box.after  .ba-value { color: var(--green-d); }
+    .ba-sub { font-size: 10px; color: var(--text3); line-height: 1.4; }
+    .ba-arrow {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: var(--green); flex-shrink: 0;
+    }
+
+    /* ── 조건 체크 ── */
+    .cond-list { display: flex; flex-direction: column; gap: 8px; }
+    .cond-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      background: var(--surface2);
+      font-size: 13px; color: var(--text2);
+    }
+    .cond-icon { font-size: 15px; flex-shrink: 0; }
+    .cond-meet { color: var(--green-d); font-weight: 700; }
+    .cond-fail { color: #DC2626; font-weight: 700; }
+
+    /* ── 신청 단계 ── */
+    .step-list { display: flex; flex-direction: column; gap: 12px; }
+    .step-item { display: flex; gap: 12px; align-items: flex-start; }
+    .step-num {
+      width: 28px; height: 28px; flex-shrink: 0;
+      background: var(--green-l); color: var(--green-d);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900; margin-top: 1px;
+    }
+    .step-body {}
+    .step-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+    .step-desc { font-size: 12px; color: var(--text3); line-height: 1.6; word-break: keep-all; }
+
+    /* ── 면책 고지 ── */
+    .disclaimer {
+      margin: 0 20px 16px;
+      padding: 14px 16px;
+      background: var(--amber-l);
+      border-radius: 12px;
+      border-left: 3px solid var(--amber);
+      font-size: 12px; color: var(--text2);
+      line-height: 1.7; word-break: keep-all;
+    }
+    .disclaimer strong { color: var(--navy); }
+
+    /* ── 신청 버튼 ── */
+    .apply-wrap { padding: 0 20px 48px; }
+    .apply-btn {
+      width: 100%; padding: 18px;
+      background: var(--green); color: white;
+      border: none; border-radius: var(--radius);
+      font-family: var(--font); font-size: 16px; font-weight: 900;
+      cursor: pointer; letter-spacing: -0.3px;
+      box-shadow: var(--shadow-btn);
+      transition: all 0.15s; line-height: 1;
+    }
+    .apply-btn:active { transform: scale(0.98); box-shadow: none; }
+    .apply-note {
+      text-align: center; font-size: 11px; color: var(--text3);
+      margin-top: 10px;
+    }
+
+    /* ── 오류 화면 ── */
+    .error-wrap {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 20px; text-align: center;
+    }
+    .error-icon { font-size: 48px; margin-bottom: 16px; }
+    .error-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .error-sub { font-size: 13px; color: var(--text3); margin-bottom: 24px; line-height: 1.6; }
+    .error-btn {
+      padding: 12px 24px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; font-family: var(--font); font-size: 14px;
+      font-weight: 700; cursor: pointer; color: var(--navy);
+    }
+
+    /* ── 등장 애니메이션 ── */
+    .fade-up {
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .fade-up.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="top-bar">
+    <div class="back-btn" onclick="goBack()">←</div>
+    <span class="top-logo">mate.</span>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+const INCOME_MAP = {
+  '100만원 미만':50, '100~200만원':150, '200~300만원':250,
+  '300~400만원':350, '400~500만원':450, '500만원 이상':600,
+  '없음':0, '50만원 미만':25, '50~100만원':75,
+  '아르바이트 병행':75, '기타':100
+};
+
+const FALLBACK = [
+  {id:'youth_savings_account',name:'청년도약계좌',category:'금융',source:'금융위원회',apply_url:'https://www.fss.or.kr',color:'#00C47A',category_icon:'💰',category_label:'청년 저축',cat_bg:'#E6F7F1',cat_color:'#00A868',description:'월 최대 70만원 납입 시 정부가 매달 최대 2만4천원을 보태주는 청년 전용 적금. 5년 만기 시 최대 5,000만원.',before_label:'일반 적금',before_value:'연 3%대',before_sub:'시중 은행 적금 기준',after_label:'청년도약계좌',after_value:'연 6%+ 효과',after_sub:'정부 기여금 포함 시',filter:{age_min:19,age_max:34,jobs:['직장인','자영업','프리랜서'],regions:[],housing_types:[],income_max_monthly:625,goals:['비상금','노후준비','여행취미']},condition_checks:[{text:'나이: 만 19~34세',field:'age',rule:'range',min:19,max:34},{text:'소득: 총급여 7,500만원 이하',field:'income_monthly',rule:'max',value:625},{text:'직업: 근로·사업소득 필수',field:'job',rule:'include',values:['직장인','자영업','프리랜서']}],priority_boost:15},
+  {id:'youth_dream_account',name:'청년 주택드림 청약통장',category:'주거',source:'주택도시기금',apply_url:'https://nhuf.molit.go.kr',color:'#3B82F6',category_icon:'🏠',category_label:'내 집 마련',cat_bg:'#EFF6FF',cat_color:'#1D4ED8',description:'청약 준비 + 최대 연 4.5% 금리를 동시에. 24개월 유지 시 청약 1순위 자격 획득.',before_label:'청약 없음',before_value:'막막한 상태',before_sub:'내 집 마련 준비 없음',after_label:'24개월 뒤',after_value:'1순위 청약 자격',after_sub:'연 4.5% 금리 + 청약 가점',filter:{age_min:19,age_max:34,jobs:[],regions:[],housing_types:['월세','전세','공공임대','비주택','무상거주'],income_max_monthly:625,goals:['내집마련']},condition_checks:[{text:'나이: 만 19~34세',field:'age',rule:'range',min:19,max:34},{text:'주거: 무주택자 (자가 제외)',field:'housing',rule:'include',values:['월세','전세','공공임대','비주택','무상거주']},{text:'소득: 연 7,500만원 이하',field:'income_monthly',rule:'max',value:625}],priority_boost:20},
+  {id:'haessallon_youth',name:'햇살론Youth',category:'금융',source:'서민금융진흥원',apply_url:'https://www.kinfa.or.kr',color:'#F97316',category_icon:'✂️',category_label:'부채 전환',cat_bg:'#FFF0E6',cat_color:'#C2410C',description:'고금리 대출을 저금리로 전환해주는 청년 전용 서민금융 상품. 연 3.5% 수준.',before_label:'현재 대출',before_value:'연 15~20%',before_sub:'카드론·저축은행 기준',after_label:'햇살론Youth',after_value:'연 3.5%',after_sub:'이자 부담 대폭 경감',filter:{age_min:19,age_max:34,jobs:[],regions:[],housing_types:[],income_max_monthly:292,goals:['부채상환']},condition_checks:[{text:'나이: 만 34세 이하',field:'age',rule:'range',min:19,max:34},{text:'소득: 연 3,500만원 이하 또는 신용점수 하위 20%',field:'income_monthly',rule:'max',value:292},{text:'한도: 최대 1,200만원',field:'info',rule:'none'}],priority_boost:20},
+  {id:'isa_account',name:'ISA 계좌 (개인종합자산관리)',category:'금융',source:'금융감독원',apply_url:'https://www.fss.or.kr',color:'#8B5CF6',category_icon:'📊',category_label:'세금 절약',cat_bg:'#F3F0FF',cat_color:'#6D28D9',description:'예·적금·펀드·ETF를 한 계좌에서 운용하며 이자·배당 200만원까지 비과세. 누구나 가입 가능.',before_label:'일반 투자',before_value:'이자세 15.4%',before_sub:'수익에 세금 발생',after_label:'ISA 계좌',after_value:'200만원 비과세',after_sub:'초과분도 9.9% 분리과세',filter:{age_min:19,age_max:65,jobs:[],regions:[],housing_types:[],income_max_monthly:0,goals:['노후준비','여행취미','기타']},condition_checks:[{text:'나이: 만 19세 이상 누구나',field:'age',rule:'range',min:19,max:65},{text:'소득·직업 제한 없음',field:'info',rule:'none'},{text:'의무 보유 3년',field:'info',rule:'none'}],priority_boost:5},
+  {id:'national_scholarship',name:'국가장학금 I·II유형',category:'교육',source:'한국장학재단',apply_url:'https://www.kosaf.go.kr',color:'#EC4899',category_icon:'🎓',category_label:'학비 지원',cat_bg:'#FDF2F8',cat_color:'#9D174D',description:'소득 8구간 이하 대학생에게 연 최대 700만원 등록금 지원. C학점 이상이면 신청 가능.',before_label:'등록금 전액',before_value:'100% 자부담',before_sub:'연평균 400~700만원',after_label:'장학금 지원 시',after_value:'최대 연 700만원',after_sub:'소득 구간별 차등',filter:{age_min:17,age_max:35,jobs:['학생'],regions:[],housing_types:[],income_max_monthly:0,goals:['비상금','기타']},condition_checks:[{text:'직업: 대학교 재학·입학 예정자',field:'job',rule:'include',values:['학생']},{text:'성적: C학점 이상 (80점 이상)',field:'info',rule:'none'},{text:'나이 제한 없음 (재학 기간)',field:'age',rule:'range',min:17,max:35}],priority_boost:18}
+];
+
+function condStatus(cond, profile, age, monthly) {
+  if (cond.field === 'age')
+    return (age >= cond.min && age <= cond.max) ? 'meet' : 'fail';
+  if (cond.field === 'income_monthly') {
+    if (!monthly) return 'info';
+    return monthly <= cond.value ? 'meet' : 'fail';
+  }
+  if (cond.field === 'job')
+    return cond.values && cond.values.includes(profile.job) ? 'meet' : 'info';
+  if (cond.field === 'housing')
+    return cond.values && cond.values.includes(profile.housing) ? 'meet' : 'info';
+  return 'info';
+}
+
+function icon(status) {
+  return status === 'meet' ? '✅' : status === 'fail' ? '❌' : '🔸';
+}
+function cls(status) {
+  return status === 'meet' ? 'cond-meet' : status === 'fail' ? 'cond-fail' : '';
+}
+
+async function loadBenefits() {
+  try {
+    const r = await fetch('data/benefits.json');
+    if (!r.ok) throw 0;
+    const d = await r.json();
+    return d.benefits || FALLBACK;
+  } catch { return FALLBACK; }
+}
+
+async function init() {
+  const id = new URLSearchParams(location.search).get('id');
+  const benefits = await loadBenefits();
+  const b = id ? benefits.find(x => x.id === id) : null;
+  const el = document.getElementById('content');
+
+  if (!b) {
+    el.innerHTML = `
+      <div class="error-wrap">
+        <div class="error-icon">🔍</div>
+        <div class="error-title">혜택 정보를 찾을 수 없어요</div>
+        <div class="error-sub">결과 화면으로 돌아가서<br>다시 카드를 선택해 주세요.</div>
+        <button class="error-btn" onclick="goBack()">← 결과로 돌아가기</button>
+      </div>`;
+    return;
+  }
+
+  const raw     = localStorage.getItem('mateAnswers');
+  const profile = raw ? JSON.parse(raw) : {};
+  const age     = profile.birthYear ? new Date().getFullYear() - profile.birthYear : null;
+  const monthly = INCOME_MAP[profile.income] || 0;
+  document.title = `메이트 — ${b.name}`;
+
+  const checks = (b.condition_checks || []).map(c => ({
+    text: c.text,
+    st: age !== null ? condStatus(c, profile, age, monthly) : 'info'
+  }));
+
+  const steps = [
+    { n:1, title:'신청 자격 확인',
+      desc:'아래 조건 항목을 내 상황과 비교해 보세요. 🔸 항목은 기관에 직접 문의하면 빠릅니다.' },
+    { n:2, title:`${b.source} 공식 사이트 접속`,
+      desc:'아래 신청 버튼을 누르면 공식 홈페이지로 이동합니다. 본인인증 후 신청서를 작성하세요.' },
+    { n:3, title:'서류 제출 및 심사',
+      desc:'신청서 제출 후 담당 기관에서 심사합니다. 결과는 등록된 연락처로 안내받을 수 있어요.' },
+  ];
+
+  el.innerHTML = `
+    <div class="hero-banner fade-up">
+      <div class="hero-color-bar" style="background:${b.color}"></div>
+      <div class="hero-category" style="background:${b.cat_bg};color:${b.cat_color}">
+        ${b.category_icon} ${b.category_label}
+      </div>
+      <div class="hero-name">${b.name}</div>
+      <div class="hero-source">${b.source} 제공</div>
+    </div>
+
+    <div class="section fade-up">
+      <div class="sec-title">혜택 소개</div>
+      <p class="desc-text">${b.description}</p>
+    </div>
+
+    <div class="section fade-up">
+      <div class="sec-title">Before / After</div>
+      <div class="before-after">
+        <div class="ba-box before">
+          <div class="ba-label">${b.before_label}</div>
+          <div class="ba-value">${b.before_value}</div>
+          <div class="ba-sub">${b.before_sub}</div>
+        </div>
+        <div class="ba-arrow">→</div>
+        <div class="ba-box after">
+          <div class="ba-label">${b.after_label}</div>
+          <div class="ba-value">${b.after_value}</div>
+          <div class="ba-sub">${b.after_sub}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section fade-up">
+      <div class="sec-title">지원 조건</div>
+      <div class="cond-list">
+        ${checks.map(c => `
+          <div class="cond-item">
+            <span class="cond-icon">${icon(c.st)}</span>
+            <span class="${cls(c.st)}">${c.text}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="section fade-up">
+      <div class="sec-title">신청 방법</div>
+      <div class="step-list">
+        ${steps.map(s => `
+          <div class="step-item">
+            <div class="step-num">${s.n}</div>
+            <div class="step-body">
+              <div class="step-title">${s.title}</div>
+              <div class="step-desc">${s.desc}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="disclaimer fade-up">
+      <strong>⚠️ 참고용 정보입니다.</strong><br>
+      이 화면의 내용은 참고용이며, 실제 지원 조건·금액·기간은 변경될 수 있습니다.
+      정확한 정보는 <strong>${b.source} 공식 사이트</strong>에서 반드시 확인하세요.
+    </div>
+
+    <div class="apply-wrap fade-up">
+      <button class="apply-btn" onclick="window.open('${b.apply_url}','_blank')">
+        ${b.source}에서 신청하기 →
+      </button>
+      <p class="apply-note">버튼을 누르면 외부 공식 사이트로 이동합니다</p>
+    </div>
+  `;
+
+  setTimeout(() => {
+    document.querySelectorAll('.fade-up').forEach((el, i) => {
+      setTimeout(() => el.classList.add('show'), 40 + i * 70);
+    });
+  }, 50);
+}
+
+function goBack() {
+  if (history.length > 1) history.back();
+  else location.href = 'result.html';
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
