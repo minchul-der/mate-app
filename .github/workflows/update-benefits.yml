@@ -1,0 +1,43 @@
+name: 정부 혜택 데이터 자동 업데이트
+
+on:
+  schedule:
+    # 매일 KST 01:00 (= UTC 16:00 전날)
+    - cron: '0 16 * * *'
+  workflow_dispatch:
+    # GitHub Actions 탭에서 수동 실행 가능
+
+permissions:
+  contents: write
+
+jobs:
+  update-benefits:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 설정
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 의존 패키지 설치
+        run: pip install requests
+
+      - name: 혜택 데이터 수집 스크립트 실행
+        env:
+          DATA_GO_KR_API_KEY: ${{ secrets.DATA_GO_KR_API_KEY }}
+          BOKJIRO_API_KEY:    ${{ secrets.BOKJIRO_API_KEY }}
+          FSS_API_KEY:        ${{ secrets.FSS_API_KEY }}
+          LH_API_KEY:         ${{ secrets.LH_API_KEY }}
+        run: python scripts/fetch_benefits.py
+
+      - name: 변경된 데이터 자동 커밋
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: 정부 혜택 데이터 자동 업데이트'
+          file_pattern: data/benefits.json
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com

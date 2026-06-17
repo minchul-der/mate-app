@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>메이트 — 투자 공부</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #F7F8FA;
+      --surface:  #FFFFFF;
+      --surface2: #F2F5F9;
+      --green:    #00C47A;
+      --green-d:  #00A868;
+      --green-l:  #E6F7F1;
+      --blue:     #3B82F6;
+      --blue-l:   #EFF6FF;
+      --purple:   #8B5CF6;
+      --purple-l: #F3F0FF;
+      --amber:    #F59E0B;
+      --amber-l:  #FEF3C7;
+      --navy:     #1A2332;
+      --text2:    #4A5568;
+      --text3:    #8896A6;
+      --border:   #DDE4EE;
+      --radius:   16px;
+      --font:     'Noto Sans KR', sans-serif;
+      --shadow:   0 2px 16px rgba(0,0,0,0.07);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      width: 100%; background: var(--bg);
+      font-family: var(--font); color: var(--navy);
+      overflow-x: hidden; -webkit-font-smoothing: antialiased;
+    }
+    .app {
+      width: 100%; max-width: 430px; min-height: 100dvh;
+      margin: 0 auto; display: flex; flex-direction: column;
+      background: var(--bg);
+    }
+
+    /* ── 상단 바 ── */
+    .top-bar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(247,248,250,0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; gap: 12px;
+      padding: 52px 20px 16px;
+    }
+    .back-btn {
+      width: 40px; height: 40px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 18px; flex-shrink: 0;
+      transition: all 0.15s; color: var(--navy);
+    }
+    .back-btn:active { background: var(--surface2); transform: scale(0.96); }
+    .top-logo { font-size: 16px; font-weight: 900; letter-spacing: -0.5px; }
+
+    /* ── 히어로 ── */
+    .hero {
+      margin: 4px 20px 24px;
+      padding: 24px 20px;
+      background: linear-gradient(135deg, #1A2332 0%, #2D3748 100%);
+      border-radius: 20px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '📈';
+      position: absolute; right: 20px; bottom: 16px;
+      font-size: 56px; opacity: 0.15;
+      transform: rotate(10deg);
+    }
+    .hero-tag {
+      display: inline-block; padding: 4px 10px;
+      background: rgba(0,196,122,0.2); color: #00C47A;
+      border-radius: 100px; font-size: 11px; font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .hero-title {
+      font-size: 22px; font-weight: 900;
+      letter-spacing: -0.8px; line-height: 1.3;
+      margin-bottom: 10px;
+    }
+    .hero-title span { color: #00C47A; }
+    .hero-sub {
+      font-size: 13px; color: rgba(255,255,255,0.6);
+      line-height: 1.6; word-break: keep-all;
+    }
+
+    /* ── 진도 표시 ── */
+    .progress-bar {
+      margin: 0 20px 20px;
+      display: flex; gap: 6px;
+    }
+    .prog-item {
+      flex: 1; height: 4px; border-radius: 2px;
+      background: var(--border);
+      cursor: pointer; transition: background 0.2s;
+    }
+    .prog-item.done { background: var(--green); }
+    .prog-item.active { background: var(--green); opacity: 0.5; }
+
+    /* ── 챕터 카드 ── */
+    .chapter {
+      margin: 0 20px 14px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .chapter-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 18px 18px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .chapter-num {
+      width: 36px; height: 36px; flex-shrink: 0;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .chapter-meta { flex: 1; min-width: 0; }
+    .chapter-title { font-size: 15px; font-weight: 800; letter-spacing: -0.3px; }
+    .chapter-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+    .chapter-arrow {
+      font-size: 14px; color: var(--text3);
+      transition: transform 0.25s;
+    }
+    .chapter.open .chapter-arrow { transform: rotate(180deg); }
+
+    .chapter-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .chapter.open .chapter-body { max-height: 2000px; }
+
+    .chapter-content {
+      padding: 0 18px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── 콘텐츠 블록들 ── */
+    .content-lead {
+      font-size: 14px; color: var(--text2);
+      line-height: 1.8; word-break: keep-all;
+      margin-top: 16px; margin-bottom: 16px;
+    }
+    .concept-box {
+      background: var(--surface2);
+      border-radius: 12px; padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .concept-label {
+      font-size: 10px; font-weight: 800; color: var(--text3);
+      letter-spacing: 0.5px; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .concept-val {
+      font-size: 14px; font-weight: 700; color: var(--navy);
+      line-height: 1.55;
+    }
+    .compare-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; margin-bottom: 12px;
+    }
+    .compare-card {
+      border-radius: 12px; padding: 14px 12px;
+    }
+    .compare-card.a { background: #FEF2F2; }
+    .compare-card.b { background: var(--green-l); }
+    .compare-label { font-size: 10px; font-weight: 800; margin-bottom: 6px; }
+    .compare-card.a .compare-label { color: #DC2626; }
+    .compare-card.b .compare-label { color: var(--green-d); }
+    .compare-val { font-size: 13px; font-weight: 700; line-height: 1.5; }
+    .tip-box {
+      display: flex; gap: 10px; align-items: flex-start;
+      background: var(--amber-l); border-radius: 12px;
+      padding: 12px 14px; margin-bottom: 12px;
+    }
+    .tip-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .tip-text { font-size: 13px; color: var(--text2); line-height: 1.6; word-break: keep-all; }
+    .key-point {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .key-point:last-child { border-bottom: none; }
+    .kp-icon { font-size: 16px; flex-shrink: 0; }
+    .kp-text { font-size: 13px; color: var(--text2); line-height: 1.6; word-break: keep-all; }
+    .kp-text strong { color: var(--navy); }
+    .highlight-num {
+      font-size: 28px; font-weight: 900;
+      color: var(--green-d); letter-spacing: -1px;
+    }
+    .action-cta {
+      margin: 0 20px 48px;
+      background: var(--green);
+      border-radius: var(--radius);
+      padding: 20px;
+      color: white;
+    }
+    .cta-title { font-size: 16px; font-weight: 900; margin-bottom: 6px; letter-spacing: -0.3px; }
+    .cta-sub { font-size: 13px; opacity: 0.8; line-height: 1.5; margin-bottom: 16px; }
+    .cta-btn {
+      width: 100%; padding: 14px;
+      background: white; color: var(--green-d);
+      border: none; border-radius: 12px;
+      font-family: var(--font); font-size: 14px; font-weight: 900;
+      cursor: pointer; letter-spacing: -0.2px;
+      transition: all 0.15s;
+    }
+    .cta-btn:active { opacity: 0.9; }
+
+    /* ── 등장 ── */
+    .fade-up {
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .fade-up.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="top-bar">
+    <div class="back-btn" onclick="goBack()">←</div>
+    <span class="top-logo">mate.</span>
+  </div>
+
+  <div class="hero fade-up">
+    <div class="hero-tag">투자 입문 가이드</div>
+    <div class="hero-title">복잡하지 않아요,<br /><span>진짜 기초부터</span> 시작해요</div>
+    <div class="hero-sub">주식·ETF·분산투자까지, 처음 시작하는 사람을 위한 5가지 개념</div>
+  </div>
+
+  <div class="progress-bar" id="progressBar">
+    <div class="prog-item active" onclick="scrollToChapter(0)"></div>
+    <div class="prog-item" onclick="scrollToChapter(1)"></div>
+    <div class="prog-item" onclick="scrollToChapter(2)"></div>
+    <div class="prog-item" onclick="scrollToChapter(3)"></div>
+    <div class="prog-item" onclick="scrollToChapter(4)"></div>
+  </div>
+
+  <!-- ── Chapter 1 ── -->
+  <div class="chapter fade-up" id="ch0">
+    <div class="chapter-header" onclick="toggleChapter(0)">
+      <div class="chapter-num" style="background:#E6F7F1">💡</div>
+      <div class="chapter-meta">
+        <div class="chapter-title">투자가 뭔가요?</div>
+        <div class="chapter-sub">저축과 투자의 차이 · 왜 시작해야 할까</div>
+      </div>
+      <div class="chapter-arrow">▼</div>
+    </div>
+    <div class="chapter-body">
+      <div class="chapter-content">
+        <p class="content-lead">
+          투자란 <strong>지금의 돈을 미래에 더 많은 돈으로 만드는 행위</strong>입니다. 저축이 원금을 안전하게 지키는 것이라면, 투자는 그 돈을 일하게 만드는 것이에요.
+        </p>
+        <div class="compare-row">
+          <div class="compare-card a">
+            <div class="compare-label">저축</div>
+            <div class="compare-val">원금 보장<br />이자: 연 3~4%<br />물가 상승엔 약함</div>
+          </div>
+          <div class="compare-card b">
+            <div class="compare-label">투자</div>
+            <div class="compare-val">원금 비보장<br />기대 수익: 연 7~10%<br />장기엔 강함</div>
+          </div>
+        </div>
+        <div class="concept-box">
+          <div class="concept-label">핵심 개념 — 물가 상승률</div>
+          <div class="concept-val">연 2~3% 물가 상승이 계속되면, 은행 적금 이자만으론 실질 구매력이 줄어들어요. 100만원의 가치가 매년 조금씩 낮아지는 거예요.</div>
+        </div>
+        <div class="tip-box">
+          <div class="tip-icon">💡</div>
+          <div class="tip-text"><strong>결론:</strong> 투자는 "돈을 버는 것"이 아니라 "돈의 가치를 지키고 키우는 것"입니다. 안 하는 게 오히려 손해일 수 있어요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Chapter 2 ── -->
+  <div class="chapter fade-up" id="ch1">
+    <div class="chapter-header" onclick="toggleChapter(1)">
+      <div class="chapter-num" style="background:#EFF6FF">📊</div>
+      <div class="chapter-meta">
+        <div class="chapter-title">주식이 뭔가요?</div>
+        <div class="chapter-sub">회사의 조각을 산다는 것 · 수익과 위험</div>
+      </div>
+      <div class="chapter-arrow">▼</div>
+    </div>
+    <div class="chapter-body">
+      <div class="chapter-content">
+        <p class="content-lead">
+          주식은 <strong>회사의 일부 소유권</strong>입니다. 삼성전자 주식 1주를 사면, 삼성전자라는 회사의 아주 작은 주인이 되는 거예요.
+        </p>
+        <div class="key-point">
+          <div class="kp-icon">📈</div>
+          <div class="kp-text"><strong>회사가 성장하면</strong> 주식 가격이 오르고 배당금을 받을 수 있어요</div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon">📉</div>
+          <div class="kp-text"><strong>회사 실적이 나쁘면</strong> 주식 가격이 내려가 손실이 생길 수 있어요</div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon">⏳</div>
+          <div class="kp-text"><strong>단기 변동은 크지만</strong>, 우량 기업 주식은 10년 이상 보유 시 대부분 플러스였어요</div>
+        </div>
+        <div class="concept-box" style="margin-top:14px">
+          <div class="concept-label">실제 예시</div>
+          <div class="concept-val">2010년에 삼성전자 100만원어치 샀다면 2024년엔 약 700만원 이상의 가치. 단, 그 사이에 반토막 나는 구간도 있었어요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Chapter 3 ── -->
+  <div class="chapter fade-up" id="ch2">
+    <div class="chapter-header" onclick="toggleChapter(2)">
+      <div class="chapter-num" style="background:#F3F0FF">📦</div>
+      <div class="chapter-meta">
+        <div class="chapter-title">ETF가 뭔가요?</div>
+        <div class="chapter-sub">주식 바구니 · 초보자에게 추천하는 이유</div>
+      </div>
+      <div class="chapter-arrow">▼</div>
+    </div>
+    <div class="chapter-body">
+      <div class="chapter-content">
+        <p class="content-lead">
+          ETF(상장지수펀드)는 <strong>여러 주식을 묶어 하나의 상품으로 만든 것</strong>입니다. 코스피200 ETF를 1주 사면 한국 상위 200개 기업 모두에 투자하는 효과가 나요.
+        </p>
+        <div class="compare-row">
+          <div class="compare-card a">
+            <div class="compare-label">개별 주식</div>
+            <div class="compare-val">한 회사에 집중<br />수익 크지만<br />위험도 큼</div>
+          </div>
+          <div class="compare-card b">
+            <div class="compare-label">ETF</div>
+            <div class="compare-val">여러 회사 분산<br />수익 안정적<br />위험 분산</div>
+          </div>
+        </div>
+        <div class="tip-box">
+          <div class="tip-icon">💡</div>
+          <div class="tip-text"><strong>추천 ETF 예시:</strong> KODEX 200 (코스피 상위 200), TIGER 미국S&P500 (미국 상위 500개 기업). 매월 일정액 적립식으로 사는 것이 가장 효과적이에요.</div>
+        </div>
+        <div class="concept-box">
+          <div class="concept-label">수수료 비교</div>
+          <div class="concept-val">ETF 연간 수수료(운용보수): 0.05~0.3% 수준. 일반 펀드 대비 10분의 1 이하로 저렴해요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Chapter 4 ── -->
+  <div class="chapter fade-up" id="ch3">
+    <div class="chapter-header" onclick="toggleChapter(3)">
+      <div class="chapter-num" style="background:#FEF3C7">⚖️</div>
+      <div class="chapter-meta">
+        <div class="chapter-title">분산투자 원칙</div>
+        <div class="chapter-sub">달걀을 한 바구니에 담지 않는다</div>
+      </div>
+      <div class="chapter-arrow">▼</div>
+    </div>
+    <div class="chapter-body">
+      <div class="chapter-content">
+        <p class="content-lead">
+          투자의 핵심 원칙은 <strong>분산</strong>입니다. 한 곳에 몰아넣으면 그것이 망했을 때 전부 잃어요. 나눠서 투자하면 일부가 손실이어도 다른 쪽이 보완해줘요.
+        </p>
+        <div class="key-point">
+          <div class="kp-icon">🌍</div>
+          <div class="kp-text"><strong>지역 분산:</strong> 국내 주식 + 미국 주식 + 선진국 주식</div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon">📁</div>
+          <div class="kp-text"><strong>자산 분산:</strong> 주식 + 채권 + 예금 (위험 자산 + 안전 자산)</div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon">📅</div>
+          <div class="kp-text"><strong>시간 분산:</strong> 한 번에 몰아서 사지 않고, 매월 일정액씩 나눠서 구매 (적립식)</div>
+        </div>
+        <div class="concept-box" style="margin-top:14px">
+          <div class="concept-label">포트폴리오 예시 (20~30대)</div>
+          <div class="concept-val">미국 ETF 50% + 국내 ETF 30% + 예금·CMA 20%<br />→ 수익성과 안정성의 균형</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Chapter 5 ── -->
+  <div class="chapter fade-up" id="ch4">
+    <div class="chapter-header" onclick="toggleChapter(4)">
+      <div class="chapter-num" style="background:#E6F7F1">🚀</div>
+      <div class="chapter-meta">
+        <div class="chapter-title">지금 당장 시작하는 법</div>
+        <div class="chapter-sub">계좌 개설부터 첫 매수까지</div>
+      </div>
+      <div class="chapter-arrow">▼</div>
+    </div>
+    <div class="chapter-body">
+      <div class="chapter-content">
+        <p class="content-lead">
+          투자는 <strong>오늘 시작하는 사람</strong>이 내일 시작하는 사람보다 유리합니다. 시작이 어렵지 않아요.
+        </p>
+        <div class="key-point">
+          <div class="kp-icon">1️⃣</div>
+          <div class="kp-text"><strong>증권사 앱 설치</strong> — 토스증권·카카오페이증권·삼성증권 등 앱 설치 후 5분이면 계좌 개설 완료</div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon">2️⃣</div>
+          <div class="kp-text"><strong>ISA 계좌 먼저 개설</strong> — 비과세 혜택 있는 ISA 계좌에 ETF 담으면 세금 절약 가능</div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon">3️⃣</div>
+          <div class="kp-text"><strong>소액으로 시작</strong> — 처음엔 월 1~5만원도 충분. 금액보다 <strong>습관</strong>이 중요해요</div>
+        </div>
+        <div class="key-point">
+          <div class="kp-icon">4️⃣</div>
+          <div class="kp-text"><strong>적립식 매수 설정</strong> — 매월 같은 날 자동으로 ETF를 사도록 설정하면 관리 필요 없음</div>
+        </div>
+        <div class="tip-box" style="margin-top:14px">
+          <div class="tip-icon">💡</div>
+          <div class="tip-text">투자 전 비상금(생활비 3개월치)은 반드시 예금으로 따로 보관하세요. 투자금은 <strong>"잃어도 당장 생활에 지장 없는 돈"</strong>으로만 하세요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CTA ── -->
+  <div class="action-cta fade-up">
+    <div class="cta-title">내 맞춤 혜택도 확인해보세요</div>
+    <div class="cta-sub">투자를 시작하기 전, 지금 신청할 수 있는 정부 지원부터 챙기는 게 우선이에요.</div>
+    <button class="cta-btn" onclick="goTo('result.html')">내 맞춤 혜택 보러 가기 →</button>
+  </div>
+
+</div>
+
+<script>
+  const chapters = document.querySelectorAll('.chapter');
+  const progItems = document.querySelectorAll('.prog-item');
+  const openState = new Array(chapters.length).fill(false);
+
+  function toggleChapter(idx) {
+    const wasOpen = openState[idx];
+    openState[idx] = !wasOpen;
+    chapters[idx].classList.toggle('open', openState[idx]);
+    progItems[idx].classList.toggle('done', openState[idx]);
+  }
+
+  function scrollToChapter(idx) {
+    chapters[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* 등장 애니메이션 */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  function goBack() {
+    if (history.length > 1) history.back();
+    else location.href = 'result.html';
+  }
+
+  function goTo(path) {
+    document.querySelector('.app').style.cssText = 'opacity:0;transition:opacity 0.3s';
+    setTimeout(() => { window.location.href = path; }, 300);
+  }
+</script>
+</body>
+</html>

@@ -72,6 +72,16 @@
       transition: color 0.2s; min-width: 44px; min-height: 44px;
     }
     .skip-btn:active { color: var(--color-primary); }
+    .btn-return {
+      width: 100%; margin-top: 10px; padding: 14px;
+      background: transparent;
+      border: 1.5px solid var(--color-primary);
+      border-radius: 14px;
+      font-family: var(--font-main); font-size: 14px; font-weight: 700;
+      color: var(--color-primary); cursor: pointer; letter-spacing: -0.2px;
+      transition: all 0.15s;
+    }
+    .btn-return:active { background: var(--color-primary-l); }
 
     /* ── 카드 슬라이드 영역 ── */
     .cards-area {
@@ -306,7 +316,7 @@
         <div class="logo-icon">M</div>
         <span class="logo-text">mate<span>.</span></span>
       </div>
-      <button class="skip-btn" onclick="goToOnboarding()">건너뛰기</button>
+      <button class="skip-btn" id="skipBtn" onclick="goToOnboarding()">건너뛰기</button>
     </div>
 
     <!-- 카드 영역 -->
@@ -407,6 +417,9 @@
               <button class="btn-primary" onclick="goToOnboarding()">
                 3분이면 내 혜택 나와요 →
               </button>
+              <button class="btn-return" id="returnBtn" onclick="goToResult()" style="display:none">
+                이전 결과 바로 보기
+              </button>
               <p style="text-align:center;font-size:11px;color:var(--color-gray1);margin-top:10px">
                 가입 없이 무료로 확인해요
               </p>
@@ -501,6 +514,20 @@
   }, { passive: true });
 
   goToCard(0);
+
+  /* ── 재방문 처리 ── */
+  if (localStorage.getItem('mateAnswers')) {
+    const skipBtn = document.getElementById('skipBtn');
+    skipBtn.textContent = '내 결과 보기 →';
+    skipBtn.onclick = goToResult;
+    document.getElementById('returnBtn').style.display = 'block';
+  }
+
+  function goToResult() {
+    document.querySelector('.app-wrapper').style.opacity = '0';
+    document.querySelector('.app-wrapper').style.transition = 'opacity 0.3s ease';
+    setTimeout(() => { window.location.href = 'result.html'; }, 300);
+  }
 </script>
 </body>
 </html>

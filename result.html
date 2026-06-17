@@ -49,15 +49,15 @@
     /* ── 히어로 헤더 ── */
     .hero {
       background: var(--green);
-      padding: 52px 20px 28px;
+      padding: 52px 20px 18px;
       position: relative; overflow: hidden;
       flex-shrink: 0;
     }
     .hero::after {
       content: '';
-      position: absolute; bottom: -30px; left: 0; right: 0;
-      height: 60px; background: var(--bg);
-      border-radius: 30px 30px 0 0;
+      position: absolute; bottom: -12px; left: 0; right: 0;
+      height: 24px; background: var(--bg);
+      border-radius: 24px 24px 0 0;
     }
     .hero-logo {
       display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
@@ -80,9 +80,44 @@
       font-size: 12px; font-weight: 600; color: #fff;
     }
 
+    /* ── 카테고리 필터 칩 ── */
+    .cat-filter {
+      display: flex; gap: 8px;
+      padding: 7px 20px 10px;
+      overflow-x: auto; overflow-y: hidden;
+      cursor: grab;
+      scrollbar-width: none;
+      position: sticky; top: 0; z-index: 5;
+      background: var(--bg);
+    }
+    .cat-filter::-webkit-scrollbar { display: none; }
+    .cat-chip {
+      flex-shrink: 0; white-space: nowrap;
+      padding: 7px 14px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      color: var(--text2); cursor: pointer;
+      transition: all 0.18s;
+    }
+    .cat-chip.active { background: var(--green); border-color: var(--green); color: #fff; box-shadow: 0 2px 8px rgba(0,196,122,0.30); }
+    .cat-chip:active { transform: scale(0.96); }
+
+    /* 카테고리 섹션 카운트 뱃지 */
+    .cat-count {
+      display: inline-block;
+      background: rgba(255,255,255,0.35);
+      border-radius: 100px;
+      padding: 1px 5px;
+      font-size: 11px;
+      margin-left: 3px;
+    }
+    .cat-chip:not(.active) .cat-count { background: var(--border); }
+
     /* ── 혜택 카드 영역 ── */
     .cards-section {
-      flex: 1; padding: 44px 20px 20px;
+      flex: 1; padding: 10px 20px 20px;
     }
 
     .section-title {
@@ -259,9 +294,14 @@
     </div>
   </div>
 
+  <!-- 카테고리 필터 칩 -->
+  <div class="cat-filter" id="catFilter">
+    <button class="cat-chip active" data-cat="전체" onclick="filterBenefits('전체',this)">전체</button>
+  </div>
+
   <!-- 혜택 카드 영역 -->
   <div class="cards-section">
-    <div class="section-title">지금 받을 수 있는 혜택</div>
+    <div class="section-title" id="sectionTitle">지금 받을 수 있는 혜택</div>
     <div id="benefitCards">
       <!-- JS로 카드 생성 -->
     </div>
@@ -276,7 +316,7 @@
         <span class="action-label">저축법</span>
         <span class="action-sub">돈 모이는 구조 만들기</span>
       </button>
-      <button class="action-btn" onclick="goTo('benefit.html')">
+      <button class="action-btn" onclick="scrollToBenefits()">
         <span class="action-icon">🏛️</span>
         <span class="action-label">정부지원</span>
         <span class="action-sub">내 조건 맞춤 검색</span>
@@ -438,24 +478,87 @@ function scoreBenefit(b, profile, age, monthly) {
 }
 
 /* ══════════════════════════════════
-   상위 3장 선택 (카테고리 다양성 보장)
+   카테고리 메타 정의
    ══════════════════════════════════ */
-function selectTop3(benefits, profile) {
+const CAT_META = {
+  '금융': { label: '💰 금융·저축', key: '금융' },
+  '주거': { label: '🏠 주거',      key: '주거' },
+  '교육': { label: '📚 교육',      key: '교육' },
+  '취업': { label: '💼 취업',      key: '취업' },
+  '복지': { label: '🤝 복지',      key: '복지' },
+  '직업': { label: '💼 직업 맞춤', key: '직업' },
+  '지역': { label: '📍 내 지역',   key: '지역' },
+};
+
+/* 혜택 하나에 해당하는 카테고리 키 목록 반환 */
+function getCats(b, profile) {
+  const cats = new Set([b.category]);
+  const f = b.filter || {};
+  if (f.jobs && f.jobs.length && profile.job && f.jobs.includes(profile.job))
+    cats.add('직업');
+  if (f.regions && f.regions.length && profile.sido && f.regions.includes(profile.sido))
+    cats.add('지역');
+  return [...cats];
+}
+
+/* ══════════════════════════════════
+   자격 해당 혜택 전체 선택 (점수순)
+   ══════════════════════════════════ */
+function selectAll(benefits, profile) {
   const age     = new Date().getFullYear() - profile.birthYear;
   const monthly = INCOME_MAP[profile.income] || 0;
-
-  const scored = benefits
+  return benefits
     .map(b => ({ ...b, _score: scoreBenefit(b, profile, age, monthly) }))
     .filter(b => b._score > 0)
     .sort((a, b) => b._score - a._score);
+}
 
-  const result = [], catCount = {};
-  for (const b of scored) {
-    if (result.length >= 3) break;
-    catCount[b.category] = (catCount[b.category] || 0) + 1;
-    if (catCount[b.category] <= 2) result.push(b);
-  }
-  return result;
+/* ══════════════════════════════════
+   카테고리 필터 + 칩 빌드
+   ══════════════════════════════════ */
+let _allCards = [];   // 렌더된 카드 DOM 참조
+let _profile  = null; // 현재 프로필
+
+function buildChips(cards, profile) {
+  const catCount = {};
+  cards.forEach(b => {
+    getCats(b, profile).forEach(c => {
+      catCount[c] = (catCount[c] || 0) + 1;
+    });
+  });
+
+  // 전체 칩 카운트 업데이트
+  const allChip = document.querySelector('.cat-chip[data-cat="전체"]');
+  if (allChip) allChip.innerHTML = `전체 <span class="cat-count">${cards.length}</span>`;
+
+  const strip = document.getElementById('catFilter');
+  const order = ['금융','주거','교육','취업','복지','직업','지역'];
+  order.forEach(key => {
+    if (!catCount[key]) return;
+    const meta = CAT_META[key] || { label: key };
+    const btn  = document.createElement('button');
+    btn.className    = 'cat-chip';
+    btn.dataset.cat  = key;
+    btn.innerHTML    = `${meta.label} <span class="cat-count">${catCount[key]}</span>`;
+    btn.onclick = () => filterBenefits(key, btn);
+    strip.appendChild(btn);
+  });
+}
+
+function filterBenefits(cat, btn) {
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+
+  let shown = 0;
+  _allCards.forEach(({ el, cats }) => {
+    const visible = cat === '전체' || cats.includes(cat);
+    el.style.display = visible ? '' : 'none';
+    if (visible) shown++;
+  });
+
+  const meta = CAT_META[cat];
+  document.getElementById('sectionTitle').textContent =
+    cat === '전체' ? `지금 받을 수 있는 혜택` : `${meta ? meta.label : cat} (${shown}개)`;
 }
 
 /* ══════════════════════════════════
@@ -511,6 +614,9 @@ function renderCard(card, profile, delay) {
       <button class="card-btn" onclick="goTo('benefit.html?id=${card.id}')">자세히 →</button>
     </div>
   `;
+  const cats = getCats(card, _profile || profile);
+  el.dataset.cats = cats.join(',');
+  _allCards.push({ el, cats });
   setTimeout(() => el.classList.add('visible'), delay);
   return el;
 }
@@ -536,7 +642,9 @@ async function init() {
     tags.map(t => `<div class="profile-chip">${t}</div>`).join('');
 
   /* 카드 렌더링 */
-  const cards     = selectTop3(benefits, profile);
+  _profile  = profile;
+  _allCards = [];
+  const cards     = selectAll(benefits, profile);
   const container = document.getElementById('benefitCards');
 
   if (!cards.length) {
@@ -546,6 +654,9 @@ async function init() {
     </div>`;
   } else {
     cards.forEach((card, i) => container.appendChild(renderCard(card, profile, 200 + i * 150)));
+    buildChips(cards, profile);
+    document.getElementById('sectionTitle').textContent =
+      `지금 받을 수 있는 혜택 (${cards.length}개)`;
   }
 
   setTimeout(() => {
@@ -558,6 +669,50 @@ function goTo(path) {
   document.querySelector('.app').style.cssText = 'opacity:0;transition:opacity 0.3s';
   setTimeout(() => { window.location.href = path; }, 300);
 }
+
+function scrollToBenefits() {
+  const chip = document.querySelector('.cat-chip[data-cat="전체"]');
+  if (chip) filterBenefits('전체', chip);
+  document.getElementById('catFilter').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ── 카테고리 필터 마우스 드래그 스크롤 ── */
+(function () {
+  const el = document.getElementById('catFilter');
+  // catFilter는 JS로 동적 생성되므로 DOMContentLoaded 이후 등록
+  window.addEventListener('DOMContentLoaded', () => {
+    const strip = document.getElementById('catFilter');
+    let isDown = false, startX = 0, scrollLeft = 0, moved = false;
+
+    strip.addEventListener('mousedown', e => {
+      isDown   = true;
+      moved    = false;
+      startX   = e.pageX - strip.offsetLeft;
+      scrollLeft = strip.scrollLeft;
+      strip.style.cursor = 'grabbing';
+      strip.style.userSelect = 'none';
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDown = false;
+      strip.style.cursor = 'grab';
+      strip.style.userSelect = '';
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      const x    = e.pageX - strip.offsetLeft;
+      const walk = (x - startX) * 1.2;
+      if (Math.abs(walk) > 4) moved = true;
+      strip.scrollLeft = scrollLeft - walk;
+    });
+
+    /* 드래그 중 클릭 이벤트 차단 */
+    strip.addEventListener('click', e => {
+      if (moved) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+  });
+})();
 
 window.addEventListener('DOMContentLoaded', init);
 </script>
