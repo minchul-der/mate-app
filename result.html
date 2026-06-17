@@ -294,226 +294,221 @@
 
 <script>
 /* ══════════════════════════════════
-   온보딩 답변 로드
+   소득 문자열 → 월 금액(만원) 변환
    ══════════════════════════════════ */
-const raw = localStorage.getItem('mateAnswers');
-const ans = raw ? JSON.parse(raw) : null;
-
-/* 데이터 없으면 온보딩으로 */
-if (!ans) {
-  window.location.href = 'onboarding.html';
-}
+const INCOME_MAP = {
+  // 현재 항목
+  '100만원 미만': 50, '100~250만원': 175, '250~400만원': 325,
+  '400~600만원': 500, '600만원 이상': 700,
+  // 구버전 호환
+  '100~200만원': 150, '200~300만원': 250, '300~400만원': 350,
+  '400~500만원': 450, '500만원 이상': 600,
+  '없음': 0, '50만원 미만': 25, '50~100만원': 75,
+  '아르바이트 병행': 75, '기타': 100
+};
 
 /* ══════════════════════════════════
-   사용자 프로필 태그 생성
+   로컬 fallback 데이터 (fetch 실패 시)
    ══════════════════════════════════ */
-function buildProfile(a) {
-  const now = new Date();
-  const age = now.getFullYear() - a.birthYear;
-  const tags = [];
-  tags.push(`만 ${age}세`);
-  if (a.job) tags.push(a.job);
-  if (a.sido) tags.push(a.sido + (a.sigungu ? ' ' + a.sigungu : ''));
-  if (a.income) tags.push(a.income);
-  if (a.housing) tags.push(a.housing);
-  return tags;
-}
-
-/* ══════════════════════════════════
-   혜택 카드 로직
-   — 온보딩 답변 기반으로 3장 결정
-   ══════════════════════════════════ */
-function selectCards(a) {
-  const now = new Date();
-  const age = now.getFullYear() - a.birthYear;
-  const cards = [];
-
-  /* ── 카드 1: 목표 기반 핵심 혜택 ── */
-  if (a.goal === '비상금' || !a.goal) {
-    const incomeOk = ['100만원 미만','100~200만원','200~300만원'].includes(a.income);
-    cards.push({
-      id: 'emergency',
-      color: '#00C47A',
-      catBg: '#E6F7F1', catColor: '#00A868',
-      category: '💰 비상금·저축',
-      name: '청년도약계좌',
-      match: incomeOk ? '✅ 신청 가능' : '🔸 조건 확인 필요',
-      matchClass: incomeOk ? '' : 'partial',
-      desc: '월 최대 70만원 납입 시 정부가 매달 최대 2만4천원을 보태주는 청년 전용 적금이에요.',
-      before: { label: 'BEFORE', value: '연 3%대', sub: '일반 적금 기준' },
-      after:  { label: 'AFTER',  value: '연 6%+', sub: '정부 기여금 포함 시' },
-      conds: [
-        { icon: age <= 34 ? '✅' : '❌', text: `나이 조건: 만 19~34세 (현재 만 ${age}세)` },
-        { icon: a.job === '직장인' ? '✅' : '🔸', text: '소득 조건: 총급여 7,500만원 이하' },
-        { icon: '🔸', text: '가입 기간: 5년 (중도 해지 시 혜택 일부 소멸)' },
-      ],
-      ctaLabel: '금융위원회 공식 안내',
-      ctaAction: () => window.open('https://www.fss.or.kr', '_blank'),
-    });
-  } else if (a.goal === '내집마련') {
-    const ageOk = age >= 19 && age <= 34;
-    cards.push({
-      id: 'housing',
-      color: '#3B82F6',
-      catBg: '#EFF6FF', catColor: '#1D4ED8',
-      category: '🏠 내 집 마련',
-      name: '청년 주택드림 청약통장',
-      match: ageOk ? '✅ 신청 가능' : '🔸 조건 확인 필요',
-      matchClass: ageOk ? '' : 'partial',
-      desc: '청약을 준비하면서 이자까지 챙기는 청년 전용 통장. 최대 연 4.5% 금리 + 청약 1순위 자격.',
-      before: { label: 'BEFORE', value: '청약 준비 없음', sub: '내 집 마련 막막한 상태' },
-      after:  { label: 'AFTER',  value: '1순위 청약 자격', sub: '24개월 이상 유지 시' },
-      conds: [
-        { icon: ageOk ? '✅' : '❌', text: `나이 조건: 만 19~34세 (현재 만 ${age}세)` },
-        { icon: a.housing === '월세' || a.housing === '전세' ? '✅' : '🔸', text: '무주택자 조건' },
-        { icon: '✅', text: '월 최소 2만원부터 자유 납입' },
-      ],
-      ctaLabel: '주택도시기금 안내 보기',
-      ctaAction: () => window.open('https://nhuf.molit.go.kr', '_blank'),
-    });
-  } else if (a.goal === '부채상환') {
-    cards.push({
-      id: 'debt',
-      color: '#F97316',
-      catBg: '#FFF0E6', catColor: '#C2410C',
-      category: '✂️ 부채 상환',
-      name: '햇살론 Youth',
-      match: '🔸 조건 확인 필요',
-      matchClass: 'partial',
-      desc: '고금리 대출을 저금리로 전환해주는 청년 전용 서민금융 상품. 연 3.5% 수준.',
-      before: { label: 'BEFORE', value: '연 15~20%', sub: '카드론·저축은행 기준' },
-      after:  { label: 'AFTER',  value: '연 3.5%', sub: '햇살론 Youth 기준' },
-      conds: [
-        { icon: age <= 34 ? '✅' : '❌', text: `나이 조건: 만 34세 이하 (현재 만 ${age}세)` },
-        { icon: '🔸', text: '연소득 3,500만원 이하 또는 신용점수 하위 20%' },
-        { icon: '✅', text: '최대 1,200만원까지 대출 가능' },
-      ],
-      ctaLabel: '서민금융진흥원 안내',
-      ctaAction: () => window.open('https://www.kinfa.or.kr', '_blank'),
-    });
-  } else {
-    /* 기타 목표 — 청년내일저축계좌 */
-    cards.push({
-      id: 'saving_acct',
-      color: '#00C47A',
-      catBg: '#E6F7F1', catColor: '#00A868',
-      category: '💰 정부 지원 저축',
-      name: '청년내일저축계좌',
-      match: '🔸 조건 확인 필요',
-      matchClass: 'partial',
-      desc: '월 10만원 저축하면 정부가 10~30만원을 추가 적립해주는 복지부 사업. 3년 만기 시 최대 1,440만원.',
-      before: { label: 'BEFORE', value: '내 저축만', sub: '월 10만원 × 36개월 = 360만원' },
-      after:  { label: 'AFTER',  value: '정부 매칭 포함', sub: '최대 360+1,080 = 1,440만원' },
-      conds: [
-        { icon: age <= 34 ? '✅' : '❌', text: `나이 조건: 만 15~34세 (현재 만 ${age}세)` },
-        { icon: '🔸', text: '소득 조건: 기준 중위소득 100% 이하' },
-        { icon: '✅', text: '근로·사업소득이 있어야 신청 가능' },
-      ],
-      ctaLabel: '복지로 신청 안내',
-      ctaAction: () => window.open('https://www.bokjiro.go.kr', '_blank'),
-    });
+const FALLBACK_BENEFITS = [
+  {
+    id:'youth_savings_account', name:'청년도약계좌', category:'금융',
+    source:'금융위원회', apply_url:'https://www.fss.or.kr',
+    color:'#00C47A', category_icon:'💰', category_label:'청년 저축',
+    cat_bg:'#E6F7F1', cat_color:'#00A868',
+    description:'월 최대 70만원 납입 시 정부가 매달 최대 2만4천원을 보태주는 청년 전용 적금. 5년 만기 시 최대 5,000만원.',
+    before_label:'일반 적금', before_value:'연 3%대', before_sub:'시중 은행 적금 기준',
+    after_label:'청년도약계좌', after_value:'연 6%+ 효과', after_sub:'정부 기여금 포함 시',
+    filter:{ age_min:19, age_max:34, jobs:['직장인','자영업','프리랜서'], regions:[], housing_types:[], income_max_monthly:625, goals:['비상금','노후준비','여행취미'] },
+    condition_checks:[
+      {text:'나이: 만 19~34세', field:'age', rule:'range', min:19, max:34},
+      {text:'소득: 총급여 7,500만원 이하', field:'income_monthly', rule:'max', value:625},
+      {text:'직업: 근로·사업소득 필수', field:'job', rule:'include', values:['직장인','자영업','프리랜서']}
+    ], priority_boost:15
+  },
+  {
+    id:'youth_dream_account', name:'청년 주택드림 청약통장', category:'주거',
+    source:'주택도시기금', apply_url:'https://nhuf.molit.go.kr',
+    color:'#3B82F6', category_icon:'🏠', category_label:'내 집 마련',
+    cat_bg:'#EFF6FF', cat_color:'#1D4ED8',
+    description:'청약 준비 + 최대 연 4.5% 금리를 동시에. 24개월 유지 시 청약 1순위 자격 획득.',
+    before_label:'청약 없음', before_value:'막막한 상태', before_sub:'내 집 마련 준비 없음',
+    after_label:'24개월 뒤', after_value:'1순위 청약 자격', after_sub:'연 4.5% 금리 + 청약 가점',
+    filter:{ age_min:19, age_max:34, jobs:[], regions:[], housing_types:['월세','전세','공공임대','비주택','무상거주'], income_max_monthly:625, goals:['내집마련'] },
+    condition_checks:[
+      {text:'나이: 만 19~34세', field:'age', rule:'range', min:19, max:34},
+      {text:'주거: 무주택자 (자가 제외)', field:'housing', rule:'include', values:['월세','전세','공공임대','비주택','무상거주']},
+      {text:'소득: 연 7,500만원 이하', field:'income_monthly', rule:'max', value:625}
+    ], priority_boost:20
+  },
+  {
+    id:'haessallon_youth', name:'햇살론Youth', category:'금융',
+    source:'서민금융진흥원', apply_url:'https://www.kinfa.or.kr',
+    color:'#F97316', category_icon:'✂️', category_label:'부채 전환',
+    cat_bg:'#FFF0E6', cat_color:'#C2410C',
+    description:'고금리 대출을 저금리로 전환해주는 청년 전용 서민금융 상품. 연 3.5% 수준.',
+    before_label:'현재 대출', before_value:'연 15~20%', before_sub:'카드론·저축은행 기준',
+    after_label:'햇살론Youth', after_value:'연 3.5%', after_sub:'이자 부담 대폭 경감',
+    filter:{ age_min:19, age_max:34, jobs:[], regions:[], housing_types:[], income_max_monthly:292, goals:['부채상환'] },
+    condition_checks:[
+      {text:'나이: 만 34세 이하', field:'age', rule:'range', min:19, max:34},
+      {text:'소득: 연 3,500만원 이하 또는 신용점수 하위 20%', field:'income_monthly', rule:'max', value:292},
+      {text:'한도: 최대 1,200만원', field:'info', rule:'none'}
+    ], priority_boost:20
+  },
+  {
+    id:'isa_account', name:'ISA 계좌 (개인종합자산관리)', category:'금융',
+    source:'금융감독원', apply_url:'https://www.fss.or.kr',
+    color:'#8B5CF6', category_icon:'📊', category_label:'세금 절약',
+    cat_bg:'#F3F0FF', cat_color:'#6D28D9',
+    description:'예·적금·펀드·ETF를 한 계좌에서 운용하며 이자·배당 200만원까지 비과세. 누구나 가입 가능.',
+    before_label:'일반 투자', before_value:'이자세 15.4%', before_sub:'수익에 세금 발생',
+    after_label:'ISA 계좌', after_value:'200만원 비과세', after_sub:'초과분도 9.9% 분리과세',
+    filter:{ age_min:19, age_max:65, jobs:[], regions:[], housing_types:[], income_max_monthly:0, goals:['노후준비','여행취미','기타'] },
+    condition_checks:[
+      {text:'나이: 만 19세 이상 누구나', field:'age', rule:'range', min:19, max:65},
+      {text:'소득·직업 제한 없음', field:'info', rule:'none'},
+      {text:'의무 보유 3년', field:'info', rule:'none'}
+    ], priority_boost:5
+  },
+  {
+    id:'national_scholarship', name:'국가장학금 I·II유형', category:'교육',
+    source:'한국장학재단', apply_url:'https://www.kosaf.go.kr',
+    color:'#EC4899', category_icon:'🎓', category_label:'학비 지원',
+    cat_bg:'#FDF2F8', cat_color:'#9D174D',
+    description:'소득 8구간 이하 대학생에게 연 최대 700만원 등록금 지원. C학점 이상이면 신청 가능.',
+    before_label:'등록금 전액', before_value:'100% 자부담', before_sub:'연평균 400~700만원',
+    after_label:'장학금 지원 시', after_value:'최대 연 700만원', after_sub:'소득 구간별 차등',
+    filter:{ age_min:17, age_max:35, jobs:['학생'], regions:[], housing_types:[], income_max_monthly:0, goals:['비상금','기타'] },
+    condition_checks:[
+      {text:'직업: 대학교 재학·입학 예정자', field:'job', rule:'include', values:['학생']},
+      {text:'성적: C학점 이상 (80점 이상)', field:'info', rule:'none'},
+      {text:'나이 제한 없음 (재학 기간)', field:'age', rule:'range', min:17, max:35}
+    ], priority_boost:18
   }
+];
 
-  /* ── 카드 2: 지역 기반 주거 혜택 ── */
-  const isSeoul = a.sido === '서울';
-  const isMetro = ['서울','경기','인천','부산','대구','광주','대전','울산'].includes(a.sido);
-  cards.push({
-    id: 'region',
-    color: '#F59E0B',
-    catBg: '#FEF3C7', catColor: '#B45309',
-    category: '🏛️ 지역 주거 지원',
-    name: isSeoul ? '서울 청년월세 지원' : (isMetro ? '청년 전·월세 보증금 대출' : '중소기업 청년 전세대출'),
-    match: '🔸 조건 확인 필요',
-    matchClass: 'partial',
-    desc: isSeoul
-      ? '서울 거주 청년에게 월 최대 20만원, 최장 12개월 월세를 지원해요. 매년 모집 공고를 확인하세요.'
-      : (isMetro
-        ? '전세·월세 보증금을 저금리로 대출해주는 상품. 연 1~2%대 금리로 최대 3천만원.'
-        : '중소기업 재직 청년에게 전세보증금을 연 1.5%로 대출해드려요. 최대 1억원.'),
-    before: { label: 'BEFORE', value: '월세 그대로', sub: '매달 지출로만 사라짐' },
-    after:  {
-      label: 'AFTER',
-      value: isSeoul ? '월 -20만원' : '연 1~2% 대출',
-      sub: isSeoul ? '12개월 최대 240만원 지원' : '보증금 부담 대폭 경감',
-    },
-    conds: [
-      { icon: a.sido ? '✅' : '🔸', text: `거주지: ${a.sido || '지역 정보 없음'}${a.sigungu ? ' ' + a.sigungu : ''}` },
-      { icon: a.housing === '월세' ? '✅' : '🔸', text: '현재 월세 거주자 우선 (전세도 일부 가능)' },
-      { icon: '🔸', text: '소득·자산 기준 충족 필요' },
-    ],
-    ctaLabel: '해당 기관 안내 보기',
-    ctaAction: () => {},
-  });
+/* ══════════════════════════════════
+   JSON 데이터 로드 (fetch → fallback)
+   ══════════════════════════════════ */
+async function loadBenefits() {
+  try {
+    const res = await fetch('data/benefits.json');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    return data.benefits || FALLBACK_BENEFITS;
+  } catch {
+    return FALLBACK_BENEFITS;
+  }
+}
 
-  /* ── 카드 3: 성향·목표 기반 장기 전략 ── */
-  const isConservative = a.style === '안전';
-  cards.push({
-    id: 'longterm',
-    color: '#8B5CF6',
-    catBg: '#F3F0FF', catColor: '#6D28D9',
-    category: '🌅 장기 전략',
-    name: isConservative ? 'ISA 계좌 + 연금저축' : 'ETF 적립식 투자',
-    match: '✅ 지금 바로 시작 가능',
-    matchClass: '',
-    desc: isConservative
-      ? '세금 혜택이 있는 ISA 계좌로 예·적금을 운용하고, 연금저축으로 노후를 준비하세요. 리스크 없이 절세 효과만.'
-      : '매달 소액으로 ETF를 적립하면 시장 평균 수익을 안정적으로 추구할 수 있어요. 장기적으로 인플레이션을 이길 가능성이 높아요.',
-    before: { label: 'BEFORE', value: '일반 저축', sub: '이자 수익에 15.4% 세금 납부' },
-    after:  {
-      label: 'AFTER',
-      value: isConservative ? 'ISA 비과세 혜택' : '복리 + 절세',
-      sub: isConservative ? '연간 200만원 이자·배당 비과세' : '장기 투자 시 세금 이연 효과',
-    },
-    conds: [
-      { icon: '✅', text: '나이·소득 무관, 누구나 개설 가능' },
-      { icon: '✅', text: isConservative ? '원금 보장 상품도 편입 가능' : '월 1만원 소액부터 시작 가능' },
-      { icon: '🔸', text: '의무 보유 기간 3년 (중도 해지 시 혜택 일부 소멸)' },
-    ],
-    ctaLabel: '메이트 투자 공부 시작',
-    ctaAction: () => goTo('learn.html'),
-  });
+/* ══════════════════════════════════
+   조건 체크 아이콘 계산
+   ══════════════════════════════════ */
+function checkCondition(cond, profile, age, monthly) {
+  if (cond.field === 'age')
+    return (age >= cond.min && age <= cond.max) ? '✅' : '❌';
+  if (cond.field === 'income_monthly') {
+    if (!monthly) return '🔸';
+    return monthly <= cond.value ? '✅' : '❌';
+  }
+  if (cond.field === 'job')
+    return cond.values.includes(profile.job) ? '✅' : '🔸';
+  if (cond.field === 'region')
+    return cond.values.includes(profile.sido) ? '✅' : '🔸';
+  if (cond.field === 'housing')
+    return cond.values.includes(profile.housing) ? '✅' : '🔸';
+  return '🔸'; // field:'info' 등 정보성 조건
+}
 
-  return cards;
+/* ══════════════════════════════════
+   혜택 점수 계산
+   ══════════════════════════════════ */
+function scoreBenefit(b, profile, age, monthly) {
+  const f = b.filter;
+  if (age < f.age_min || age > f.age_max) return -1; // 나이 필수 조건
+
+  let score = 100 + (b.priority_boost || 0);
+  if (!f.goals.length        || f.goals.includes(profile.goal))          score += 30;
+  if (!f.jobs.length         || f.jobs.includes(profile.job))            score += 20;
+  if (!f.regions.length      || f.regions.includes(profile.sido))        score += 15;
+  if (!f.housing_types.length|| f.housing_types.includes(profile.housing)) score += 10;
+  if (!f.income_max_monthly  || !monthly || monthly <= f.income_max_monthly) score += 10;
+  return score;
+}
+
+/* ══════════════════════════════════
+   상위 3장 선택 (카테고리 다양성 보장)
+   ══════════════════════════════════ */
+function selectTop3(benefits, profile) {
+  const age     = new Date().getFullYear() - profile.birthYear;
+  const monthly = INCOME_MAP[profile.income] || 0;
+
+  const scored = benefits
+    .map(b => ({ ...b, _score: scoreBenefit(b, profile, age, monthly) }))
+    .filter(b => b._score > 0)
+    .sort((a, b) => b._score - a._score);
+
+  const result = [], catCount = {};
+  for (const b of scored) {
+    if (result.length >= 3) break;
+    catCount[b.category] = (catCount[b.category] || 0) + 1;
+    if (catCount[b.category] <= 2) result.push(b);
+  }
+  return result;
 }
 
 /* ══════════════════════════════════
    카드 HTML 생성
    ══════════════════════════════════ */
-function renderCard(card, delay) {
+function renderCard(card, profile, delay) {
+  const age     = new Date().getFullYear() - profile.birthYear;
+  const monthly = INCOME_MAP[profile.income] || 0;
+  const checks  = (card.condition_checks || []).map(c => ({
+    icon: checkCondition(c, profile, age, monthly),
+    text: c.text
+  }));
+
+  const anyFail  = checks.some(c => c.icon === '❌');
+  const allGreen = checks.length > 0 && checks.every(c => c.icon === '✅');
+  const matchCls = anyFail ? 'partial' : '';
+  const matchTxt = allGreen ? '✅ 바로 신청 가능' : anyFail ? '🔸 조건 확인 필요' : '✅ 신청 가능';
+
   const el = document.createElement('div');
   el.className = 'benefit-card';
   el.style.setProperty('--card-color', card.color);
   el.innerHTML = `
     <div class="card-top">
-      <div class="card-category" style="background:${card.catBg};color:${card.catColor};">${card.category}</div>
-      <div class="card-match ${card.matchClass}">${card.match}</div>
+      <div class="card-category" style="background:${card.cat_bg};color:${card.cat_color};">
+        ${card.category_icon} ${card.category_label}
+      </div>
+      <div class="card-match ${matchCls}">${matchTxt}</div>
     </div>
     <div class="card-name">${card.name}</div>
-    <div class="card-desc">${card.desc}</div>
+    <div class="card-desc">${card.description}</div>
     <div class="before-after">
       <div class="ba-box before">
-        <div class="ba-label">${card.before.label}</div>
-        <div class="ba-value">${card.before.value}</div>
-        <div class="ba-sub">${card.before.sub}</div>
+        <div class="ba-label">${card.before_label}</div>
+        <div class="ba-value">${card.before_value}</div>
+        <div class="ba-sub">${card.before_sub}</div>
       </div>
       <div class="ba-arrow">→</div>
       <div class="ba-box after">
-        <div class="ba-label">${card.after.label}</div>
-        <div class="ba-value">${card.after.value}</div>
-        <div class="ba-sub">${card.after.sub}</div>
+        <div class="ba-label">${card.after_label}</div>
+        <div class="ba-value">${card.after_value}</div>
+        <div class="ba-sub">${card.after_sub}</div>
       </div>
     </div>
     <div class="cond-list">
-      ${card.conds.map(c => `
+      ${checks.map(c => `
         <div class="cond-item">
           <span class="cond-icon">${c.icon}</span>
           <span>${c.text}</span>
-        </div>
-      `).join('')}
+        </div>`).join('')}
     </div>
     <div class="card-cta">
       <span class="card-cta-label">신청 전 조건을 꼭 확인하세요</span>
-      <button class="card-btn" onclick="(${card.ctaAction.toString()})()">자세히 →</button>
+      <button class="card-btn" onclick="goTo('benefit.html?id=${card.id}')">자세히 →</button>
     </div>
   `;
   setTimeout(() => el.classList.add('visible'), delay);
@@ -521,42 +516,50 @@ function renderCard(card, delay) {
 }
 
 /* ══════════════════════════════════
-   화면 구성
+   초기화
    ══════════════════════════════════ */
-function buildResult() {
-  if (!ans) return;
+async function init() {
+  const raw     = localStorage.getItem('mateAnswers');
+  const profile = raw ? JSON.parse(raw) : null;
+  if (!profile) { window.location.href = 'onboarding.html'; return; }
+
+  const benefits = await loadBenefits();
 
   /* 프로필 태그 */
-  const chips = buildProfile(ans);
+  const age  = new Date().getFullYear() - profile.birthYear;
+  const tags = [`만 ${age}세`];
+  if (profile.job)     tags.push(profile.job);
+  if (profile.sido)    tags.push(profile.sido + (profile.sigungu ? ' ' + profile.sigungu : ''));
+  if (profile.income)  tags.push(profile.income);
+  if (profile.housing) tags.push(profile.housing);
   document.getElementById('profileChips').innerHTML =
-    chips.map(t => `<div class="profile-chip">${t}</div>`).join('');
+    tags.map(t => `<div class="profile-chip">${t}</div>`).join('');
 
-  /* 혜택 카드 */
-  const cards = selectCards(ans);
+  /* 카드 렌더링 */
+  const cards     = selectTop3(benefits, profile);
   const container = document.getElementById('benefitCards');
-  cards.forEach((card, i) => {
-    container.appendChild(renderCard(card, 200 + i * 150));
-  });
+
+  if (!cards.length) {
+    container.innerHTML = `<div style="text-align:center;padding:40px 0;color:var(--text3);font-size:14px;">
+      조건에 맞는 혜택을 찾지 못했어요.<br>온보딩을 다시 해보세요.
+      <br><br><button class="card-btn" onclick="goTo('onboarding.html')">다시 시작</button>
+    </div>`;
+  } else {
+    cards.forEach((card, i) => container.appendChild(renderCard(card, profile, 200 + i * 150)));
+  }
+
+  setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hidden');
+    document.getElementById('appMain').style.display = 'flex';
+  }, 1200);
 }
 
-/* ══════════════════════════════════
-   네비게이션
-   ══════════════════════════════════ */
 function goTo(path) {
   document.querySelector('.app').style.cssText = 'opacity:0;transition:opacity 0.3s';
   setTimeout(() => { window.location.href = path; }, 300);
 }
 
-/* ══════════════════════════════════
-   초기화 (로딩 → 결과 표시)
-   ══════════════════════════════════ */
-window.addEventListener('DOMContentLoaded', () => {
-  buildResult();
-  setTimeout(() => {
-    document.getElementById('loadingScreen').classList.add('hidden');
-    document.getElementById('appMain').style.display = 'flex';
-  }, 1200);
-});
+window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
