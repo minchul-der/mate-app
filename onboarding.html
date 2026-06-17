@@ -832,9 +832,10 @@ function renderSigungu(sido) {
   const el  = document.getElementById('sigunguList');
   el.innerHTML = '';
   const all = REGION[sido] || [];
-  // 시(市) 포함 항목은 현재 순서 유지, 군·구로 끝나는 항목은 가나다순
-  const cities = all.filter(sg => !/[군구]$/.test(sg));
-  const others = all.filter(sg => /[군구]$/.test(sg)).sort((a,b) => a.localeCompare(b,'ko'));
+  // '시' 글자가 포함된 항목(수원시·창원시 의창구 등)은 순서 유지
+  // 순수 군·구 항목만 가나다순 정렬
+  const cities = all.filter(sg => /시/.test(sg));
+  const others = all.filter(sg => !/시/.test(sg)).sort((a,b) => a.localeCompare(b,'ko'));
   [...cities, ...others].forEach(sg => {
     const d = document.createElement('div');
     d.className = 'rg-item';
