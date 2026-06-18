@@ -7,22 +7,23 @@
   <link rel="stylesheet" href="css/style.css" />
   <style>
     :root {
-      --bg:       #F7F9F8;
+      --bg:       #F8FAFA;
       --surface:  #FFFFFF;
-      --surface2: #F7F9F8;
-      --green:    #1B4F3A;
-      --green-d:  #2D7A5F;
-      --green-l:  #E1F5EE;
-      --amber:    #F6AD55;
-      --amber-l:  #FFF8EC;
-      --navy:     #1A1A2E;
-      --text2:    #4A5568;
-      --text3:    #8896A6;
-      --border:   #E4EAE7;
+      --surface2: #F2F5F4;
+      --green:    #0D5C46;
+      --green-d:  #127A5E;
+      --green-l:  #E6FAF4;
+      --accent:   #00C98A;
+      --amber:    #D97706;
+      --amber-l:  #FEF3C7;
+      --navy:     #191F28;
+      --text2:    #4D6258;
+      --text3:    #8FA89E;
+      --border:   #E8EEED;
       --radius:   16px;
-      --font:     'Pretendard', 'Noto Sans KR', sans-serif;
-      --shadow:   0 2px 12px rgba(0,0,0,0.06);
-      --shadow-btn: 0 4px 16px rgba(27,79,58,0.25);
+      --font:     'Pretendard', sans-serif;
+      --shadow:   0 1px 4px rgba(0,0,0,0.05);
+      --shadow-btn: 0 4px 16px rgba(13,92,70,0.22);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html, body {
@@ -40,31 +41,32 @@
     /* ── 상단 바 ── */
     .top-bar {
       position: sticky; top: 0; z-index: 10;
-      background: rgba(247,249,248,0.92);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       display: flex; align-items: center; gap: 12px;
-      padding: 52px 20px 16px;
+      padding: 52px 20px 14px;
+      border-bottom: 1px solid var(--border);
     }
     .back-btn {
-      width: 40px; height: 40px;
+      width: 36px; height: 36px;
       background: var(--surface); border: 1.5px solid var(--border);
-      border-radius: 12px; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 18px; flex-shrink: 0;
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
       transition: all 0.15s; color: var(--navy);
     }
     .back-btn:active { background: var(--surface2); transform: scale(0.96); }
     .top-logo { font-size: 16px; font-weight: 700; letter-spacing: -0.5px; color: var(--navy); }
+    .top-logo span { color: var(--accent); }
 
     /* ── 히어로 배너 ── */
     .hero-banner {
-      margin: 4px 20px 20px;
+      margin: 12px 20px 16px;
       border-radius: 16px;
       padding: 22px 18px 18px;
       position: relative; overflow: hidden;
-      border: 0.5px solid var(--border);
+      border: 1.5px solid var(--border);
       background: var(--surface);
-      box-shadow: var(--shadow);
     }
     .hero-color-bar {
       position: absolute; top: 0; left: 0; right: 0; height: 4px;
@@ -77,8 +79,8 @@
       margin-bottom: 12px;
     }
     .hero-name {
-      font-size: 22px; font-weight: 700;
-      letter-spacing: -0.6px; line-height: 1.3;
+      font-size: 22px; font-weight: 800;
+      letter-spacing: -0.7px; line-height: 1.3;
       margin-bottom: 6px; color: var(--navy);
     }
     .hero-source { font-size: 12px; color: var(--text3); font-weight: 600; }
@@ -88,19 +90,18 @@
       margin: 0 20px 12px;
       background: var(--surface);
       border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: var(--shadow);
-      border: 0.5px solid var(--border);
+      padding: 18px 16px;
+      border: 1.5px solid var(--border);
     }
     .sec-title {
-      font-size: 11px; font-weight: 700; color: var(--text3);
-      letter-spacing: 0.4px; text-transform: uppercase;
-      margin-bottom: 12px;
-      display: flex; align-items: center; gap: 6px;
+      font-size: 14px; font-weight: 700; color: var(--navy);
+      letter-spacing: -0.2px;
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 7px;
     }
     .sec-title::before {
-      content: ''; display: block; width: 3px; height: 12px;
-      background: var(--green); border-radius: 2px;
+      content: ''; display: block; width: 3px; height: 14px;
+      background: var(--accent); border-radius: 2px;
     }
     .desc-text {
       font-size: 14px; color: var(--text2);
@@ -136,18 +137,18 @@
       background: var(--surface2);
       font-size: 13px; color: var(--text2);
     }
-    .cond-icon { font-size: 15px; flex-shrink: 0; }
-    .cond-meet { color: var(--green-d); font-weight: 700; }
-    .cond-fail { color: #DC2626; font-weight: 700; }
+    .cond-icon { display:flex; align-items:center; flex-shrink:0; line-height:1; }
+    .cond-meet { color: var(--green-d); font-weight: 600; }
+    .cond-fail { color: #DC2626; font-weight: 600; }
 
     /* ── 신청 단계 ── */
     .step-list { display: flex; flex-direction: column; gap: 12px; }
     .step-item { display: flex; gap: 12px; align-items: flex-start; }
     .step-num {
       width: 28px; height: 28px; flex-shrink: 0;
-      background: var(--green-l); color: var(--green-d);
+      background: var(--green); color: #fff;
       border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 700; margin-top: 1px;
+      font-size: 12px; font-weight: 700; margin-top: 1px;
     }
     .step-body {}
     .step-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
@@ -169,11 +170,11 @@
     .apply-wrap { padding: 0 20px 48px; }
     .apply-btn {
       width: 100%; padding: 17px;
-      background: var(--green); color: white;
+      background: var(--accent); color: white;
       border: none; border-radius: var(--radius);
       font-family: var(--font); font-size: 16px; font-weight: 700;
       cursor: pointer; letter-spacing: -0.3px;
-      box-shadow: var(--shadow-btn);
+      box-shadow: 0 4px 16px rgba(0,201,138,0.28);
       transition: all 0.15s; line-height: 1;
     }
     .apply-btn:active { transform: scale(0.98); box-shadow: none; }
@@ -215,7 +216,7 @@
       background: var(--surface2);
       border: 1px solid var(--border);
     }
-    .doc-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .doc-icon { display:flex; align-items:center; flex-shrink:0; color:var(--text3); margin-top:1px; }
     .doc-body { flex: 1; min-width: 0; }
     .doc-name {
       font-size: 13px; font-weight: 700; color: var(--navy);
@@ -255,8 +256,8 @@
 <body>
 <div class="app">
   <div class="top-bar">
-    <div class="back-btn" onclick="goBack()">←</div>
-    <span class="top-logo">mate.</span>
+    <div class="back-btn" onclick="goBack()"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="top-logo">mate<span>.</span></span>
   </div>
   <div id="content"></div>
 </div>
@@ -311,7 +312,11 @@ function condStatus(cond, profile, age, monthly) {
 }
 
 function icon(status) {
-  return status === 'meet' ? '✅' : status === 'fail' ? '❌' : '🔸';
+  if (status === 'meet')
+    return `<svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="8" fill="#DCFCE7"/><path d="M4.5 8L6.8 10.3L11.5 5.5" stroke="#16A34A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  if (status === 'fail')
+    return `<svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="8" fill="#FEE2E2"/><path d="M5.5 5.5L10.5 10.5M10.5 5.5L5.5 10.5" stroke="#DC2626" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+  return `<svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="8" fill="#FEF3C7"/><path d="M8 5V8.5" stroke="#D97706" stroke-width="1.6" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.9" fill="#D97706"/></svg>`;
 }
 function cls(status) {
   return status === 'meet' ? 'cond-meet' : status === 'fail' ? 'cond-fail' : '';
@@ -335,7 +340,7 @@ async function init() {
   if (!b) {
     el.innerHTML = `
       <div class="error-wrap">
-        <div class="error-icon">🔍</div>
+        <div class="error-icon"><svg width="44" height="44" viewBox="0 0 44 44" fill="none"><circle cx="19" cy="19" r="12" stroke="#CBD5E1" stroke-width="2.5"/><path d="M28 28L38 38" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round"/></svg></div>
         <div class="error-title">혜택 정보를 찾을 수 없어요</div>
         <div class="error-sub">결과 화면으로 돌아가서<br>다시 카드를 선택해 주세요.</div>
         <button class="error-btn" onclick="goBack()">← 결과로 돌아가기</button>
@@ -370,15 +375,17 @@ async function init() {
   function renderDocs(docs) {
     if (!docs || !docs.length) return '';
     const items = docs.map(d => {
+      const _svgClock = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 5V8L10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      const _svgLink  = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M7 3H3V13H13V9M9 2H14M14 2V7M14 2L7 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
       const validBadge = d.validity
-        ? `<span class="doc-validity">⏰ ${d.validity}</span><br>`
+        ? `<span class="doc-validity" style="display:inline-flex;align-items:center;gap:3px">${_svgClock} ${d.validity}</span><br>`
         : '';
       const link = d.issue_url
-        ? `<a class="doc-link" href="${d.issue_url}" target="_blank" rel="noopener">🔗 ${d.issue_site}에서 발급</a>`
+        ? `<a class="doc-link" href="${d.issue_url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px">${_svgLink} ${d.issue_site}에서 발급</a>`
         : `<span class="doc-link-plain">${d.issue_site}</span>`;
       return `
         <div class="doc-item">
-          <div class="doc-icon">📄</div>
+          <div class="doc-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2H9.5L13 5.5V14H4V2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 2V6H13" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 9H11M6 11.5H9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
           <div class="doc-body">
             <div class="doc-name">${d.name}</div>
             ${validBadge}${link}
@@ -389,7 +396,7 @@ async function init() {
       <div class="section fade-up">
         <div class="sec-title">필요 서류 체크리스트</div>
         <div class="doc-list">${items}</div>
-        <div class="doc-tip">💡 서류 유효기간 초과 시 반려될 수 있어요. 신청 당일 또는 직전에 발급하는 것이 안전합니다.</div>
+        <div class="doc-tip" style="display:flex;align-items:flex-start;gap:6px"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M8 2C5.24 2 3 4.24 3 7C3 8.7 3.85 10.2 5.17 11.1V12.5H10.83V11.1C12.15 10.2 13 8.7 13 7C13 4.24 10.76 2 8 2Z" stroke="#D97706" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.5 12.5H10.5M6 14.5H10" stroke="#D97706" stroke-width="1.4" stroke-linecap="round"/></svg><span>서류 유효기간 초과 시 반려될 수 있어요. 신청 당일 또는 직전에 발급하는 것이 안전합니다.</span></div>
       </div>`;};
 
   el.innerHTML = `
@@ -400,7 +407,7 @@ async function init() {
       </div>
       <div class="hero-name">${b.name}</div>
       <div class="hero-source">${b.source} 제공</div>
-      ${b.apply_period ? `<div class="apply-period">📅 신청 기간: ${b.apply_period}</div>` : ''}
+      ${b.apply_period ? `<div class="apply-period" style="display:inline-flex;align-items:center;gap:5px"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="3.5" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 7H14M5.5 2V5M10.5 2V5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> 신청 기간: ${b.apply_period}</div>` : ''}
     </div>
 
     <div class="section fade-up">
@@ -416,7 +423,7 @@ async function init() {
           <div class="ba-value">${b.before_value}</div>
           <div class="ba-sub">${b.before_sub}</div>
         </div>
-        <div class="ba-arrow">→</div>
+        <div class="ba-arrow"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ba-box after">
           <div class="ba-label">${b.after_label}</div>
           <div class="ba-value">${b.after_value}</div>
@@ -447,7 +454,7 @@ async function init() {
             <div class="step-body">
               <div class="step-title">${s.title}</div>
               <div class="step-desc">${s.desc}</div>
-              ${s.url ? `<a class="doc-link" style="margin-top:6px;display:inline-flex;" href="${s.url}" target="_blank" rel="noopener">🔗 공식 사이트 바로가기</a>` : ''}
+              ${s.url ? `<a class="doc-link" style="margin-top:6px;display:inline-flex;align-items:center;gap:4px;" href="${s.url}" target="_blank" rel="noopener"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M7 3H3V13H13V9M9 2H14M14 2V7M14 2L7 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> 공식 사이트 바로가기</a>` : ''}
             </div>
           </div>`).join('')}
       </div>

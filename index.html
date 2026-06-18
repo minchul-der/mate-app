@@ -11,10 +11,10 @@
 
     /* ── 배경 블롭 ── */
     .blob-wrap { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-    .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.4; }
-    .blob-1 { width: 300px; height: 300px; background: rgba(27,79,58,0.12); top: -80px; right: -60px; }
-    .blob-2 { width: 220px; height: 220px; background: rgba(45,122,95,0.08); bottom: 80px; left: -70px; }
-    .blob-3 { width: 160px; height: 160px; background: rgba(255,107,53,0.07); top: 40%; right: -40px; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; }
+    .blob-1 { width: 320px; height: 320px; background: rgba(13,92,70,0.10); top: -100px; right: -80px; }
+    .blob-2 { width: 240px; height: 240px; background: rgba(0,201,138,0.07); bottom: 60px; left: -80px; }
+    .blob-3 { width: 180px; height: 180px; background: rgba(0,201,138,0.06); top: 38%; right: -50px; }
 
     /* ── 슬라이더 구조 ── */
     .slider-container { position: relative; z-index: 1; width: 100%; height: 100dvh; display: flex; flex-direction: column; }
@@ -29,10 +29,10 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 15px; font-weight: 700; color: #fff;
       letter-spacing: -0.5px;
-      box-shadow: 0 3px 10px rgba(27,79,58,0.30);
+      box-shadow: 0 3px 10px rgba(13,92,70,0.28);
     }
-    .logo-text { font-size: 19px; font-weight: 700; letter-spacing: -0.8px; color: var(--mate-text-dark); }
-    .logo-text span { color: var(--mate-primary-mid); }
+    .logo-text { font-size: 19px; font-weight: 700; letter-spacing: -0.8px; color: var(--mate-text); }
+    .logo-text span { color: var(--mate-accent); }
     .skip-btn {
       font-size: 13px; color: var(--color-gray1);
       background: none; border: none; cursor: pointer;
@@ -56,16 +56,24 @@
     .cards-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px 0; position: relative; overflow: hidden; }
     .cards-track { display: flex; width: 100%; height: 100%; transition: transform 0.45s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
     .cards-track.swiping { transition: none; }
-    .intro-card { min-width: 100%; height: 100%; padding: 0 20px; display: flex; align-items: center; justify-content: center; }
+    .intro-card {
+      min-width: 100%; height: 100%;
+      padding: 8px 20px;
+      display: flex; flex-direction: column; align-items: center;
+      overflow-y: auto; -webkit-overflow-scrolling: touch;
+    }
+    .intro-card::-webkit-scrollbar { display: none; }
 
     /* 카드 박스 */
     .card-box {
       width: 100%;
+      margin-top: auto;
+      margin-bottom: auto;
       background: #fff;
       border-radius: 20px;
-      padding: 32px 24px 28px;
-      box-shadow: var(--card-shadow);
-      border: 0.5px solid var(--card-border);
+      padding: 28px 22px 24px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      border: 1px solid var(--mate-border);
       position: relative; overflow: hidden;
       animation: slideInUp 0.4s cubic-bezier(0.4,0,0.2,1) both;
     }
@@ -77,27 +85,28 @@
     }
     @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    .card-emoji { font-size: 44px; margin-bottom: 18px; display: block; animation: float 3s ease-in-out infinite; }
+    .card-emoji { width: 52px; height: 52px; margin-bottom: 16px; display: block; animation: float 3s ease-in-out infinite; flex-shrink: 0; }
     @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
     .card-tag {
       display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 11px;
+      padding: 5px 12px;
       background: var(--mate-primary-light);
       border-radius: 99px;
-      font-size: 11px; font-weight: 600;
-      color: var(--mate-primary-mid);
-      margin-bottom: 12px;
+      font-size: 11px; font-weight: 700;
+      color: var(--mate-primary);
+      margin-bottom: 14px;
+      letter-spacing: 0.1px;
     }
     .card-title {
-      font-size: 24px; font-weight: 700;
-      line-height: 1.35; letter-spacing: -0.8px;
+      font-size: 24px; font-weight: 800;
+      line-height: 1.35; letter-spacing: -1px;
       margin-bottom: 12px; word-break: keep-all;
-      color: var(--mate-text-dark);
+      color: var(--mate-text);
     }
     .card-title .highlight { color: var(--mate-primary); }
-    .card-desc { font-size: 14px; font-weight: 400; line-height: 1.75; color: var(--mate-text-mid); word-break: keep-all; }
-    .card-desc strong { color: var(--mate-text-dark); font-weight: 600; }
+    .card-desc { font-size: 14px; font-weight: 400; line-height: 1.8; color: var(--mate-text2); word-break: keep-all; }
+    .card-desc strong { color: var(--mate-text); font-weight: 700; }
 
     .card-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
 
@@ -106,28 +115,59 @@
       margin-top: 18px;
       background: var(--mate-primary-light);
       border-radius: 14px; padding: 16px 18px;
-      border: 1px solid rgba(27,79,58,0.12);
+      border: 1px solid rgba(13,92,70,0.10);
     }
     .stat-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 5px; }
-    .stat-num { font-size: 36px; font-weight: 700; color: var(--mate-primary); letter-spacing: -2px; line-height: 1; }
+    .stat-num { font-size: 36px; font-weight: 800; color: var(--mate-primary); letter-spacing: -2px; line-height: 1; }
     .stat-unit { font-size: 16px; font-weight: 700; color: var(--mate-primary); }
-    .stat-label { font-size: 12px; color: var(--mate-text-mid); line-height: 1.6; }
-    .stat-divider { height: 1px; background: rgba(27,79,58,0.12); margin: 10px 0; }
-    .stat-note { font-size: 11px; color: var(--mate-primary-mid); display: flex; align-items: center; gap: 4px; font-weight: 500; }
+    .stat-label { font-size: 12px; color: var(--mate-text2); line-height: 1.6; }
+    .stat-divider { height: 1px; background: rgba(13,92,70,0.10); margin: 10px 0; }
+    .stat-note { font-size: 11px; color: var(--mate-primary); display: flex; align-items: center; gap: 4px; font-weight: 600; }
 
     /* 공감 아이템 */
-    .empathy-item { display: flex; align-items: flex-start; gap: 10px; padding: 11px 13px; border-radius: 12px; background: var(--mate-bg); border: 0.5px solid var(--card-border); }
+    .empathy-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 12px; background: var(--mate-bg); border: 1px solid var(--mate-border); }
     .emp-icon { font-size: 17px; flex-shrink: 0; line-height: 1.3; }
-    .emp-text { font-size: 13px; color: var(--mate-text-mid); line-height: 1.6; word-break: keep-all; }
-    .emp-text strong { color: var(--mate-text-dark); font-weight: 600; }
+    .emp-text { font-size: 13px; color: var(--mate-text2); line-height: 1.65; word-break: keep-all; }
+    .emp-text strong { color: var(--mate-text); font-weight: 700; }
 
     /* 해결책 아이템 */
-    .solution-item { display: flex; align-items: center; gap: 13px; padding: 12px 13px; border-radius: 12px; background: var(--mate-bg); border: 0.5px solid var(--card-border); }
+    .solution-item { display: flex; align-items: center; gap: 13px; padding: 12px 14px; border-radius: 12px; background: var(--mate-bg); border: 1px solid var(--mate-border); }
     .sol-icon-wrap { width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 19px; }
-    .sol-title { font-size: 13px; font-weight: 600; color: var(--mate-text-dark); margin-bottom: 2px; }
-    .sol-desc { font-size: 11px; color: var(--color-gray1); line-height: 1.5; word-break: keep-all; }
+    .sol-title { font-size: 13px; font-weight: 700; color: var(--mate-text); margin-bottom: 2px; }
+    .sol-desc { font-size: 11px; color: var(--mate-text3); line-height: 1.5; word-break: keep-all; }
 
     .card-cta { margin-top: 22px; }
+
+    /* 카드 1 전용 — 텍스트 계층 */
+    .card-intro-lead {
+      font-size: 13px; color: var(--mate-text3);
+      line-height: 1.65; margin-bottom: 10px;
+      word-break: keep-all;
+    }
+    .card-intro-tension {
+      font-size: 15px; font-weight: 500; color: var(--mate-text2);
+      line-height: 1.7; margin-bottom: 16px;
+      word-break: keep-all;
+    }
+    .card-intro-tension strong { color: var(--mate-text); font-weight: 700; }
+    .card-pull-quote {
+      background: var(--mate-primary-light);
+      border-left: 3px solid var(--mate-primary);
+      border-radius: 0 10px 10px 0;
+      padding: 13px 16px;
+      font-size: 15px; font-weight: 700;
+      color: var(--mate-primary);
+      line-height: 1.55; letter-spacing: -0.3px;
+      word-break: keep-all;
+    }
+    .card-pull-quote em { font-style: normal; color: var(--mate-accent); }
+
+    .soon-badge {
+      font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 5px;
+      background: var(--mate-border); color: var(--mate-text3);
+      margin-left: 4px; vertical-align: middle; letter-spacing: 0;
+    }
 
     /* 하단 */
     .bottom-area { padding: 0 20px 40px; flex-shrink: 0; }
@@ -138,20 +178,20 @@
     .nav-btn { display: flex; align-items: center; gap: 10px; }
     .prev-btn {
       width: 50px; height: 50px; border-radius: 13px;
-      background: #fff; border: 1px solid var(--color-gray2);
-      color: var(--color-gray1); font-size: 17px; cursor: pointer;
+      background: #fff; border: 1.5px solid var(--mate-border);
+      color: var(--mate-text3); font-size: 17px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: all 0.2s; flex-shrink: 0;
-      box-shadow: var(--card-shadow);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
     .prev-btn:active { border-color: var(--mate-primary); color: var(--mate-primary); }
     .prev-btn:disabled { opacity: 0.3; cursor: default; }
     .next-btn {
       flex: 1; height: 50px; border-radius: 13px;
       background: var(--mate-primary); border: none; color: #fff;
-      font-family: var(--font-main); font-size: 15px; font-weight: 600;
+      font-family: var(--font-main); font-size: 15px; font-weight: 700;
       cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
-      transition: all 0.2s; box-shadow: var(--shadow-btn); letter-spacing: -0.2px;
+      transition: all 0.2s; box-shadow: var(--shadow-btn); letter-spacing: -0.3px;
     }
     .next-btn:active { transform: scale(0.98); opacity: 0.92; }
   </style>
@@ -181,66 +221,94 @@
     <div class="cards-area">
       <div class="cards-track" id="cardsTrack">
 
-        <!-- ── 카드 1: 정보 비대칭 공감 ── -->
+        <!-- ── 카드 1: 공감 (B시작 + A전환 + A마무리) ── -->
         <div class="intro-card">
-          <div class="card-box" style="--card-line: var(--color-primary);">
-            <span class="card-emoji">🤫</span>
-            <div class="card-tag">✦ 아무도 안 알려준 이야기</div>
+          <div class="card-box" style="--card-line: var(--mate-primary);">
+            <svg class="card-emoji" width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <circle cx="26" cy="26" r="24" fill="#E6FAF4"/>
+              <rect x="19" y="25" width="14" height="12" rx="3" fill="white" stroke="#0D5C46" stroke-width="1.8"/>
+              <path d="M23 25v-5a3 3 0 0 1 6 0v5" stroke="#0D5C46" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="26" cy="31" r="2.2" fill="#00C98A"/>
+              <path d="M26 33.2v1.5" stroke="#00C98A" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <div class="card-tag">✦ 아무도 가르쳐주지 않은 것</div>
             <h1 class="card-title">
-              학교도, 회사도<br />
-              <span class="highlight">알려주지 않았던</span><br />
-              돈 이야기가 있어요
+              학교에서도, 집에서도<br />
+              <span class="highlight">제대로 배운 적 없는</span><br />
+              돈 이야기
             </h1>
-            <p class="card-desc">
-              재테크는 아는 만큼 버는 구조예요.<br /><br />
-              모르면 내 몫의 돈이<br />
-              <strong>매달 조용히 사라지고 있습니다.</strong>
+            <p class="card-intro-lead">
+              그래서 직접 찾아봤어요 — 유튜브, 책, 블로그엔 방법이 넘쳐나요.
             </p>
-          </div>
-        </div>
-
-        <!-- ── 카드 2: 숫자 쇼크 + FOMO ── -->
-        <div class="intro-card">
-          <div class="card-box" style="--card-line: #F59E0B;">
-            <span class="card-emoji">💰</span>
-            <div class="card-tag" style="background:rgba(245,158,11,0.12);color:#B45309;">지금 이 순간에도</div>
-            <h2 class="card-title">
-              신청 안 한 사람은<br />
-              <span class="highlight" style="color:#F59E0B">매달 손해 보는 중</span>
-            </h2>
-            <div class="stat-block">
-              <div class="stat-row">
-                <span class="stat-num">5,000</span>
-                <span class="stat-unit">만원+</span>
-              </div>
-              <div class="stat-label">청년도약계좌 5년 만기 최대 수령액<br />정부가 매달 최대 2.4만원씩 기여금을 얹어줘요</div>
-              <div class="stat-divider"></div>
-              <div class="stat-note">🔎 내가 자격이 되는지, 3분이면 알 수 있어요</div>
+            <p class="card-intro-tension">
+              근데 정작 내 나이, 내 소득, 내 상황에<br />
+              맞는 이야기는 <strong>어디에도 없었어요.</strong>
+            </p>
+            <div class="card-pull-quote">
+              메이트는 <em>'지금의 나'</em>를<br />기준으로 시작합니다.
             </div>
           </div>
         </div>
 
-        <!-- ── 카드 3: 상황 공감 ── -->
+        <!-- ── 카드 2: 숫자 쇼크 (전국민 기준) ── -->
+        <div class="intro-card">
+          <div class="card-box" style="--card-line: #F59E0B;">
+            <svg class="card-emoji" width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <circle cx="26" cy="26" r="24" fill="#FEF3C7"/>
+              <ellipse cx="26" cy="34" rx="8.5" ry="3" stroke="#D97706" stroke-width="1.8"/>
+              <path d="M17.5 29v5M34.5 29v5" stroke="#D97706" stroke-width="1.5" stroke-linecap="round"/>
+              <ellipse cx="26" cy="29" rx="8.5" ry="3" fill="#FFFBEB" stroke="#D97706" stroke-width="1.8"/>
+              <ellipse cx="26" cy="23" rx="8.5" ry="3" fill="#FFFBEB" stroke="#D97706" stroke-width="1.8"/>
+              <path d="M35 17l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1 1-2.5z" fill="#F59E0B"/>
+            </svg>
+            <div class="card-tag" style="background:rgba(245,158,11,0.12);color:#B45309;">지금 이 순간에도</div>
+            <h2 class="card-title">
+              국민 10명 중 7명은<br />
+              <span class="highlight" style="color:#F59E0B">받을 수 있는 지원금을</span><br />
+              모르고 지나쳐요
+            </h2>
+            <div class="stat-block">
+              <div class="stat-row">
+                <span class="stat-num">3,000</span>
+                <span class="stat-unit">개+</span>
+              </div>
+              <div class="stat-label">현재 운영 중인 정부·지자체 지원 프로그램 수<br />조건·나이·지역마다 달라서, 내 것만 따로 찾기가 어려워요</div>
+              <div class="stat-divider"></div>
+              <div class="stat-note">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M6 4v3M6 8.5v.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                메이트에서 내 조건 입력하면 해당 혜택만 바로 확인
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 카드 3: 공감 (경제관념 막막함) ── -->
         <div class="intro-card">
           <div class="card-box" style="--card-line: #8B5CF6;">
-            <span class="card-emoji">😶‍🌫️</span>
+            <svg class="card-emoji" width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <circle cx="26" cy="26" r="24" fill="rgba(139,92,246,0.08)"/>
+              <circle cx="26" cy="26" r="11" fill="white" stroke="#8B5CF6" stroke-width="1.8"/>
+              <path d="M22.5 23.5c0-1.9 1.6-3.5 3.5-3.5s3.5 1.6 3.5 3.5c0 1.8-1.2 2.8-2.8 3.3-.5.2-.7.6-.7 1.2" stroke="#8B5CF6" stroke-width="1.9" stroke-linecap="round"/>
+              <circle cx="26" cy="33" r="1.5" fill="#8B5CF6"/>
+            </svg>
             <div class="card-tag" style="background:rgba(139,92,246,0.10);color:#6D28D9;">혹시 이런 생각 해보셨나요?</div>
             <h2 class="card-title">
-              월급은 오르는데<br />
-              <span class="highlight" style="color:#8B5CF6">통장은 왜 그대로일까</span>
+              경제적으로 잘 살고 싶은데<br />
+              <span class="highlight" style="color:#8B5CF6">어디서부터 시작해야 할지</span><br />
+              모르겠어요
             </h2>
             <div class="card-list" style="gap:8px">
               <div class="empathy-item">
-                <span class="emp-icon">📈</span>
-                <span class="emp-text"><strong>"재테크 시작해야지"</strong> 생각은 하는데<br />막상 뭐부터 해야 할지 모르겠어요</span>
-              </div>
-              <div class="empathy-item">
                 <span class="emp-icon">🏛️</span>
-                <span class="emp-text"><strong>정부 지원이 있다는 건 알아요</strong><br />근데 뭘 어떻게 신청하는지 모르겠어요</span>
+                <span class="emp-text"><strong>"정부 지원이 있다는 건 알아요"</strong><br />근데 찾아보면 복잡해서 그냥 포기했어요</span>
               </div>
               <div class="empathy-item">
-                <span class="emp-icon">💸</span>
-                <span class="emp-text"><strong>쓰지도 않았는데</strong> 왜 항상<br />월말이면 잔고가 비어있을까요</span>
+                <span class="emp-icon">🔀</span>
+                <span class="emp-text"><strong>저축, 소비, 투자 다 해야 한다는데</strong><br />뭐가 먼저인지 순서를 모르겠어요</span>
+              </div>
+              <div class="empathy-item">
+                <span class="emp-icon">📱</span>
+                <span class="emp-text"><strong>재테크 콘텐츠는 많이 봤는데</strong><br />결국 내 상황에 어떻게 적용할지 모르겠어요</span>
               </div>
             </div>
           </div>
@@ -248,35 +316,120 @@
 
         <!-- ── 카드 4: 해결 + CTA ── -->
         <div class="intro-card">
-          <div class="card-box" style="--card-line: var(--color-primary);">
-            <span class="card-emoji">🌱</span>
+          <div class="card-box" style="--card-line: var(--mate-primary);">
+            <svg class="card-emoji" width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <circle cx="26" cy="26" r="24" fill="#E6FAF4"/>
+              <path d="M26 38V27" stroke="#0D5C46" stroke-width="2.2" stroke-linecap="round"/>
+              <path d="M26 33c0 0-6-1-5.5-7.5 2.5-.5 5.5 3.5 5.5 7.5z" fill="#00C98A"/>
+              <path d="M26 28.5c0 0 6-1 5.5-7-2.5-.5-5.5 3-5.5 7z" fill="#0D5C46"/>
+              <path d="M20 38h12" stroke="#0D5C46" stroke-width="2" stroke-linecap="round"/>
+            </svg>
             <div class="card-tag">복잡하지 않아요, 진짜로요</div>
             <h2 class="card-title">
-              그래서<br />
-              <span class="highlight">메이트가 있어요</span>
+              지금 바로 할 수 있는 것부터<br />
+              <span class="highlight">메이트가 함께할게요</span>
             </h2>
             <div class="card-list" style="gap:8px">
               <div class="solution-item">
-                <div class="sol-icon-wrap" style="background:var(--color-primary-l)">🏛️</div>
+                <div class="sol-icon-wrap" style="background:var(--mate-primary-light);color:var(--mate-primary)">
+                  <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><path d="M3 18V9l7-6 7 6v9" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 18v-5h4v5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                </div>
                 <div class="sol-body">
-                  <div class="sol-title">내 조건에 맞는 정부 혜택만 쏙</div>
-                  <div class="sol-desc">나이·소득·지역 기반, 지금 신청 가능한 것만 추려드려요</div>
+                  <div class="sol-title">내 조건에 맞는 정부 혜택만</div>
+                  <div class="sol-desc">나이·소득·지역 기반 자동 필터, 신청 방법까지 한 화면에</div>
                 </div>
               </div>
               <div class="solution-item">
-                <div class="sol-icon-wrap" style="background:#EFF6FF">💡</div>
+                <div class="sol-icon-wrap" style="background:#EFF6FF;color:#3B82F6">
+                  <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><rect x="4" y="3" width="12" height="15" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 8h6M7 11h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.5"/></svg>
+                </div>
                 <div class="sol-body">
-                  <div class="sol-title">돈 모이는 구조 안내</div>
-                  <div class="sol-desc">내 상황에서 뭐부터 시작할지 순서대로 알려드려요</div>
+                  <div class="sol-title">조건 확인부터 신청까지 한 번에</div>
+                  <div class="sol-desc">복잡한 기관 홈페이지 찾아다닐 필요 없어요</div>
+                </div>
+              </div>
+              <div class="solution-item" style="opacity:0.55">
+                <div class="sol-icon-wrap" style="background:#F3F4F6;color:#9CA3AF">
+                  <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><path d="M3 16V10M7 16V6M11 16V11M15 16V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M2 16h16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                </div>
+                <div class="sol-body">
+                  <div class="sol-title">금융 기록·투자 연동<span class="soon-badge">준비 중</span></div>
+                  <div class="sol-desc">내 소비·저축 패턴 분석까지, 순서대로 준비하고 있어요</div>
                 </div>
               </div>
             </div>
             <div class="card-cta" style="margin-top:20px">
-              <button class="btn-primary" onclick="goToOnboarding()">
+              <button class="btn-accent" onclick="goToOnboarding()">
                 3분이면 내 혜택 나와요 →
               </button>
               <button class="btn-return" id="returnBtn" onclick="goToResult()" style="display:none">
                 이전 결과 바로 보기
+              </button>
+              <p style="text-align:center;font-size:11px;color:var(--color-gray1);margin-top:10px">
+                가입 없이 무료로 확인해요
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 카드 5: 비전 예고 (신규) ── -->
+        <div class="intro-card">
+          <div class="card-box" style="--card-line: var(--mate-accent);">
+            <svg class="card-emoji" width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <circle cx="26" cy="26" r="24" fill="rgba(0,201,138,0.08)"/>
+              <rect x="18" y="23" width="14" height="6" rx="2" fill="white" stroke="#009E6C" stroke-width="1.8"/>
+              <rect x="32" y="24.5" width="4.5" height="3" rx="1" fill="white" stroke="#009E6C" stroke-width="1.5"/>
+              <ellipse cx="18" cy="26" rx="2.5" ry="4" fill="white" stroke="#00C98A" stroke-width="1.8"/>
+              <path d="M22 29l-2.5 7M26 29v7M30 29l2.5 7" stroke="#009E6C" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="39" cy="21" r="1.5" fill="#00C98A"/>
+              <circle cx="36" cy="17.5" r="1" fill="#00C98A" opacity="0.7"/>
+              <circle cx="40" cy="25" r="1" fill="#009E6C" opacity="0.7"/>
+            </svg>
+            <div class="card-tag" style="background:rgba(0,201,138,0.10);color:#009E6C;">메이트가 준비 중인 것들</div>
+            <h2 class="card-title">
+              지원금은 시작이에요<br />
+              <span class="highlight" style="color:var(--mate-accent)">진짜 경제 독립까지</span><br />
+              단계적으로 함께할게요
+            </h2>
+            <p class="card-desc" style="margin-bottom:14px">
+              정부 혜택을 파악했다면, 다음은 내 돈을 제대로 아는 것.<br />
+              내 속도에 맞게 하나씩 알아갈 수 있도록 준비하고 있어요.
+            </p>
+            <div class="card-list" style="gap:8px">
+              <div class="solution-item" style="opacity:0.6">
+                <div class="sol-icon-wrap" style="background:#F3F4F6;color:#9CA3AF">
+                  <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><path d="M3 16V10M7 16V6M11 16V11M15 16V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M2 16h16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                </div>
+                <div class="sol-body">
+                  <div class="sol-title">금융 기록 연동<span class="soon-badge">준비 중</span></div>
+                  <div class="sol-desc">내 소비·저축 현황 한눈에</div>
+                </div>
+              </div>
+              <div class="solution-item" style="opacity:0.6">
+                <div class="sol-icon-wrap" style="background:#F3F4F6;color:#9CA3AF">
+                  <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="0.8" fill="currentColor"/></svg>
+                </div>
+                <div class="sol-body">
+                  <div class="sol-title">맞춤 저축 플랜<span class="soon-badge">준비 중</span></div>
+                  <div class="sol-desc">내 목표까지 최단 경로</div>
+                </div>
+              </div>
+              <div class="solution-item" style="opacity:0.6">
+                <div class="sol-icon-wrap" style="background:#F3F4F6;color:#9CA3AF">
+                  <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><path d="M3 14l4-4 3 3 4-5 3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8h3v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="sol-body">
+                  <div class="sol-title">투자 상품 가이드<span class="soon-badge">준비 중</span></div>
+                  <div class="sol-desc">내 성향에 맞는 첫 시작</div>
+                </div>
+              </div>
+            </div>
+            <p style="text-align:center;font-size:12px;color:var(--mate-text3);margin-top:14px;font-weight:600;letter-spacing:-0.2px">
+              아는 만큼 버는 구조, 메이트가 같이 만들어가요
+            </p>
+            <div class="card-cta" style="margin-top:12px">
+              <button class="btn-accent" onclick="goToOnboarding()">
+                지금 내 혜택 확인하기 →
               </button>
               <p style="text-align:center;font-size:11px;color:var(--color-gray1);margin-top:10px">
                 가입 없이 무료로 확인해요
@@ -295,6 +448,7 @@
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
+        <div class="dot"></div>
       </div>
       <div class="nav-btn">
         <button class="prev-btn" id="prevBtn" onclick="prevCard()" disabled>←</button>
@@ -307,7 +461,7 @@
 
 <script>
   let currentCard = 0;
-  const totalCards = 4;
+  const totalCards = 5;
 
   const track   = document.getElementById('cardsTrack');
   const dots    = document.querySelectorAll('.dot');

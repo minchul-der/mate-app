@@ -7,26 +7,25 @@
   <link rel="stylesheet" href="css/style.css" />
   <style>
     :root {
-      --bg:       #F7F9F8;
+      --bg:       #F8FAFA;
       --surface:  #FFFFFF;
-      --surface2: #F7F9F8;
-      --green:    #1B4F3A;
-      --green-d:  #2D7A5F;
-      --green-l:  #E1F5EE;
-      --amber:    #F6AD55;
-      --amber-l:  #FFF8EC;
+      --surface2: #F2F5F4;
+      --green:    #0D5C46;
+      --green-d:  #127A5E;
+      --green-l:  #E6FAF4;
+      --accent:   #00C98A;
+      --amber:    #D97706;
+      --amber-l:  #FEF3C7;
       --blue:     #3B82F6;
       --blue-l:   #EFF6FF;
-      --coral:    #FF6B35;
-      --coral-l:  #FFF0E6;
-      --navy:     #1A1A2E;
-      --text2:    #4A5568;
-      --text3:    #8896A6;
-      --border:   #E4EAE7;
+      --navy:     #191F28;
+      --text2:    #4D6258;
+      --text3:    #8FA89E;
+      --border:   #E8EEED;
       --radius:   16px;
-      --font:     'Pretendard', 'Noto Sans KR', sans-serif;
-      --shadow:   0 2px 12px rgba(0,0,0,0.06);
-      --shadow-btn: 0 4px 16px rgba(27,79,58,0.25);
+      --font:     'Pretendard', sans-serif;
+      --shadow:   0 1px 4px rgba(0,0,0,0.05);
+      --shadow-btn: 0 4px 16px rgba(13,92,70,0.22);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -45,46 +44,42 @@
       background: var(--bg);
     }
 
-    /* ── 히어로 헤더 ── */
+    /* ── 히어로 헤더 (화이트 + 그린 포인트) ── */
     .hero {
-      background: var(--green);
-      padding: 52px 20px 18px;
-      position: relative; overflow: hidden;
+      background: var(--surface);
+      padding: 52px 20px 16px;
+      position: relative;
+      border-bottom: 1px solid var(--border);
       flex-shrink: 0;
     }
-    .hero::before {
-      content: '';
-      position: absolute; top: -60px; right: -50px;
-      width: 200px; height: 200px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-    .hero::after {
-      content: '';
-      position: absolute; bottom: -12px; left: 0; right: 0;
-      height: 24px; background: var(--bg);
-      border-radius: 24px 24px 0 0;
-    }
     .hero-logo {
-      display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px;
     }
+    .hero-logo-left { display: flex; align-items: center; gap: 8px; }
     .hero-logo-icon {
-      width: 30px; height: 30px; background: rgba(255,255,255,0.20);
+      width: 30px; height: 30px; background: var(--green);
       border-radius: 9px; display: flex; align-items: center; justify-content: center;
       font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.5px;
+      box-shadow: 0 2px 8px rgba(13,92,70,0.22);
     }
-    .hero-logo-text { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+    .hero-logo-text { font-size: 17px; font-weight: 700; color: var(--navy); letter-spacing: -0.5px; }
+    .hero-logo-text span { color: var(--accent); }
 
-    .hero-title { font-size: 21px; font-weight: 700; color: #fff; letter-spacing: -0.6px; line-height: 1.35; margin-bottom: 14px; }
+    .hero-title {
+      font-size: 20px; font-weight: 800; color: var(--navy);
+      letter-spacing: -0.7px; line-height: 1.35; margin-bottom: 14px;
+    }
+    .hero-title em { font-style: normal; color: var(--green); }
 
     /* 사용자 상황 요약 태그 */
     .profile-chips { display: flex; flex-wrap: wrap; gap: 6px; }
     .profile-chip {
       padding: 5px 12px;
-      background: rgba(255,255,255,0.20);
+      background: var(--green-l);
       border-radius: 100px;
-      font-size: 12px; font-weight: 600; color: #fff;
+      font-size: 12px; font-weight: 600; color: var(--green);
+      border: 1px solid rgba(13,92,70,0.10);
     }
 
     /* ── 카테고리 필터 칩 ── */
@@ -100,6 +95,7 @@
     .cat-filter::-webkit-scrollbar { display: none; }
     .cat-chip {
       flex-shrink: 0; white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 5px;
       padding: 7px 14px;
       background: var(--surface);
       border: 1.5px solid var(--border);
@@ -108,7 +104,7 @@
       color: var(--text2); cursor: pointer;
       transition: all 0.18s;
     }
-    .cat-chip.active { background: var(--green); border-color: var(--green); color: #fff; box-shadow: 0 2px 8px rgba(27,79,58,0.25); }
+    .cat-chip.active { background: var(--green); border-color: var(--green); color: #fff; box-shadow: 0 2px 8px rgba(13,92,70,0.22); }
     .cat-chip:active { transform: scale(0.96); }
 
     /* 카테고리 섹션 카운트 뱃지 */
@@ -128,14 +124,14 @@
     }
 
     .section-title {
-      font-size: 13px; font-weight: 800; color: var(--text3);
-      letter-spacing: 0.4px; text-transform: uppercase;
+      font-size: 15px; font-weight: 700; color: var(--navy);
+      letter-spacing: -0.3px;
       margin-bottom: 14px;
-      display: flex; align-items: center; gap: 6px;
+      display: flex; align-items: center; gap: 7px;
     }
     .section-title::before {
-      content: ''; display: block; width: 3px; height: 12px;
-      background: var(--green); border-radius: 2px;
+      content: ''; display: block; width: 3px; height: 14px;
+      background: var(--accent); border-radius: 2px;
     }
 
     /* ── 혜택 카드 ── */
@@ -143,13 +139,12 @@
       background: var(--surface);
       border-radius: 16px;
       padding: 18px;
-      box-shadow: var(--shadow);
       margin-bottom: 10px;
       position: relative; overflow: hidden;
-      border: 0.5px solid var(--border);
-      transition: transform 0.15s, box-shadow 0.15s;
+      border: 1.5px solid var(--border);
+      transition: transform 0.15s, border-color 0.15s;
     }
-    .benefit-card:active { transform: scale(0.99); box-shadow: 0 1px 8px rgba(0,0,0,0.07); }
+    .benefit-card:active { transform: scale(0.99); border-color: rgba(13,92,70,0.18); }
 
     /* 카드 상단 컬러 라인 */
     .benefit-card::before {
@@ -169,6 +164,7 @@
       color: var(--cat-color, var(--green-d));
     }
     .card-match {
+      display: inline-flex; align-items: center; gap: 3px;
       font-size: 11px; font-weight: 700;
       color: var(--green); padding: 4px 10px;
       background: var(--green-l); border-radius: 100px;
@@ -209,7 +205,7 @@
       display: flex; align-items: center; gap: 8px;
       font-size: 12px; color: var(--text2);
     }
-    .cond-icon { font-size: 13px; flex-shrink: 0; }
+    .cond-icon { display:flex; align-items:center; flex-shrink:0; line-height:1; }
 
     /* 카드 CTA */
     .card-cta {
@@ -218,11 +214,13 @@
     }
     .card-cta-label { font-size: 12px; color: var(--text3); }
     .card-btn {
+      display: inline-flex; align-items: center; gap: 4px;
       padding: 8px 16px;
-      background: var(--green); color: white;
+      background: var(--accent); color: white;
       border: none; border-radius: 10px;
       font-family: var(--font); font-size: 13px; font-weight: 700;
       cursor: pointer; transition: all 0.15s;
+      box-shadow: 0 2px 8px rgba(0,201,138,0.25);
     }
     .card-btn:active { transform: scale(0.97); }
     .card-btn.secondary {
@@ -243,31 +241,31 @@
       cursor: pointer; transition: all 0.15s; text-align: center;
     }
     .action-btn:active { border-color: var(--green); background: var(--green-l); }
-    .action-icon { font-size: 24px; }
+    .action-icon { display:flex; align-items:center; justify-content:center; line-height:1; }
     .action-label { font-size: 12px; font-weight: 700; color: var(--navy); }
     .action-sub { font-size: 10px; color: var(--text3); word-break: keep-all; }
 
     /* ── 하단 여백 ── */
     .bottom-pad { height: 40px; }
 
-    /* ── 로그인 상태 헤더 ── */
+    /* ── 로그인 상태 헤더 (화이트 배경용) ── */
     .auth-header-btn {
-      background: rgba(255,255,255,0.18);
-      border: 1px solid rgba(255,255,255,0.25);
+      background: var(--green-l);
+      border: 1.5px solid rgba(13,92,70,0.12);
       border-radius: 99px;
-      padding: 7px 14px 7px 10px;
+      padding: 7px 14px 7px 8px;
       font-family: var(--font); font-size: 12px; font-weight: 600;
-      color: #fff; cursor: pointer;
+      color: var(--green); cursor: pointer;
       display: flex; align-items: center; gap: 6px;
       transition: background 0.15s;
       white-space: nowrap;
     }
-    .auth-header-btn:active { background: rgba(255,255,255,0.28); }
+    .auth-header-btn:active { background: rgba(13,92,70,0.12); }
     .auth-avatar {
       width: 22px; height: 22px;
-      background: rgba(255,255,255,0.30); border-radius: 50%;
+      background: var(--green); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 12px;
+      font-size: 11px; color: #fff; font-weight: 700;
     }
 
     /* ── D-Day 뱃지 ── */
@@ -519,19 +517,20 @@
 
   <!-- 히어로 헤더 -->
   <div class="hero">
-    <div class="hero-logo" style="justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:8px">
+    <div class="hero-logo">
+      <div class="hero-logo-left">
         <div class="hero-logo-icon">M</div>
-        <span class="hero-logo-text">mate.</span>
+        <span class="hero-logo-text">mate<span>.</span></span>
       </div>
       <button class="auth-header-btn" id="authBtn" onclick="handleAuthBtnClick()">
+        <span class="auth-avatar" id="authAvatar">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 14C2 11.24 4.69 9 8 9C11.31 9 14 11.24 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
         <span id="authBtnInner">로그인</span>
       </button>
     </div>
-    <div class="hero-title" id="heroTitle">내 상황에 딱 맞는<br />혜택을 찾았어요 🎉</div>
-    <div class="profile-chips" id="profileChips">
-      <!-- JS로 사용자 프로필 태그 채워짐 -->
-    </div>
+    <div class="hero-title" id="heroTitle">내 상황에 딱 맞는<br /><em>혜택을 찾았어요</em></div>
+    <div class="profile-chips" id="profileChips"></div>
   </div>
 
   <!-- 카테고리 필터 칩 -->
@@ -552,17 +551,17 @@
     <div class="section-title">더 알아보기</div>
     <div class="action-row">
       <button class="action-btn" onclick="goTo('saving.html')">
-        <span class="action-icon">💰</span>
+        <span class="action-icon"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="var(--green)" stroke-width="2"/><path d="M16 8V10M16 22V24M20 12.5C20 10.57 18.21 9 16 9C13.79 9 12 10.57 12 12.5C12 14.43 13.79 16 16 16C18.21 16 20 17.57 20 19.5C20 21.43 18.21 23 16 23C13.79 23 12 21.43 12 19.5" stroke="var(--green)" stroke-width="2" stroke-linecap="round"/></svg></span>
         <span class="action-label">저축법</span>
         <span class="action-sub">돈 모이는 구조 만들기</span>
       </button>
       <button class="action-btn" onclick="scrollToBenefits()">
-        <span class="action-icon">🏛️</span>
+        <span class="action-icon"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 15H28M16 4L4 15V28H28V15L16 4Z" stroke="var(--green)" stroke-width="2" stroke-linejoin="round"/><rect x="11" y="20" width="4" height="8" rx="1" stroke="var(--green)" stroke-width="1.8"/><rect x="17" y="20" width="4" height="8" rx="1" stroke="var(--green)" stroke-width="1.8"/></svg></span>
         <span class="action-label">정부지원</span>
         <span class="action-sub">내 조건 맞춤 검색</span>
       </button>
       <button class="action-btn" onclick="goTo('learn.html')">
-        <span class="action-icon">📈</span>
+        <span class="action-icon"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 28V20M10 28V14M16 28V18M22 28V8M28 28V12" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"/><path d="M4 20L10 14L16 18L22 8L28 12" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <span class="action-label">투자 공부</span>
         <span class="action-sub">개념부터 천천히</span>
       </button>
@@ -695,19 +694,51 @@ async function loadBenefits() {
    ══════════════════════════════════ */
 function checkCondition(cond, profile, age, monthly) {
   if (cond.field === 'age')
-    return (age >= cond.min && age <= cond.max) ? '✅' : '❌';
+    return (age >= cond.min && age <= cond.max) ? 'ok' : 'fail';
   if (cond.field === 'income_monthly') {
-    if (!monthly) return '🔸';
-    return monthly <= cond.value ? '✅' : '❌';
+    if (!monthly) return 'maybe';
+    return monthly <= cond.value ? 'ok' : 'fail';
   }
   if (cond.field === 'job')
-    return cond.values.includes(profile.job) ? '✅' : '🔸';
+    return cond.values.includes(profile.job) ? 'ok' : 'maybe';
   if (cond.field === 'region')
-    return cond.values.includes(profile.sido) ? '✅' : '🔸';
+    return cond.values.includes(profile.sido) ? 'ok' : 'maybe';
   if (cond.field === 'housing')
-    return cond.values.includes(profile.housing) ? '✅' : '🔸';
-  return '🔸'; // field:'info' 등 정보성 조건
+    return cond.values.includes(profile.housing) ? 'ok' : 'maybe';
+  return 'maybe';
 }
+
+/* ══════════════════════════════════
+   아이콘 SVG 헬퍼 (원본 제작 — 오픈소스 Lucide 동일 라이선스 구조)
+   ══════════════════════════════════ */
+function statusSvg(s) {
+  if (s === 'ok')
+    return `<svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="8" fill="#DCFCE7"/><path d="M4.5 8L6.8 10.3L11.5 5.5" stroke="#16A34A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  if (s === 'fail')
+    return `<svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="8" fill="#FEE2E2"/><path d="M5.5 5.5L10.5 10.5M10.5 5.5L5.5 10.5" stroke="#DC2626" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+  return `<svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="8" fill="#FEF3C7"/><path d="M8 5V8.5" stroke="#D97706" stroke-width="1.6" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.9" fill="#D97706"/></svg>`;
+}
+
+function catSvg(key) {
+  const m = {
+    '금융': `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5V5.5M8 10.5V11.5M10 7C10 6.17 9.1 5.5 8 5.5C6.9 5.5 6 6.17 6 7C6 7.83 6.9 8.5 8 8.5C9.1 8.5 10 9.17 10 10C10 10.83 9.1 11.5 8 11.5C6.9 11.5 6 10.83 6 10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>`,
+    '주거': `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M2 7.5L8 2L14 7.5V14H10.5V10H5.5V14H2V7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+    '교육': `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M8 2L14 5L8 8L2 5L8 2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M4.5 6.5V10C4.5 10 5.5 12 8 12C10.5 12 11.5 10 11.5 10V6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+    '취업': `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><rect x="2" y="5.5" width="12" height="8.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M6 5.5V4.5C6 3.4 6.9 2.5 8 2.5C9.1 2.5 10 3.4 10 4.5V5.5M2 9H14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+    '복지': `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M8 13C8 13 2.5 9.8 2.5 6C2.5 4.07 4.07 2.5 6 2.5C7 2.5 7.9 2.9 8 3.5C8.1 2.9 9 2.5 10 2.5C11.93 2.5 13.5 4.07 13.5 6C13.5 9.8 8 13 8 13Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+    '직업': `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><rect x="2" y="5.5" width="12" height="8.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M6 5.5V4.5C6 3.4 6.9 2.5 8 2.5C9.1 2.5 10 3.4 10 4.5V5.5M2 9H14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+    '지역': `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M8 2C5.79 2 4 3.79 4 6C4 9 8 14 8 14C8 14 12 9 12 6C12 3.79 10.21 2 8 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="6" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>`,
+  };
+  return m[key] || '';
+}
+
+const _svgBell   = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M8 2C5.8 2 4 3.8 4 6V10L2.5 12H13.5L12 10V6C12 3.8 10.2 2 8 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.5 12C6.5 12.83 7.17 13.5 8 13.5C8.83 13.5 9.5 12.83 9.5 12" stroke="currentColor" stroke-width="1.4"/></svg>`;
+const _svgArrowR = `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const _svgCheckSm= `<svg width="11" height="11" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M3.5 8.5L6 11L12.5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const _svgInfoSm = `<svg width="11" height="11" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><path d="M8 5.5V9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="8" cy="11.5" r="1" fill="currentColor"/></svg>`;
+const _svgCoinL  = `<svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/><path d="M16 8V10M16 22V24M20 12.5C20 10.57 18.21 9 16 9C13.79 9 12 10.57 12 12.5C12 14.43 13.79 16 16 16C18.21 16 20 17.57 20 19.5C20 21.43 18.21 23 16 23C13.79 23 12 21.43 12 19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+const _svgGovL   = `<svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 15H28M16 4L4 15V28H28V15L16 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><rect x="11" y="20" width="4" height="8" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="17" y="20" width="4" height="8" rx="1" stroke="currentColor" stroke-width="1.8"/></svg>`;
+const _svgChartL = `<svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 28V20M10 28V14M16 28V18M22 28V8M28 28V12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M4 20L10 14L16 18L22 8L28 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 /* ══════════════════════════════════
    혜택 점수 계산
@@ -729,13 +760,13 @@ function scoreBenefit(b, profile, age, monthly) {
    카테고리 메타 정의
    ══════════════════════════════════ */
 const CAT_META = {
-  '금융': { label: '💰 금융·저축', key: '금융' },
-  '주거': { label: '🏠 주거',      key: '주거' },
-  '교육': { label: '📚 교육',      key: '교육' },
-  '취업': { label: '💼 취업',      key: '취업' },
-  '복지': { label: '🤝 복지',      key: '복지' },
-  '직업': { label: '💼 직업 맞춤', key: '직업' },
-  '지역': { label: '📍 내 지역',   key: '지역' },
+  '금융': { label: '금융·저축', key: '금융' },
+  '주거': { label: '주거',      key: '주거' },
+  '교육': { label: '교육',      key: '교육' },
+  '취업': { label: '취업',      key: '취업' },
+  '복지': { label: '복지',      key: '복지' },
+  '직업': { label: '직업 맞춤', key: '직업' },
+  '지역': { label: '내 지역',   key: '지역' },
 };
 
 /* 혜택 하나에 해당하는 카테고리 키 목록 반환 */
@@ -787,7 +818,7 @@ function buildChips(cards, profile) {
     const btn  = document.createElement('button');
     btn.className    = 'cat-chip';
     btn.dataset.cat  = key;
-    btn.innerHTML    = `${meta.label} <span class="cat-count">${catCount[key]}</span>`;
+    btn.innerHTML    = `${catSvg(key)}${meta.label} <span class="cat-count">${catCount[key]}</span>`;
     btn.onclick = () => filterBenefits(key, btn);
     strip.appendChild(btn);
   });
@@ -820,10 +851,12 @@ function renderCard(card, profile, delay) {
     text: c.text
   }));
 
-  const anyFail  = checks.some(c => c.icon === '❌');
-  const allGreen = checks.length > 0 && checks.every(c => c.icon === '✅');
+  const anyFail  = checks.some(c => c.icon === 'fail');
+  const allGreen = checks.length > 0 && checks.every(c => c.icon === 'ok');
   const matchCls = anyFail ? 'partial' : '';
-  const matchTxt = allGreen ? '✅ 바로 신청 가능' : anyFail ? '🔸 조건 확인 필요' : '✅ 신청 가능';
+  const matchTxt = allGreen
+    ? `${_svgCheckSm} 바로 신청 가능`
+    : `${_svgInfoSm} 조건 확인 필요`;
 
   const el = document.createElement('div');
   el.className = 'benefit-card';
@@ -831,7 +864,7 @@ function renderCard(card, profile, delay) {
   el.innerHTML = `
     <div class="card-top">
       <div class="card-category" style="background:${card.cat_bg};color:${card.cat_color};">
-        ${card.category_icon} ${card.category_label}
+        ${catSvg(card.category)} ${card.category_label}
       </div>
       <div style="display:flex;align-items:center;gap:6px">
         ${card.deadline ? `<span class="dday-badge" id="dday-${card.id}" data-deadline="${card.deadline}"></span>` : ''}
@@ -846,7 +879,7 @@ function renderCard(card, profile, delay) {
         <div class="ba-value">${card.before_value}</div>
         <div class="ba-sub">${card.before_sub}</div>
       </div>
-      <div class="ba-arrow">→</div>
+      <div class="ba-arrow"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div class="ba-box after">
         <div class="ba-label">${card.after_label}</div>
         <div class="ba-value">${card.after_value}</div>
@@ -856,7 +889,7 @@ function renderCard(card, profile, delay) {
     <div class="cond-list">
       ${checks.map(c => `
         <div class="cond-item">
-          <span class="cond-icon">${c.icon}</span>
+          <span class="cond-icon">${statusSvg(c.icon)}</span>
           <span>${c.text}</span>
         </div>`).join('')}
     </div>
@@ -864,8 +897,8 @@ function renderCard(card, profile, delay) {
       <button class="alarm-btn" id="alarm-${card.id}"
         data-alarm-on="false" data-id="${card.id}"
         data-name="${card.name}" data-deadline="${card.deadline||''}"
-        onclick="handleAlarm(this)">🔔 알림</button>
-      <button class="card-btn" onclick="goTo('benefit.html?id=${card.id}')">자세히 →</button>
+        onclick="handleAlarm(this)">${_svgBell} 알림</button>
+      <button class="card-btn" onclick="goTo('benefit.html?id=${card.id}')">자세히 ${_svgArrowR}</button>
     </div>
   `;
   const cats = getCats(card, _profile || profile);
@@ -898,7 +931,10 @@ async function init() {
   /* 카드 렌더링 */
   _profile  = profile;
   _allCards = [];
-  const cards     = selectAll(benefits, profile);
+  const monthly = INCOME_MAP[profile.income] || 0;
+  const cards = selectAll(benefits, profile).filter(card =>
+    !(card.condition_checks || []).some(c => checkCondition(c, profile, age, monthly) === 'fail')
+  );
   const container = document.getElementById('benefitCards');
 
   if (!cards.length) {

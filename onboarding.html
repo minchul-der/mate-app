@@ -7,23 +7,24 @@
   <link rel="stylesheet" href="css/style.css" />
   <style>
     :root {
-      --bg:       #F7F9F8;
+      --bg:       #F8FAFA;
       --surface:  #FFFFFF;
-      --surface2: #F7F9F8;
-      --green:    #1B4F3A;
-      --green-d:  #2D7A5F;
-      --green-l:  #E1F5EE;
-      --amber:    #F6AD55;
-      --amber-l:  #FFF8EC;
+      --surface2: #F2F5F4;
+      --green:    #0D5C46;
+      --green-d:  #127A5E;
+      --green-l:  #E6FAF4;
+      --accent:   #00C98A;
+      --amber:    #D97706;
+      --amber-l:  #FEF3C7;
       --blue:     #3B82F6;
       --blue-l:   #EFF6FF;
-      --navy:     #1A1A2E;
-      --text2:    #4A5568;
-      --text3:    #8896A6;
-      --border:   #E4EAE7;
+      --navy:     #191F28;
+      --text2:    #4D6258;
+      --text3:    #8FA89E;
+      --border:   #E8EEED;
       --radius:   14px;
-      --font:     'Pretendard', 'Noto Sans KR', sans-serif;
-      --shadow:   0 2px 12px rgba(0,0,0,0.06);
+      --font:     'Pretendard', sans-serif;
+      --shadow:   0 1px 4px rgba(0,0,0,0.05);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -59,11 +60,12 @@
     .step-badge {
       font-size: 12px; font-weight: 700; color: var(--green);
       background: var(--green-l); padding: 5px 12px; border-radius: 100px; letter-spacing: 0.3px;
+      border: 1px solid rgba(13,92,70,0.10);
     }
     .progress-wrap { display: flex; gap: 4px; }
     .prog-seg { flex: 1; height: 4px; border-radius: 100px; background: var(--border); transition: background 0.4s; }
     .prog-seg.done   { background: var(--green); }
-    .prog-seg.active { background: linear-gradient(90deg, var(--green), var(--amber)); }
+    .prog-seg.active { background: linear-gradient(90deg, var(--green), var(--accent)); }
 
     /* ── 슬라이드 ── */
     .slides-area { flex: 1; position: relative; min-height: 0; overflow: hidden; z-index: 1; }
@@ -88,7 +90,7 @@
       font-size: 11px; font-weight: 700; color: var(--text2);
       letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 7px;
     }
-    .sec-label::before { content: ''; display: block; width: 3px; height: 12px; background: var(--green); border-radius: 2px; }
+    .sec-label::before { content: ''; display: block; width: 3px; height: 12px; background: var(--accent); border-radius: 2px; }
     .sec-hint { font-size: 11px; color: var(--text3); margin-bottom: 7px; line-height: 1.4; }
 
     /* 슬라이드 1 직업 선택 스크롤 유도 */
@@ -141,8 +143,8 @@
     .wheel-hl {
       position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
       height: 36px; background: var(--green-l);
-      border-top: 1px solid rgba(45,122,95,0.25);
-      border-bottom: 1px solid rgba(45,122,95,0.25);
+      border-top: 1px solid rgba(13,92,70,0.12);
+      border-bottom: 1px solid rgba(13,92,70,0.12);
       pointer-events: none;
     }
     .wheel-fade-t, .wheel-fade-b {
@@ -230,7 +232,7 @@
       background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius);
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .asset-wrap.focused { border-color: var(--green); box-shadow: 0 0 0 3px rgba(27,79,58,0.10); }
+    .asset-wrap.focused { border-color: var(--green); box-shadow: 0 0 0 3px rgba(13,92,70,0.08); }
     .asset-input {
       flex: 1; background: none; border: none; outline: none;
       color: var(--navy); font-family: var(--font); font-size: 22px; font-weight: 700;
@@ -321,11 +323,11 @@
     }
     .next-btn {
       width: 100%; height: 52px; border-radius: var(--radius);
-      background: var(--green); border: none; color: white;
-      font-family: var(--font); font-size: 16px; font-weight: 600;
+      background: var(--accent); border: none; color: white;
+      font-family: var(--font); font-size: 16px; font-weight: 700;
       cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
       transition: all 0.2s; letter-spacing: -0.3px;
-      box-shadow: 0 4px 16px rgba(27,79,58,0.28);
+      box-shadow: 0 4px 16px rgba(0,201,138,0.28);
     }
     .next-btn:active { transform: scale(0.98); opacity: 0.92; }
     .next-btn:disabled { background: var(--border); color: var(--text3); box-shadow: none; cursor: not-allowed; }
@@ -344,9 +346,9 @@
     .complete-desc { font-size: 14px; color: var(--text3); text-align: center; line-height: 1.7; margin-bottom: 32px; word-break: keep-all; }
     .complete-btn {
       width: 100%; height: 52px; border-radius: var(--radius);
-      background: var(--green); border: none; color: white;
+      background: var(--accent); border: none; color: white;
       font-family: var(--font); font-size: 16px; font-weight: 700;
-      cursor: pointer; box-shadow: 0 4px 16px rgba(27,79,58,0.28); transition: all 0.2s;
+      cursor: pointer; box-shadow: 0 4px 16px rgba(0,201,138,0.28); transition: all 0.2s;
     }
     .complete-btn:active { transform: scale(0.98); }
   </style>
@@ -356,7 +358,7 @@
 
   <div class="header">
     <div class="header-top">
-      <button class="back-btn" id="backBtn" onclick="prevSlide()">←</button>
+      <button class="back-btn" id="backBtn" onclick="prevSlide()"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <span class="step-badge" id="stepBadge">1단계 · 기본 정보</span>
     </div>
     <div class="progress-wrap">
