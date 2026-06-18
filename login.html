@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>메이트 — 로그인</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 
   <style>
@@ -27,9 +25,10 @@
     .logo-icon {
       width: 30px; height: 30px; background: var(--color-primary);
       border-radius: 8px; display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 900; color: #fff; letter-spacing: -0.5px;
+      font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.5px;
+      box-shadow: 0 2px 8px rgba(27,79,58,0.25);
     }
-    .logo-text { font-size: 18px; font-weight: 900; letter-spacing: -1px; color: var(--color-text); }
+    .logo-text { font-size: 18px; font-weight: 700; letter-spacing: -0.8px; color: var(--color-text); }
     .logo-text span { color: var(--color-primary); }
 
     .tab-wrap {
@@ -48,7 +47,7 @@
 
     .form-section { padding: 28px 20px 40px; }
     .form-section.hidden { display: none; }
-    .form-title { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 6px; }
+    .form-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
     .form-sub { font-size: 13px; color: var(--color-gray1); margin-bottom: 28px; line-height: 1.5; }
 
     .field-group { margin-bottom: 16px; }
@@ -129,7 +128,7 @@
     .agree-text { font-size: 13px; color: var(--color-text2); line-height: 1.5; }
     .agree-link {
       color: var(--color-primary); font-weight: 700;
-      text-decoration: none; border-bottom: 1px solid rgba(0,196,122,0.3);
+      text-decoration: none; border-bottom: 1px solid rgba(27,79,58,0.25);
       cursor: pointer; background: none; border-top: none; border-left: none; border-right: none;
       font-family: var(--font-main); font-size: 13px; padding: 0;
     }
@@ -140,8 +139,8 @@
 
     .btn-submit {
       width: 100%; padding: 17px; background: var(--color-primary);
-      border: none; border-radius: 16px; cursor: pointer;
-      font-family: var(--font-main); font-size: 16px; font-weight: 900;
+      border: none; border-radius: 13px; cursor: pointer;
+      font-family: var(--font-main); font-size: 16px; font-weight: 700;
       color: #fff; letter-spacing: -0.3px; box-shadow: var(--shadow-btn);
       transition: all 0.2s; margin-top: 8px;
     }
@@ -178,7 +177,7 @@
     }
     .modal-overlay.hidden { display: none; }
     .modal-sheet {
-      background: #fff; border-radius: 24px 24px 0 0;
+      background: #fff; border-radius: 20px 20px 0 0;
       width: 100%; max-width: 430px;
       display: flex; flex-direction: column;
       max-height: 85dvh;
@@ -191,13 +190,13 @@
       background: var(--color-gray2); border-radius: 99px;
       margin: 0 auto 20px;
     }
-    .modal-title { font-size: 18px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 4px; }
+    .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 4px; }
     .modal-updated { font-size: 12px; color: var(--color-gray1); margin-bottom: 16px; }
     .modal-body {
       padding: 0 20px 40px; overflow-y: auto; flex: 1;
       font-size: 13px; color: var(--color-text2); line-height: 1.8;
     }
-    .modal-body h3 { font-size: 14px; font-weight: 900; color: var(--color-text); margin: 20px 0 6px; }
+    .modal-body h3 { font-size: 14px; font-weight: 700; color: var(--color-text); margin: 20px 0 6px; }
     .modal-body p { margin-bottom: 8px; }
     .modal-body ul { padding-left: 16px; margin-bottom: 8px; }
     .modal-body ul li { margin-bottom: 4px; }
@@ -205,8 +204,8 @@
     .modal-body th, .modal-body td { border: 1px solid var(--color-gray2); padding: 8px; text-align: left; vertical-align: top; }
     .modal-body th { background: var(--color-bg, #F7F8FA); font-weight: 700; color: var(--color-text); }
     .modal-close-btn {
-      margin: 0 20px 32px; padding: 15px; border-radius: 14px; border: none; cursor: pointer;
-      font-family: var(--font-main); font-size: 15px; font-weight: 900;
+      margin: 0 20px 32px; padding: 15px; border-radius: 13px; border: none; cursor: pointer;
+      font-family: var(--font-main); font-size: 15px; font-weight: 700;
       background: var(--color-primary); color: #fff; flex-shrink: 0;
     }
     .modal-close-btn:active { opacity: 0.88; }
