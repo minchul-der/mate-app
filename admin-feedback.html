@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>메이트 — 피드백 대시보드</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root {
+      --bg: #F8FAFA; --surface: #FFFFFF; --green: #0D5C46; --green-d: #127A5E;
+      --green-l: #E6FAF4; --accent: #00C98A; --navy: #191F28;
+      --text2: #4D6258; --text3: #8FA89E; --border: #E8EEED;
+      --font: 'Pretendard', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg); font-family: var(--font); color: var(--navy); }
+
+    .dash {
+      max-width: 640px; margin: 0 auto; padding: 20px;
+      min-height: 100dvh;
+    }
+
+    /* 헤더 */
+    .dash-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px; padding-top: 12px;
+    }
+    .dash-title { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+    .dash-title span { color: var(--green); }
+    .dash-count {
+      font-size: 13px; font-weight: 700; color: var(--green);
+      background: var(--green-l); padding: 6px 14px; border-radius: 99px;
+      border: 1px solid rgba(13,92,70,0.10);
+    }
+
+    /* 로그인 폼 */
+    .login-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px 24px; text-align: center;
+      margin-top: 60px;
+    }
+    .login-box h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .login-box p { font-size: 13px; color: var(--text3); margin-bottom: 20px; }
+    .login-input {
+      width: 100%; padding: 13px 16px; border: 1.5px solid var(--border);
+      border-radius: 12px; font-family: var(--font); font-size: 14px;
+      color: var(--navy); outline: none; margin-bottom: 10px;
+    }
+    .login-input:focus { border-color: var(--green); }
+    .login-btn {
+      width: 100%; padding: 14px; background: var(--green); color: #fff;
+      border: none; border-radius: 12px; font-family: var(--font);
+      font-size: 15px; font-weight: 700; cursor: pointer;
+    }
+    .login-btn:active { opacity: 0.9; }
+    .login-err { font-size: 12px; color: #EF4444; margin-top: 8px; }
+
+    /* 요약 카드 */
+    .summary-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    .summary-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px 12px; text-align: center;
+    }
+    .summary-num { font-size: 28px; font-weight: 800; color: var(--green); letter-spacing: -1px; }
+    .summary-label { font-size: 11px; color: var(--text3); margin-top: 4px; font-weight: 600; }
+
+    /* 피드백 카드 */
+    .fb-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 16px; margin-bottom: 12px;
+    }
+    .fb-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .fb-card-date { font-size: 12px; color: var(--text3); font-weight: 600; }
+    .fb-card-profile {
+      display: flex; gap: 5px; flex-wrap: wrap;
+    }
+    .fb-chip {
+      font-size: 10px; font-weight: 600; padding: 3px 8px;
+      border-radius: 99px; background: var(--green-l); color: var(--green-d);
+    }
+
+    .fb-scores { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .fb-score-item {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 12px; color: var(--text2);
+      background: #F2F5F4; padding: 5px 10px; border-radius: 8px;
+    }
+    .fb-score-val { font-weight: 800; color: var(--green); font-size: 14px; }
+
+    .fb-answer { margin-bottom: 8px; }
+    .fb-answer-q { font-size: 11px; color: var(--text3); font-weight: 600; margin-bottom: 2px; }
+    .fb-answer-v { font-size: 13px; color: var(--navy); line-height: 1.5; }
+
+    .fb-text-box {
+      background: #F2F5F4; border-radius: 10px; padding: 12px 14px;
+      margin-bottom: 8px;
+    }
+    .fb-text-q { font-size: 11px; color: var(--text3); font-weight: 600; margin-bottom: 4px; }
+    .fb-text-v { font-size: 13px; color: var(--navy); line-height: 1.6; word-break: keep-all; }
+
+    .empty-state {
+      text-align: center; padding: 60px 20px; color: var(--text3); font-size: 14px;
+    }
+
+    /* 내보내기 버튼 */
+    .export-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 16px; background: var(--surface);
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: var(--font); font-size: 12px; font-weight: 700;
+      color: var(--text2); cursor: pointer; transition: all 0.15s;
+    }
+    .export-btn:active { border-color: var(--green); background: var(--green-l); }
+    .toolbar { display: flex; gap: 8px; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+
+<div class="dash" id="dashMain" style="display:none">
+  <div class="dash-header">
+    <div class="dash-title"><span>mate.</span> 피드백 대시보드</div>
+    <div class="dash-count" id="totalCount">0건</div>
+  </div>
+
+  <div class="summary-row">
+    <div class="summary-card">
+      <div class="summary-num" id="avgQ1">-</div>
+      <div class="summary-label">Q1 첫인상 이해도</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-num" id="avgQ3">-</div>
+      <div class="summary-label">Q3 혜택 유용성</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-num" id="avgQ6">-</div>
+      <div class="summary-label">Q6 추천 의향</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button class="export-btn" onclick="exportCSV()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 11v2a1 1 0 001 1h10a1 1 0 001-1v-2M8 2v8M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      CSV 다운로드
+    </button>
+    <button class="export-btn" onclick="location.reload()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 8a6 6 0 0111.47-2.47M14 2v4h-4M14 8a6 6 0 01-11.47 2.47M2 14v-4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      새로고침
+    </button>
+  </div>
+
+  <div id="feedbackList"></div>
+</div>
+
+<!-- 로그인 -->
+<div class="dash" id="loginScreen">
+  <div class="login-box">
+    <h2>피드백 대시보드</h2>
+    <p>관리자 계정으로 로그인해 주세요</p>
+    <input class="login-input" type="email" id="adminEmail" placeholder="이메일" />
+    <input class="login-input" type="password" id="adminPw" placeholder="비밀번호"
+      onkeydown="if(event.key==='Enter')doAdminLogin()" />
+    <button class="login-btn" onclick="doAdminLogin()">로그인</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="scripts/firebase-config.js"></script>
+
+<script>
+const auth = firebase.auth();
+const db   = firebase.firestore();
+let _feedbacks = [];
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashMain').style.display = 'block';
+    loadFeedbacks();
+  }
+});
+
+async function doAdminLogin() {
+  const email = document.getElementById('adminEmail').value.trim();
+  const pw    = document.getElementById('adminPw').value;
+  document.getElementById('loginErr').textContent = '';
+  try {
+    await auth.signInWithEmailAndPassword(email, pw);
+  } catch(e) {
+    document.getElementById('loginErr').textContent = '이메일 또는 비밀번호를 확인해주세요';
+  }
+}
+
+async function loadFeedbacks() {
+  const snap = await db.collection('feedback').orderBy('created_at', 'desc').get();
+  _feedbacks = [];
+  snap.forEach(doc => _feedbacks.push({ id: doc.id, ...doc.data() }));
+
+  document.getElementById('totalCount').textContent = _feedbacks.length + '건';
+  renderSummary();
+  renderList();
+}
+
+function renderSummary() {
+  const scores = { q1: [], q3: [], q6: [] };
+  _feedbacks.forEach(fb => {
+    const a = fb.answers || {};
+    if (a.q1) scores.q1.push(a.q1);
+    if (a.q3) scores.q3.push(a.q3);
+    if (a.q6) scores.q6.push(a.q6);
+  });
+
+  const avg = arr => arr.length ? (arr.reduce((a,b) => a+b, 0) / arr.length).toFixed(1) : '-';
+  document.getElementById('avgQ1').textContent = avg(scores.q1);
+  document.getElementById('avgQ3').textContent = avg(scores.q3);
+  document.getElementById('avgQ6').textContent = avg(scores.q6);
+}
+
+function renderList() {
+  const container = document.getElementById('feedbackList');
+  if (!_feedbacks.length) {
+    container.innerHTML = '<div class="empty-state">아직 피드백이 없어요</div>';
+    return;
+  }
+
+  container.innerHTML = _feedbacks.map((fb, idx) => {
+    const a = fb.answers || {};
+    const p = fb.profile || {};
+    const date = fb.created_at?.toDate
+      ? fb.created_at.toDate().toLocaleString('ko-KR', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' })
+      : '-';
+
+    const chips = [p.job, p.sido, p.income].filter(Boolean)
+      .map(v => `<span class="fb-chip">${v}</span>`).join('');
+
+    const age = p.birthYear ? (new Date().getFullYear() - p.birthYear) + '세' : '';
+    const ageChip = age ? `<span class="fb-chip">${age}</span>` : '';
+
+    const scaleItems = [
+      { key: 'q1', label: 'Q1 이해도' },
+      { key: 'q3', label: 'Q3 유용성' },
+      { key: 'q4', label: 'Q4 BA비교' },
+      { key: 'q6', label: 'Q6 추천' },
+    ].filter(s => a[s.key]).map(s =>
+      `<div class="fb-score-item">${s.label} <span class="fb-score-val">${a[s.key]}</span>/5</div>`
+    ).join('');
+
+    const choiceItems = [
+      { key: 'q2', label: 'Q2 온보딩 경험' },
+      { key: 'q5', label: 'Q5 알림 사용 의향' },
+      { key: 'q7', label: 'Q7 원하는 기능' },
+    ].filter(s => a[s.key]).map(s => {
+      const val = Array.isArray(a[s.key]) ? a[s.key].join(', ') : a[s.key];
+      return `<div class="fb-answer"><div class="fb-answer-q">${s.label}</div><div class="fb-answer-v">${val}</div></div>`;
+    }).join('');
+
+    const textItems = [
+      { key: 'q8', label: 'Q8 불편한 점' },
+      { key: 'q9', label: 'Q9 개선 요청' },
+      { key: 'q10', label: 'Q10 한 마디' },
+    ].filter(s => a[s.key]).map(s =>
+      `<div class="fb-text-box"><div class="fb-text-q">${s.label}</div><div class="fb-text-v">${a[s.key]}</div></div>`
+    ).join('');
+
+    return `
+      <div class="fb-card">
+        <div class="fb-card-header">
+          <div class="fb-card-date">#${_feedbacks.length - idx} · ${date}</div>
+          <div class="fb-card-profile">${ageChip}${chips}</div>
+        </div>
+        ${scaleItems ? `<div class="fb-scores">${scaleItems}</div>` : ''}
+        ${choiceItems}
+        ${textItems}
+      </div>`;
+  }).join('');
+}
+
+function exportCSV() {
+  if (!_feedbacks.length) return;
+  const headers = ['날짜','나이','직업','지역','소득','Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10'];
+  const rows = _feedbacks.map(fb => {
+    const a = fb.answers || {};
+    const p = fb.profile || {};
+    const date = fb.created_at?.toDate
+      ? fb.created_at.toDate().toLocaleString('ko-KR') : '';
+    const age = p.birthYear ? (new Date().getFullYear() - p.birthYear) : '';
+    const q7 = Array.isArray(a.q7) ? a.q7.join(' / ') : (a.q7 || '');
+    return [date, age, p.job||'', p.sido||'', p.income||'',
+      a.q1||'', a.q2||'', a.q3||'', a.q4||'', a.q5||'', a.q6||'', q7,
+      (a.q8||'').replace(/\n/g,' '), (a.q9||'').replace(/\n/g,' '), (a.q10||'').replace(/\n/g,' ')
+    ];
+  });
+
+  const BOM = '﻿';
+  const csv = BOM + [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `mate_feedback_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>

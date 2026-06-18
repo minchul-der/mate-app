@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>메이트 — 베타 피드백</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root {
+      --bg:       #F8FAFA;
+      --surface:  #FFFFFF;
+      --surface2: #F2F5F4;
+      --green:    #0D5C46;
+      --green-d:  #127A5E;
+      --green-l:  #E6FAF4;
+      --accent:   #00C98A;
+      --navy:     #191F28;
+      --text2:    #4D6258;
+      --text3:    #8FA89E;
+      --border:   #E8EEED;
+      --radius:   14px;
+      --font:     'Pretendard', sans-serif;
+      --shadow-btn: 0 4px 16px rgba(13,92,70,0.22);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      width: 100%; background: var(--bg);
+      font-family: var(--font); color: var(--navy);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app {
+      width: 100%; max-width: 430px;
+      min-height: 100dvh; margin: 0 auto;
+      display: flex; flex-direction: column;
+      background: var(--bg);
+    }
+
+    /* ── 헤더 ── */
+    .fb-header {
+      background: var(--green); padding: 52px 20px 22px;
+      flex-shrink: 0; position: relative;
+    }
+    .fb-back {
+      position: absolute; top: 50px; left: 16px;
+      width: 40px; height: 40px; border-radius: 10px;
+      background: rgba(255,255,255,0.15); border: none; color: #fff;
+      font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .fb-back:active { background: rgba(255,255,255,0.25); }
+    .fb-header-title {
+      font-size: 20px; font-weight: 700; color: #fff;
+      letter-spacing: -0.5px; margin-top: 44px;
+    }
+    .fb-header-sub {
+      font-size: 13px; color: rgba(255,255,255,0.7);
+      margin-top: 8px;
+    }
+
+    /* ── 섹션 ── */
+    .fb-body { padding: 16px 20px 40px; }
+
+    .fb-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      margin-bottom: 14px;
+    }
+    .fb-sec-label {
+      font-size: 12px; font-weight: 700; color: var(--green-d);
+      letter-spacing: 0.3px; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .fb-sec-label::before {
+      content: ''; display: block; width: 3px; height: 13px;
+      background: var(--accent); border-radius: 2px;
+    }
+
+    /* ── 질문 ── */
+    .fb-q { margin-bottom: 18px; }
+    .fb-q:last-child { margin-bottom: 0; }
+    .fb-q-num { font-size: 11px; color: var(--text3); margin-bottom: 3px; font-weight: 600; }
+    .fb-q-text {
+      font-size: 14px; font-weight: 600; color: var(--navy);
+      line-height: 1.5; margin-bottom: 10px; word-break: keep-all;
+    }
+
+    /* 1~5 스케일 */
+    .scale-row { display: flex; gap: 6px; }
+    .scale-btn {
+      flex: 1; height: 40px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      font-size: 14px; font-weight: 600; color: var(--text2);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .scale-btn:active { transform: scale(0.95); }
+    .scale-btn.selected {
+      background: var(--green) !important; border-color: var(--green) !important;
+      color: #fff !important; font-weight: 700;
+      box-shadow: 0 2px 8px rgba(13,92,70,0.25);
+    }
+    .scale-hint {
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: var(--text3); margin-top: 5px; padding: 0 2px;
+    }
+
+    /* 선택지 */
+    .choice-col { display: flex; flex-direction: column; gap: 7px; }
+    .choice-btn {
+      padding: 12px 14px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      font-family: var(--font); font-size: 13px; font-weight: 500;
+      color: var(--navy); cursor: pointer; text-align: left;
+      transition: all 0.15s;
+    }
+    .choice-btn:active { transform: scale(0.98); }
+    .choice-btn.selected {
+      background: var(--green-l) !important; border-color: var(--green) !important;
+      color: var(--green-d) !important; font-weight: 700;
+      box-shadow: inset 0 0 0 1.5px var(--green);
+    }
+
+    /* 텍스트 입력 */
+    .fb-textarea {
+      width: 100%; border: 1.5px solid var(--border); border-radius: 10px;
+      padding: 12px 14px; font-size: 13px; color: var(--navy);
+      background: var(--surface); resize: none; min-height: 72px;
+      font-family: var(--font); line-height: 1.6;
+      transition: border-color 0.2s;
+    }
+    .fb-textarea:focus { outline: none; border-color: var(--green); }
+    .fb-textarea::placeholder { color: var(--border); }
+
+    /* ── 제출 버튼 ── */
+    .fb-submit {
+      width: 100%; padding: 16px; margin-top: 6px;
+      background: var(--accent); color: #fff; border: none;
+      border-radius: var(--radius);
+      font-family: var(--font); font-size: 16px; font-weight: 700;
+      cursor: pointer; box-shadow: var(--shadow-btn);
+      transition: all 0.2s; letter-spacing: -0.3px;
+    }
+    .fb-submit:active { transform: scale(0.98); opacity: 0.92; }
+    .fb-submit:disabled { background: var(--border); color: var(--text3); box-shadow: none; cursor: not-allowed; }
+
+    /* ── 완료 화면 ── */
+    .fb-done {
+      position: fixed; inset: 0; background: var(--bg);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 40px 24px; z-index: 10; opacity: 0; pointer-events: none;
+      transition: opacity 0.4s;
+    }
+    .fb-done.show { opacity: 1; pointer-events: auto; }
+    .fb-done-emoji { font-size: 56px; margin-bottom: 16px; }
+    .fb-done-title {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.6px;
+      text-align: center; margin-bottom: 8px; line-height: 1.35;
+    }
+    .fb-done-title span { color: var(--green); }
+    .fb-done-desc {
+      font-size: 14px; color: var(--text3); text-align: center;
+      line-height: 1.7; margin-bottom: 28px; word-break: keep-all;
+    }
+    .fb-done-btn {
+      width: 100%; max-width: 300px; padding: 15px;
+      background: var(--accent); color: #fff; border: none;
+      border-radius: var(--radius);
+      font-family: var(--font); font-size: 15px; font-weight: 700;
+      cursor: pointer; box-shadow: var(--shadow-btn);
+    }
+    .fb-done-btn:active { transform: scale(0.98); }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="fb-header">
+    <button class="fb-back" onclick="history.back()">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="fb-header-title">메이트 베타 피드백</div>
+    <div class="fb-header-sub">솔직한 의견이 더 나은 서비스를 만들어요 (3분 소요)</div>
+  </div>
+
+  <div class="fb-body">
+
+    <!-- 섹션 1: 첫인상 -->
+    <div class="fb-section">
+      <div class="fb-sec-label">첫인상</div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q1</div>
+        <div class="fb-q-text">메이트를 처음 봤을 때 어떤 서비스인지 바로 이해됐나요?</div>
+        <div class="scale-row" data-key="q1">
+          <button class="scale-btn" data-val="1">1</button>
+          <button class="scale-btn" data-val="2">2</button>
+          <button class="scale-btn" data-val="3">3</button>
+          <button class="scale-btn" data-val="4">4</button>
+          <button class="scale-btn" data-val="5">5</button>
+        </div>
+        <div class="scale-hint"><span>전혀 모르겠음</span><span>바로 이해됨</span></div>
+      </div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q2</div>
+        <div class="fb-q-text">온보딩 설문이 어렵거나 불편한 부분이 있었나요?</div>
+        <div class="choice-col" data-key="q2">
+          <button class="choice-btn" data-val="쉽고 빠르게 완료">아니요, 쉽고 빠르게 완료했어요</button>
+          <button class="choice-btn" data-val="일부 질문 이해 어려움">일부 질문이 이해하기 어려웠어요</button>
+          <button class="choice-btn" data-val="질문 많아 포기 충동">질문이 너무 많아 중간에 포기하고 싶었어요</button>
+          <button class="choice-btn" data-val="기타">기타 (아래 의견란에 작성)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 섹션 2: 핵심 기능 -->
+    <div class="fb-section">
+      <div class="fb-sec-label">핵심 기능</div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q3</div>
+        <div class="fb-q-text">내 조건에 맞는 혜택 결과가 실제로 도움이 될 것 같나요?</div>
+        <div class="scale-row" data-key="q3">
+          <button class="scale-btn" data-val="1">1</button>
+          <button class="scale-btn" data-val="2">2</button>
+          <button class="scale-btn" data-val="3">3</button>
+          <button class="scale-btn" data-val="4">4</button>
+          <button class="scale-btn" data-val="5">5</button>
+        </div>
+        <div class="scale-hint"><span>전혀 도움 안 됨</span><span>매우 유용함</span></div>
+      </div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q4</div>
+        <div class="fb-q-text">혜택 카드의 Before/After 비교가 이해하기 쉬웠나요?</div>
+        <div class="scale-row" data-key="q4">
+          <button class="scale-btn" data-val="1">1</button>
+          <button class="scale-btn" data-val="2">2</button>
+          <button class="scale-btn" data-val="3">3</button>
+          <button class="scale-btn" data-val="4">4</button>
+          <button class="scale-btn" data-val="5">5</button>
+        </div>
+        <div class="scale-hint"><span>이해 어려움</span><span>한눈에 이해됨</span></div>
+      </div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q5</div>
+        <div class="fb-q-text">D-Day 알림 기능이 있다면 실제로 사용할 것 같나요?</div>
+        <div class="choice-col" data-key="q5">
+          <button class="choice-btn" data-val="꼭 쓸 것 같아요">네, 꼭 쓸 것 같아요</button>
+          <button class="choice-btn" data-val="아마도 쓸 것 같아요">아마도 쓸 것 같아요</button>
+          <button class="choice-btn" data-val="잘 모르겠어요">잘 모르겠어요</button>
+          <button class="choice-btn" data-val="필요 없을 것 같아요">별로 필요하지 않을 것 같아요</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 섹션 3: 만족도 & 추천 -->
+    <div class="fb-section">
+      <div class="fb-sec-label">만족도 & 추천</div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q6</div>
+        <div class="fb-q-text">메이트를 주변 친구나 지인에게 추천하고 싶은가요?</div>
+        <div class="scale-row" data-key="q6">
+          <button class="scale-btn" data-val="1">1</button>
+          <button class="scale-btn" data-val="2">2</button>
+          <button class="scale-btn" data-val="3">3</button>
+          <button class="scale-btn" data-val="4">4</button>
+          <button class="scale-btn" data-val="5">5</button>
+        </div>
+        <div class="scale-hint"><span>절대 안 함</span><span>반드시 추천</span></div>
+      </div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q7</div>
+        <div class="fb-q-text">앞으로 어떤 기능이 추가되면 더 자주 사용할 것 같나요? (복수 선택)</div>
+        <div class="choice-col" data-key="q7" data-multi="true">
+          <button class="choice-btn" data-val="맞춤 저축법 추천">맞춤 저축법 추천</button>
+          <button class="choice-btn" data-val="투자 공부 콘텐츠">투자 공부 콘텐츠</button>
+          <button class="choice-btn" data-val="내 지출 분석">내 지출 분석</button>
+          <button class="choice-btn" data-val="미래 자산 시뮬레이터">미래 자산 시뮬레이터</button>
+          <button class="choice-btn" data-val="커뮤니티">커뮤니티 (같은 목표 모임)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 섹션 4: 자유 의견 -->
+    <div class="fb-section">
+      <div class="fb-sec-label">자유 의견</div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q8</div>
+        <div class="fb-q-text">사용하면서 불편하거나 이상했던 점이 있었나요?</div>
+        <textarea class="fb-textarea" data-key="q8" placeholder="자유롭게 작성해주세요..."></textarea>
+      </div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q9</div>
+        <div class="fb-q-text">메이트에 꼭 있었으면 하는 기능이나 개선점이 있다면?</div>
+        <textarea class="fb-textarea" data-key="q9" placeholder="어떤 의견이든 환영해요!"></textarea>
+      </div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q10</div>
+        <div class="fb-q-text">메이트를 한 마디로 표현한다면?</div>
+        <textarea class="fb-textarea" data-key="q10" style="min-height:48px" placeholder="예: 유용하다, 신선하다, 복잡하다..."></textarea>
+      </div>
+    </div>
+
+    <button class="fb-submit" id="submitBtn" onclick="submitFeedback()">피드백 제출하기</button>
+
+  </div>
+</div>
+
+<!-- 완료 화면 -->
+<div class="fb-done" id="doneScreen">
+  <div class="fb-done-emoji">🎉</div>
+  <h2 class="fb-done-title">소중한 피드백<br><span>감사합니다!</span></h2>
+  <p class="fb-done-desc">
+    보내주신 의견은 메이트를<br>더 좋은 서비스로 만드는 데 사용됩니다.
+  </p>
+  <button class="fb-done-btn" onclick="location.href='result.html'">내 혜택으로 돌아가기</button>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="scripts/firebase-config.js"></script>
+
+<script>
+const db = firebase.firestore();
+const answers = {};
+
+/* ── 스케일 버튼 (단일 선택) ── */
+document.querySelectorAll('.scale-row').forEach(row => {
+  const key = row.dataset.key;
+  row.querySelectorAll('.scale-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      row.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      answers[key] = parseInt(btn.dataset.val);
+    });
+  });
+});
+
+/* ── 선택지 버튼 (단일 / 복수) ── */
+document.querySelectorAll('.choice-col').forEach(col => {
+  const key = col.dataset.key;
+  const multi = col.dataset.multi === 'true';
+
+  col.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (multi) {
+        btn.classList.toggle('selected');
+        answers[key] = [...col.querySelectorAll('.choice-btn.selected')]
+          .map(b => b.dataset.val);
+      } else {
+        col.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        answers[key] = btn.dataset.val;
+      }
+    });
+  });
+});
+
+/* ── 제출 ── */
+async function submitFeedback() {
+  const btn = document.getElementById('submitBtn');
+
+  // 텍스트 입력 수집
+  document.querySelectorAll('.fb-textarea').forEach(ta => {
+    if (ta.value.trim()) answers[ta.dataset.key] = ta.value.trim();
+  });
+
+  // 필수 항목 체크 (Q1, Q3, Q6 스케일)
+  if (!answers.q1 || !answers.q3 || !answers.q6) {
+    alert('Q1, Q3, Q6 점수를 선택해 주세요.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '제출 중...';
+
+  try {
+    // 온보딩 프로필 첨부
+    const profile = JSON.parse(localStorage.getItem('mateAnswers') || '{}');
+
+    await db.collection('feedback').add({
+      answers,
+      profile: {
+        birthYear: profile.birthYear || null,
+        job: profile.job || null,
+        sido: profile.sido || null,
+        income: profile.income || null,
+      },
+      created_at: firebase.firestore.FieldValue.serverTimestamp(),
+      user_agent: navigator.userAgent,
+    });
+
+    document.getElementById('doneScreen').classList.add('show');
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = '피드백 제출하기';
+    alert('제출에 실패했어요. 다시 시도해 주세요.');
+  }
+}
+</script>
+</body>
+</html>

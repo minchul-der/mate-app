@@ -382,7 +382,7 @@
       </div>
 
       <div class="field-group">
-        <label class="field-label">휴대폰 번호 <span style="font-weight:400;color:var(--color-gray1)">(선택)</span></label>
+        <label class="field-label">휴대폰 번호 <span style="font-weight:700;color:#EF4444;font-size:12px">(필수)</span></label>
         <input class="field-input" type="tel" id="regPhone"
           placeholder="010-0000-0000" autocomplete="tel" maxlength="13"
           oninput="formatPhone(this)" />
@@ -417,6 +417,9 @@
             <div class="agree-check" id="agreeMarketing"></div>
             <span class="agree-text">[선택] 마케팅 정보 수신 동의</span>
           </div>
+        </div>
+        <div style="margin:-4px 0 6px 30px;font-size:11px;color:var(--accent);line-height:1.5;font-weight:600;word-break:keep-all">
+          💡 신규 정부지원 정책과 맞춤 금융서비스 알림을 받으려면 체크해 주세요
         </div>
         <span class="field-hint error-msg" id="agreeErr" style="display:none"></span>
       </div>
@@ -665,7 +668,8 @@
       if (!isValidEmail(email)) { showErr('regEmailErr','이메일을 올바르게 입력해주세요'); ok=false; }
       if (!isStrongPw(pw))      { showErr('regPwErr','8자 이상, 영문+숫자+특수문자 포함'); ok=false; }
       if (pw !== pwc)            { showErr('regPwConfirmErr','비밀번호가 일치하지 않아요'); ok=false; }
-      if (phone && !isValidPhone(phone)) { showErr('regPhoneErr','010-0000-0000 형식으로 입력해주세요'); ok=false; }
+      if (!phone)                  { showErr('regPhoneErr','휴대폰 번호를 입력해주세요'); ok=false; }
+      else if (!isValidPhone(phone)) { showErr('regPhoneErr','010-0000-0000 형식으로 입력해주세요'); ok=false; }
 
       const termsOk   = document.getElementById('agreeTerms').classList.contains('checked');
       const privacyOk = document.getElementById('agreePrivacy').classList.contains('checked');
