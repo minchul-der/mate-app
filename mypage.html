@@ -87,18 +87,44 @@
     }
     .btn-edit-profile:active { background: var(--color-gray2); }
 
-    /* ── 온보딩 요약 칩 ── */
-    .onboarding-chips {
-      display: flex; flex-wrap: wrap; gap: 6px;
+    /* ── 스켈레톤 로딩 ── */
+    .skel-line {
+      background: linear-gradient(90deg,#E8ECF0 25%,#f4f4f4 50%,#E8ECF0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    /* ── 내 조건 요약 그리드 ── */
+    .cond-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8px; padding: 0 20px 20px;
+    }
+    .cond-cell {
+      background: var(--color-bg);
+      border-radius: 12px; padding: 12px 14px;
+    }
+    .cond-cell-label {
+      font-size: 11px; color: var(--color-gray1);
+      font-weight: 700; margin-bottom: 3px; letter-spacing: 0.2px;
+    }
+    .cond-cell-value {
+      font-size: 14px; font-weight: 900; color: var(--color-text);
+      letter-spacing: -0.3px;
+    }
+    .cond-edit-row {
       padding: 0 20px 20px;
     }
-    .chip-tag {
-      padding: 5px 12px;
-      background: var(--color-primary-l);
-      border-radius: 99px;
-      font-size: 12px; font-weight: 700;
-      color: var(--color-primary);
+    .btn-cond-edit {
+      width: 100%; padding: 13px;
+      background: none; border: 1.5px solid var(--color-primary);
+      border-radius: 14px; cursor: pointer;
+      font-family: var(--font-main); font-size: 14px; font-weight: 700;
+      color: var(--color-primary); transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
     }
+    .btn-cond-edit:active { background: var(--color-primary-l); }
 
     /* ── 리스트 아이템 (메뉴 행) ── */
     .menu-row {
@@ -290,15 +316,27 @@
       <div class="section-label">내 프로필</div>
       <div class="card">
         <div class="profile-card">
-          <div class="avatar" id="avatarEl">...</div>
+          <div class="avatar" id="avatarEl">
+            <div class="skel-line" style="width:56px;height:56px;border-radius:18px"></div>
+          </div>
           <div class="profile-info">
-            <div class="profile-name" id="profileName">불러오는 중</div>
-            <div class="profile-email" id="profileEmail"></div>
+            <div id="profileName"><div class="skel-line" style="width:100px;height:18px;margin-bottom:6px"></div></div>
+            <div id="profileEmail"><div class="skel-line" style="width:150px;height:13px"></div></div>
             <div class="profile-since" id="profileSince"></div>
           </div>
-          <button class="btn-edit-profile" onclick="location.href='index.html'">온보딩 수정</button>
         </div>
-        <div class="onboarding-chips" id="onboardingChips"></div>
+        <!-- 내 조건 그리드 -->
+        <div class="cond-grid" id="condGrid">
+          <div class="cond-cell"><div class="skel-line" style="height:38px"></div></div>
+          <div class="cond-cell"><div class="skel-line" style="height:38px"></div></div>
+          <div class="cond-cell"><div class="skel-line" style="height:38px"></div></div>
+          <div class="cond-cell"><div class="skel-line" style="height:38px"></div></div>
+        </div>
+        <div class="cond-edit-row">
+          <button class="btn-cond-edit" onclick="location.href='index.html'">
+            ✏️ 내 조건 다시 설정하기
+          </button>
+        </div>
       </div>
     </div>
 
@@ -405,37 +443,61 @@
       const profile = await MateAuth.getUserProfile(user.uid);
       const name = profile?.name || user.displayName || '사용자';
 
-      document.getElementById('avatarEl').textContent = name.charAt(0);
-      document.getElementById('profileName').textContent = name;
-      document.getElementById('profileEmail').textContent = user.email;
+      // 아바타·이름·이메일 (스켈레톤 → 실제값)
+      const avatarEl = document.getElementById('avatarEl');
+      avatarEl.innerHTML = '';
+      avatarEl.style.cssText = 'width:56px;height:56px;flex-shrink:0;background:var(--color-primary-l);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:var(--color-primary)';
+      avatarEl.textContent = name.charAt(0);
+
+      document.getElementById('profileName').innerHTML =
+        `<span style="font-size:18px;font-weight:900;letter-spacing:-0.5px">${name}</span>`;
+      document.getElementById('profileEmail').innerHTML =
+        `<span style="font-size:13px;color:var(--color-gray1)">${user.email}</span>`;
 
       if (profile?.created_at?.toDate) {
         const d = profile.created_at.toDate();
         document.getElementById('profileSince').textContent =
-          `가입일: ${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+          `가입일 ${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
       }
 
-      // 온보딩 칩
+      // 내 조건 그리드
       const ob = profile?.onboarding || JSON.parse(localStorage.getItem('mateAnswers') || '{}');
-      const chips = buildOnboardingChips(ob);
-      const chipContainer = document.getElementById('onboardingChips');
-      if (chips.length > 0) {
-        chipContainer.innerHTML = chips.map(c =>
-          `<span class="chip-tag">${c}</span>`
-        ).join('');
-      } else {
-        chipContainer.style.display = 'none';
-      }
+      renderCondGrid(ob);
     }
 
-    function buildOnboardingChips(ob) {
-      const chips = [];
-      if (ob.age)            chips.push(`만 ${ob.age}세`);
-      if (ob.job)            chips.push(ob.job);
-      if (ob.region)         chips.push(ob.region);
-      if (ob.income_monthly) chips.push(`월 ${ob.income_monthly}만원`);
-      if (ob.goals?.length)  chips.push(...ob.goals.slice(0,2));
-      return chips;
+    const INCOME_MAP_DISPLAY = {
+      '100만원 미만':'~100만원', '100~250만원':'100~250만원',
+      '250~400만원':'250~400만원', '400~600만원':'400~600만원',
+      '600만원 이상':'600만원+', '없음':'소득 없음'
+    };
+
+    function renderCondGrid(ob) {
+      const year = ob.birthYear || ob.birth_year;
+      const age  = year ? `만 ${new Date().getFullYear() - year}세` : null;
+      const region = [ob.sido, ob.sigungu].filter(Boolean).join(' ') || ob.region || null;
+      const goals  = ob.goals?.length ? ob.goals.slice(0,2).join(', ') : ob.goal || null;
+
+      const cells = [
+        { label: '🎂  나이',   value: age },
+        { label: '💼  직업',   value: ob.job },
+        { label: '📍  거주지', value: region },
+        { label: '💰  월소득', value: INCOME_MAP_DISPLAY[ob.income] || ob.income || null },
+        { label: '🏠  주거형태', value: ob.housing },
+        { label: '🎯  재무목표', value: goals },
+      ].filter(c => c.value);
+
+      const grid = document.getElementById('condGrid');
+      if (!cells.length) {
+        grid.innerHTML = `<div style="grid-column:1/-1;padding:8px 0;font-size:13px;color:var(--color-gray1)">
+          아직 설정된 조건이 없어요. 아래 버튼으로 설정해보세요.</div>`;
+        return;
+      }
+      grid.innerHTML = cells.map(c => `
+        <div class="cond-cell">
+          <div class="cond-cell-label">${c.label}</div>
+          <div class="cond-cell-value">${c.value}</div>
+        </div>
+      `).join('');
     }
 
     /* ── 알림 목록 로드 ── */

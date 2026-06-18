@@ -286,6 +286,98 @@
     .alarm-btn:active { transform: scale(0.97); }
     .alarm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+    /* ── 알림 설정 모달 ── */
+    .alarm-modal-head {
+      padding: 0 20px 16px; border-bottom: 1px solid var(--border);
+    }
+    .alarm-modal-name {
+      font-size: 18px; font-weight: 900; letter-spacing: -0.5px;
+      color: var(--navy); margin-bottom: 4px;
+    }
+    .alarm-modal-deadline {
+      font-size: 13px; color: var(--text3);
+    }
+
+    /* 알림 미리보기 */
+    .alarm-preview-section {
+      padding: 20px 20px 0;
+    }
+    .alarm-preview-label {
+      font-size: 12px; font-weight: 700;
+      color: var(--text3); letter-spacing: 0.3px; margin-bottom: 10px;
+    }
+    .notif-mockup {
+      background: rgba(0,0,0,0.05);
+      border-radius: 16px; padding: 14px 16px;
+      border: 1px solid var(--border);
+    }
+    .notif-app-row {
+      display: flex; align-items: center; gap: 7px;
+      margin-bottom: 8px;
+    }
+    .notif-app-icon {
+      width: 20px; height: 20px;
+      background: var(--green); border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 900; color: #fff;
+    }
+    .notif-app-name { font-size: 12px; font-weight: 700; color: var(--navy); flex: 1; }
+    .notif-app-time { font-size: 11px; color: var(--text3); }
+    .notif-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+    .notif-body  { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+    /* 알림 날짜 선택 */
+    .alarm-days-wrap { padding: 20px 20px 0; }
+    .alarm-days-title {
+      font-size: 14px; font-weight: 900; color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .alarm-days-title span { font-size: 12px; font-weight: 400; color: var(--text3); }
+    .alarm-days-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    }
+    .alarm-day-chip {
+      border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 12px 8px;
+      cursor: pointer; background: #fff; text-align: center;
+      transition: all 0.15s;
+    }
+    .alarm-day-chip.selected {
+      border-color: var(--green); background: var(--green-l);
+    }
+    .alarm-day-chip:active { transform: scale(0.97); }
+    .alarm-day-label {
+      font-size: 15px; font-weight: 900; color: var(--navy);
+      margin-bottom: 3px;
+    }
+    .alarm-day-chip.selected .alarm-day-label { color: var(--green-d); }
+    .alarm-day-sub { font-size: 11px; color: var(--text3); }
+    .alarm-day-chip.selected .alarm-day-sub { color: var(--green-d); }
+
+    /* 모달 버튼 영역 */
+    .alarm-modal-btns {
+      padding: 20px 20px 40px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .btn-alarm-confirm {
+      padding: 16px; border-radius: 14px; border: none; cursor: pointer;
+      font-family: var(--font); font-size: 15px; font-weight: 900;
+      background: var(--green); color: #fff;
+      box-shadow: var(--shadow-btn); transition: all 0.2s;
+    }
+    .btn-alarm-confirm:active { opacity: 0.88; }
+    .btn-alarm-confirm:disabled { background: var(--border); box-shadow: none; cursor: not-allowed; }
+    .btn-alarm-off {
+      padding: 14px; border-radius: 14px; border: 1.5px solid #FCA5A5; cursor: pointer;
+      font-family: var(--font); font-size: 14px; font-weight: 700;
+      background: #FEF2F2; color: #EF4444; transition: all 0.2s;
+    }
+    .btn-alarm-off:active { opacity: 0.85; }
+    .btn-alarm-later {
+      padding: 12px; border: none; background: none; cursor: pointer;
+      font-family: var(--font); font-size: 13px; color: var(--text3);
+    }
+
     /* ── 비로그인 알림 모달 ── */
     .modal-overlay {
       position: fixed; inset: 0; z-index: 200;
@@ -367,6 +459,39 @@
 </div>
 
 <div class="app" id="appMain" style="display:none;">
+
+  <!-- 알림 설정 모달 -->
+  <div class="modal-overlay hidden" id="alarmModal" onclick="closeAlarmModal(event)">
+    <div class="modal-sheet">
+      <div style="padding:20px 20px 0"><div class="modal-handle"></div></div>
+      <div class="alarm-modal-head">
+        <div style="margin-bottom:8px" id="alarmModalDday"></div>
+        <div class="alarm-modal-name" id="alarmModalName"></div>
+        <div class="alarm-modal-deadline" id="alarmModalDeadline"></div>
+      </div>
+      <div class="alarm-preview-section">
+        <div class="alarm-preview-label">📱 이런 알림이 와요</div>
+        <div class="notif-mockup">
+          <div class="notif-app-row">
+            <div class="notif-app-icon">M</div>
+            <span class="notif-app-name">mate.</span>
+            <span class="notif-app-time">방금</span>
+          </div>
+          <div class="notif-title" id="notifPreviewTitle"></div>
+          <div class="notif-body" id="notifPreviewBody">신청 기간이 얼마 남지 않았어요. 지금 바로 확인하세요 →</div>
+        </div>
+      </div>
+      <div class="alarm-days-wrap">
+        <div class="alarm-days-title">언제 알려드릴까요? <span>(복수 선택 가능)</span></div>
+        <div class="alarm-days-grid" id="alarmDaysGrid"></div>
+      </div>
+      <div class="alarm-modal-btns">
+        <button class="btn-alarm-confirm" id="alarmConfirmBtn" onclick="doSetAlarm()">알림 설정하기</button>
+        <button class="btn-alarm-off" id="alarmOffBtn" style="display:none" onclick="doCancelAlarm()">🔕 알림 해제</button>
+        <button class="btn-alarm-later" onclick="closeAlarmModal()">나중에</button>
+      </div>
+    </div>
+  </div>
 
   <!-- 비로그인 알림 모달 -->
   <div class="modal-overlay hidden" id="loginModal" onclick="closeLoginModal(event)">
@@ -890,28 +1015,130 @@ function handleAuthBtnClick() {
   }
 }
 
-/* 알림 버튼 처리 */
+/* ── 알림 모달 상태 ── */
+const ALARM_DAYS_META = [
+  { days: 30, label: 'D-30', sub: '한달 전' },
+  { days: 14, label: 'D-14', sub: '2주 전'  },
+  { days: 7,  label: 'D-7',  sub: '1주 전'  },
+  { days: 3,  label: 'D-3',  sub: '3일 전'  },
+  { days: 1,  label: 'D-1',  sub: '하루 전' },
+];
+let _alarmBtn = null;
+let _selectedDays = [7, 1]; // 기본 선택
+
+/* 알림 버튼 처리 → 모달 열기 */
 async function handleAlarm(btn) {
   let user;
   try { user = MateAuth.getCurrentUser(); } catch { user = null; }
+  if (!user) { document.getElementById('loginModal').classList.remove('hidden'); return; }
 
-  if (!user) {
-    document.getElementById('loginModal').classList.remove('hidden');
-    return;
+  _alarmBtn = btn;
+  const benefitId   = btn.dataset.id;
+  const benefitName = btn.dataset.name;
+  const deadline    = btn.dataset.deadline || '';
+
+  // D-Day 정보
+  const dday = deadline ? MateAlarm.getDDayInfo(deadline) : null;
+
+  // 이미 설정된 알림 데이터 조회
+  let existingData = null;
+  try { existingData = await MateAlarm.getAlarmData(benefitId); } catch {}
+
+  // 모달 내용 채우기
+  const ddayEl = document.getElementById('alarmModalDday');
+  if (dday) {
+    ddayEl.innerHTML = `<span class="dday-badge" style="background:${dday.bg};color:${dday.color}">${dday.label}</span>`;
+  } else { ddayEl.innerHTML = ''; }
+
+  document.getElementById('alarmModalName').textContent = benefitName;
+  document.getElementById('alarmModalDeadline').textContent = deadline
+    ? `마감일: ${deadline.replace(/-/g,'.')}` : '상시 신청';
+
+  // 알림 미리보기 텍스트
+  const dayPreview = dday ? dday.label : 'D-7';
+  document.getElementById('notifPreviewTitle').textContent =
+    `${benefitName} 마감 ${dayPreview} 전!`;
+
+  // 날짜 칩 렌더링
+  _selectedDays = existingData?.alarm_days || [7, 1];
+  renderAlarmDayChips();
+
+  // 알림 해제 버튼 표시 여부
+  const offBtn = document.getElementById('alarmOffBtn');
+  offBtn.style.display = existingData ? 'block' : 'none';
+
+  const confirmBtn = document.getElementById('alarmConfirmBtn');
+  confirmBtn.textContent = existingData ? '알림 변경하기' : '알림 설정하기';
+
+  document.getElementById('alarmModal').classList.remove('hidden');
+}
+
+function renderAlarmDayChips() {
+  const grid = document.getElementById('alarmDaysGrid');
+  grid.innerHTML = ALARM_DAYS_META.map(m => `
+    <div class="alarm-day-chip ${_selectedDays.includes(m.days) ? 'selected' : ''}"
+      onclick="toggleAlarmDay(${m.days},this)">
+      <div class="alarm-day-label">${m.label}</div>
+      <div class="alarm-day-sub">${m.sub}</div>
+    </div>
+  `).join('');
+}
+
+function toggleAlarmDay(day, el) {
+  const idx = _selectedDays.indexOf(day);
+  if (idx > -1) {
+    if (_selectedDays.length === 1) return; // 최소 1개 유지
+    _selectedDays.splice(idx, 1);
+    el.classList.remove('selected');
+  } else {
+    _selectedDays.push(day);
+    el.classList.add('selected');
   }
+  // confirm 버튼 상태
+  document.getElementById('alarmConfirmBtn').disabled = _selectedDays.length === 0;
+}
 
-  btn.disabled = true;
+async function doSetAlarm() {
+  if (!_alarmBtn || _selectedDays.length === 0) return;
+  const btn = document.getElementById('alarmConfirmBtn');
+  btn.disabled = true; btn.textContent = '저장 중...';
   try {
-    const currently = btn.dataset.alarmOn === 'true';
-    const next      = !currently;
-    await MateAlarm.setAlarm(btn.dataset.id, btn.dataset.name, btn.dataset.deadline || null, next);
-    btn.dataset.alarmOn = next;
-    btn.textContent = next ? '🔔 ON' : '🔔 알림';
+    await MateAlarm.setAlarm(
+      _alarmBtn.dataset.id, _alarmBtn.dataset.name,
+      _alarmBtn.dataset.deadline || null, true, [..._selectedDays]
+    );
+    _alarmBtn.dataset.alarmOn = 'true';
+    _alarmBtn.textContent = '🔔 ON';
+    document.getElementById('alarmModal').classList.add('hidden');
+    showAlarmToast(_alarmBtn.dataset.name, _selectedDays);
   } catch(e) {
-    // 조용히 실패
-  } finally {
-    btn.disabled = false;
+    btn.disabled = false; btn.textContent = '알림 설정하기';
   }
+}
+
+async function doCancelAlarm() {
+  if (!_alarmBtn) return;
+  try {
+    await MateAlarm.setAlarm(_alarmBtn.dataset.id, _alarmBtn.dataset.name, null, false);
+    _alarmBtn.dataset.alarmOn = 'false';
+    _alarmBtn.textContent = '🔔 알림';
+    document.getElementById('alarmModal').classList.add('hidden');
+  } catch(e) {}
+}
+
+function closeAlarmModal(e) {
+  if (!e || e.target.id === 'alarmModal')
+    document.getElementById('alarmModal').classList.add('hidden');
+}
+
+function showAlarmToast(name, days) {
+  const sorted = [...days].sort((a,b) => b-a);
+  const labels = sorted.map(d => `D-${d}`).join(', ');
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#191F28;color:#fff;border-radius:12px;padding:12px 20px;font-size:13px;font-weight:500;z-index:300;white-space:nowrap;transition:all 0.3s';
+  t.textContent = `🔔 ${labels} 알림이 설정되었어요`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
 }
 
 /* D-Day 뱃지 전체 렌더 */
