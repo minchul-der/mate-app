@@ -591,7 +591,8 @@
     }
 
     function goBack() {
-      if (document.referrer) history.back(); else location.href = 'result.html';
+      document.querySelector('.app-wrapper').style.cssText = 'opacity:0;transition:opacity 0.25s';
+      setTimeout(() => { location.href = 'result.html'; }, 250);
     }
 
     /* ── 이메일 조합 ── */

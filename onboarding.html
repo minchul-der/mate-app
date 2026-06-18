@@ -356,7 +356,7 @@
 
   <div class="header">
     <div class="header-top">
-      <button class="back-btn" id="backBtn" onclick="prevSlide()" disabled>←</button>
+      <button class="back-btn" id="backBtn" onclick="prevSlide()">←</button>
       <span class="step-badge" id="stepBadge">1단계 · 기본 정보</span>
     </div>
     <div class="progress-wrap">
@@ -977,7 +977,11 @@ function nextSlide() {
   goTo(curSlide+1, false);
 }
 function prevSlide() {
-  if (curSlide<=1) return;
+  if (curSlide<=1) {
+    document.querySelector('.app').style.cssText = 'opacity:0;transition:opacity 0.25s';
+    setTimeout(() => { location.href = 'index.html'; }, 250);
+    return;
+  }
   goTo(curSlide-1, true);
 }
 function goTo(target, back) {
@@ -999,7 +1003,7 @@ function goTo(target, back) {
 
 function updateHeader() {
   document.getElementById('stepBadge').textContent = LABELS[curSlide];
-  document.getElementById('backBtn').disabled = curSlide<=1;
+  document.getElementById('backBtn').disabled = false;
   for(let i=1;i<=TOTAL;i++){
     const s = document.getElementById('prog'+i);
     s.className='prog-seg'+(i<curSlide?' done':i===curSlide?' active':'');

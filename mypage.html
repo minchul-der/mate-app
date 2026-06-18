@@ -305,7 +305,7 @@
 
     <!-- 헤더 -->
     <div class="page-header">
-      <button class="back-btn" onclick="history.back()">←</button>
+      <button class="back-btn" onclick="goBack()">←</button>
       <div class="page-title">마이페이지</div>
     </div>
 
@@ -619,6 +619,11 @@
       const t = document.getElementById('toast');
       t.textContent = msg; t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), duration);
+    }
+
+    function goBack() {
+      document.querySelector('.app-wrapper').style.cssText = 'opacity:0;transition:opacity 0.25s';
+      setTimeout(() => { location.href = 'result.html'; }, 250);
     }
   </script>
 </body>
