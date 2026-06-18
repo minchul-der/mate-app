@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // users 컬렉션 — 본인 문서만 읽기/쓰기
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // user_alarms 컬렉션 — 본인 알림만 읽기/쓰기
+    match /user_alarms/{docId} {
+      allow read, write: if request.auth != null &&
+        request.auth.uid == resource.data.user_id;
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.user_id;
+    }
+  }
+}
