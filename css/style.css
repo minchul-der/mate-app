@@ -1,28 +1,48 @@
 /* =============================================
-   메이트(Mate) — 공통 스타일 시트
-   모바일 375px 우선 설계
+   메이트(Mate) — 디자인 시스템 v2
+   Pretendard + 다크그린 브랜드
    ============================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@300;400;500;700;900&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
-/* ── 색상 변수 ── */
+/* ── 브랜드 컬러 변수 ── */
 :root {
-  --color-bg:        #F7F8FA;        /* 메인 배경 (토스 오프화이트) */
-  --color-bg2:       #FFFFFF;        /* 카드 배경 */
-  --color-primary:   #00C47A;        /* 메인 그린 */
-  --color-primary-d: #00A868;        /* 진한 그린 (호버/그림자용) */
-  --color-primary-l: rgba(0,196,122,0.10); /* 연한 그린 (배경 강조) */
-  --color-secondary: #F5C842;        /* 골드 포인트 */
-  --color-text:      #191F28;        /* 메인 텍스트 */
-  --color-text2:     #4E5968;        /* 보조 텍스트 */
-  --color-gray1:     #8B95A1;        /* 플레이스홀더·캡션 */
-  --color-gray2:     #E8ECF0;        /* 테두리·구분선 */
+  /* 신규 브랜드 팔레트 */
+  --mate-primary:       #1B4F3A;
+  --mate-primary-mid:   #2D7A5F;
+  --mate-primary-light: #E1F5EE;
+  --mate-bg:            #F7F9F8;
+  --mate-accent:        #FF6B35;
+  --mate-text-dark:     #1A1A2E;
+  --mate-text-mid:      #4A5568;
+  --mate-danger:        #E53E3E;
+  --mate-warning:       #F6AD55;
+  --mate-purple:        #534AB7;
+  --mate-purple-light:  #EEEDFE;
+
+  /* 카드 시스템 */
+  --card-bg:     #FFFFFF;
+  --card-border: rgba(0,0,0,0.07);
+  --card-radius: 16px;
+  --card-shadow: 0 2px 12px rgba(0,0,0,0.06);
+
+  /* 레거시 호환 (기존 HTML에서 참조) */
+  --color-bg:        #F7F9F8;
+  --color-bg2:       #FFFFFF;
+  --color-primary:   #1B4F3A;
+  --color-primary-d: #2D7A5F;
+  --color-primary-l: #E1F5EE;
+  --color-secondary: #FF6B35;
+  --color-text:      #1A1A2E;
+  --color-text2:     #4A5568;
+  --color-gray1:     #8896A6;
+  --color-gray2:     #E4EAE7;
   --color-white:     #FFFFFF;
-  --radius-card:     24px;
-  --radius-btn:      16px;
-  --font-main:       'Noto Sans KR', sans-serif;
-  --shadow-card:     0 2px 20px rgba(0,0,0,0.07);
-  --shadow-btn:      0 6px 20px rgba(0,196,122,0.30);
+  --radius-card:     16px;
+  --radius-btn:      14px;
+  --font-main:       'Pretendard', 'Noto Sans KR', sans-serif;
+  --shadow-card:     0 2px 12px rgba(0,0,0,0.06);
+  --shadow-btn:      0 4px 16px rgba(27,79,58,0.25);
 }
 
 /* ── 기본 리셋 ── */
@@ -36,9 +56,11 @@ html, body {
   width: 100%; height: 100%;
   overflow: hidden;
   font-family: var(--font-main);
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--mate-bg);
+  color: var(--mate-text-dark);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.2px;
 }
 
 /* ── 앱 래퍼 ── */
@@ -48,7 +70,7 @@ html, body {
   height: 100dvh;
   margin: 0 auto;
   overflow: hidden;
-  background: var(--color-bg);
+  background: var(--mate-bg);
 }
 
 /* ── 공통 버튼 ── */
@@ -58,22 +80,42 @@ html, body {
   justify-content: center;
   gap: 8px;
   width: 100%;
-  padding: 18px 24px;
-  background: var(--color-primary);
+  padding: 17px 24px;
+  background: var(--mate-primary);
   border: none;
   border-radius: var(--radius-btn);
-  color: var(--color-white);
+  color: #fff;
   font-family: var(--font-main);
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s, opacity 0.15s;
   box-shadow: var(--shadow-btn);
   letter-spacing: -0.3px;
 }
 .btn-primary:active {
   transform: scale(0.97);
-  box-shadow: 0 3px 10px rgba(0,196,122,0.25);
+  opacity: 0.92;
+}
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 16px 24px;
+  background: var(--mate-primary-light);
+  border: none;
+  border-radius: var(--radius-btn);
+  color: var(--mate-primary-mid);
+  font-family: var(--font-main);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-secondary:active {
+  opacity: 0.85;
 }
 
 .btn-ghost {
@@ -83,7 +125,7 @@ html, body {
   width: 100%;
   padding: 16px 24px;
   background: transparent;
-  border: 1.5px solid var(--color-gray2);
+  border: 1px solid var(--color-gray2);
   border-radius: var(--radius-btn);
   color: var(--color-gray1);
   font-family: var(--font-main);
@@ -93,6 +135,52 @@ html, body {
   transition: border-color 0.2s, color 0.2s;
 }
 .btn-ghost:active {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--mate-primary);
+  color: var(--mate-primary);
 }
+
+/* ── 공통 카드 ── */
+.mate-card {
+  background: var(--card-bg);
+  border: 0.5px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+}
+
+/* ── 섹션 레이블 ── */
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-gray1);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding: 0 2px;
+}
+
+/* ── 배지 공통 ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* ── 입력 공통 ── */
+.input-base {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--color-gray2);
+  border-radius: 12px;
+  font-family: var(--font-main);
+  font-size: 15px;
+  color: var(--mate-text-dark);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.input-base::placeholder { color: var(--color-gray1); }
+.input-base:focus { border-color: var(--mate-primary); }
