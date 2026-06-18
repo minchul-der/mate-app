@@ -58,6 +58,7 @@
       width: 200px; height: 200px;
       background: rgba(255,255,255,0.05);
       border-radius: 50%;
+      pointer-events: none;
     }
     .hero::after {
       content: '';
@@ -1015,12 +1016,11 @@ function updateAuthBtn(user) {
 }
 
 function handleAuthBtnClick() {
-  const user = MateAuth.getCurrentUser();
-  if (user) {
-    location.href = 'mypage.html';
-  } else {
-    goToLogin('login');
-  }
+  try {
+    const user = MateAuth.getCurrentUser();
+    if (user) { location.href = 'mypage.html'; return; }
+  } catch(e) {}
+  goToLogin('login');
 }
 
 /* ── 알림 모달 상태 ── */
