@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>메이트 — 마이페이지</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 
   <style>
@@ -27,7 +25,7 @@
     }
     .back-btn:active { background: var(--color-gray2); }
     .page-title {
-      font-size: 18px; font-weight: 900;
+      font-size: 18px; font-weight: 700;
       letter-spacing: -0.5px; color: var(--color-text);
       flex: 1;
     }
@@ -59,12 +57,12 @@
       background: var(--color-primary-l);
       border-radius: 18px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 24px; font-weight: 900;
+      font-size: 24px; font-weight: 700;
       color: var(--color-primary);
     }
     .profile-info { flex: 1; min-width: 0; }
     .profile-name {
-      font-size: 18px; font-weight: 900;
+      font-size: 18px; font-weight: 700;
       letter-spacing: -0.5px; color: var(--color-text);
     }
     .profile-email {
@@ -110,7 +108,7 @@
       font-weight: 700; margin-bottom: 3px; letter-spacing: 0.2px;
     }
     .cond-cell-value {
-      font-size: 14px; font-weight: 900; color: var(--color-text);
+      font-size: 14px; font-weight: 700; color: var(--color-text);
       letter-spacing: -0.3px;
     }
     .cond-edit-row {
@@ -227,7 +225,7 @@
       padding: 13px; border-radius: 12px;
       background: var(--color-primary); border: none; cursor: pointer;
       font-family: var(--font-main);
-      font-size: 14px; font-weight: 900; color: #fff;
+      font-size: 14px; font-weight: 700; color: #fff;
       transition: all 0.2s;
     }
     .btn-save-pw:active { opacity: 0.85; }
@@ -256,7 +254,7 @@
     }
     .modal-icon { font-size: 40px; text-align: center; margin-bottom: 12px; }
     .modal-title {
-      font-size: 18px; font-weight: 900;
+      font-size: 18px; font-weight: 700;
       letter-spacing: -0.5px; margin-bottom: 6px; text-align: center;
     }
     .modal-sub {
@@ -267,7 +265,7 @@
     .btn-modal-danger {
       padding: 15px; border-radius: 14px; border: none; cursor: pointer;
       font-family: var(--font-main);
-      font-size: 15px; font-weight: 900;
+      font-size: 15px; font-weight: 700;
       background: #EF4444; color: #fff; transition: all 0.2s;
     }
     .btn-modal-danger:active { opacity: 0.85; }
@@ -446,11 +444,11 @@
       // 아바타·이름·이메일 (스켈레톤 → 실제값)
       const avatarEl = document.getElementById('avatarEl');
       avatarEl.innerHTML = '';
-      avatarEl.style.cssText = 'width:56px;height:56px;flex-shrink:0;background:var(--color-primary-l);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:var(--color-primary)';
+      avatarEl.style.cssText = 'width:56px;height:56px;flex-shrink:0;background:var(--color-primary-l);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:var(--color-primary)';
       avatarEl.textContent = name.charAt(0);
 
       document.getElementById('profileName').innerHTML =
-        `<span style="font-size:18px;font-weight:900;letter-spacing:-0.5px">${name}</span>`;
+        `<span style="font-size:18px;font-weight:700;letter-spacing:-0.5px">${name}</span>`;
       document.getElementById('profileEmail').innerHTML =
         `<span style="font-size:13px;color:var(--color-gray1)">${user.email}</span>`;
 
