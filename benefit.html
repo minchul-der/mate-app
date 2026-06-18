@@ -476,10 +476,7 @@ async function init() {
 
 function goBack() {
   document.querySelector('.app').style.cssText = 'opacity:0;transition:opacity 0.25s';
-  setTimeout(() => {
-    if (document.referrer && document.referrer.includes('result.html')) history.back();
-    else location.href = 'result.html';
-  }, 250);
+  setTimeout(() => { location.href = 'result.html'; }, 250);
 }
 
 window.addEventListener('DOMContentLoaded', init);
