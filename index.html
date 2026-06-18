@@ -4,298 +4,154 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>메이트 — 돈의 길, 아무도 안 알려줬잖아요</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 
   <style>
     /* ── 배경 블롭 ── */
-    .blob-wrap {
-      position: absolute; inset: 0;
-      overflow: hidden; pointer-events: none; z-index: 0;
-    }
-    .blob {
-      position: absolute; border-radius: 50%;
-      filter: blur(60px); opacity: 0.55;
-    }
-    .blob-1 {
-      width: 280px; height: 280px;
-      background: rgba(0,196,122,0.15);
-      top: -60px; right: -60px;
-    }
-    .blob-2 {
-      width: 200px; height: 200px;
-      background: rgba(0,196,122,0.10);
-      bottom: 80px; left: -60px;
-    }
-    .blob-3 {
-      width: 150px; height: 150px;
-      background: rgba(245,200,66,0.10);
-      top: 40%; right: -30px;
-    }
+    .blob-wrap { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.4; }
+    .blob-1 { width: 300px; height: 300px; background: rgba(27,79,58,0.12); top: -80px; right: -60px; }
+    .blob-2 { width: 220px; height: 220px; background: rgba(45,122,95,0.08); bottom: 80px; left: -70px; }
+    .blob-3 { width: 160px; height: 160px; background: rgba(255,107,53,0.07); top: 40%; right: -40px; }
 
     /* ── 슬라이더 구조 ── */
-    .slider-container {
-      position: relative; z-index: 1;
-      width: 100%; height: 100dvh;
-      display: flex; flex-direction: column;
-    }
+    .slider-container { position: relative; z-index: 1; width: 100%; height: 100dvh; display: flex; flex-direction: column; }
 
     /* ── 상단 로고 ── */
-    .top-bar {
-      display: flex; align-items: center;
-      justify-content: space-between;
-      padding: 52px 24px 0;
-      flex-shrink: 0;
-    }
-    .logo {
-      display: flex; align-items: center; gap: 8px;
-    }
+    .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 52px 24px 0; flex-shrink: 0; }
+    .logo { display: flex; align-items: center; gap: 8px; }
     .logo-icon {
-      width: 36px; height: 36px;
-      background: var(--color-primary);
+      width: 34px; height: 34px;
+      background: var(--mate-primary);
       border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 17px; font-weight: 900; color: #fff;
-      letter-spacing: -1px;
-      box-shadow: 0 3px 10px rgba(0,196,122,0.35);
+      font-size: 15px; font-weight: 700; color: #fff;
+      letter-spacing: -0.5px;
+      box-shadow: 0 3px 10px rgba(27,79,58,0.30);
     }
-    .logo-text {
-      font-size: 20px; font-weight: 900;
-      letter-spacing: -1px; color: var(--color-text);
-    }
-    .logo-text span { color: var(--color-primary); }
+    .logo-text { font-size: 19px; font-weight: 700; letter-spacing: -0.8px; color: var(--mate-text-dark); }
+    .logo-text span { color: var(--mate-primary-mid); }
     .skip-btn {
-      font-size: 14px; color: var(--color-gray1);
+      font-size: 13px; color: var(--color-gray1);
       background: none; border: none; cursor: pointer;
-      font-family: var(--font-main); padding: 12px 16px;
+      font-family: var(--font-main); padding: 10px 14px;
       transition: color 0.2s; min-width: 44px; min-height: 44px;
+      font-weight: 500;
     }
-    .skip-btn:active { color: var(--color-primary); }
+    .skip-btn:active { color: var(--mate-primary); }
     .btn-return {
       width: 100%; margin-top: 10px; padding: 14px;
       background: transparent;
-      border: 1.5px solid var(--color-primary);
-      border-radius: 14px;
-      font-family: var(--font-main); font-size: 14px; font-weight: 700;
-      color: var(--color-primary); cursor: pointer; letter-spacing: -0.2px;
+      border: 1px solid var(--mate-primary);
+      border-radius: 12px;
+      font-family: var(--font-main); font-size: 14px; font-weight: 600;
+      color: var(--mate-primary); cursor: pointer;
       transition: all 0.15s;
     }
-    .btn-return:active { background: var(--color-primary-l); }
+    .btn-return:active { background: var(--mate-primary-light); }
 
-    /* ── 카드 슬라이드 영역 ── */
-    .cards-area {
-      flex: 1;
-      display: flex; align-items: center; justify-content: center;
-      padding: 20px 0;
-      position: relative; overflow: hidden;
-    }
-    .cards-track {
-      display: flex;
-      width: 100%; height: 100%;
-      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: transform;
-    }
+    /* ── 카드 슬라이드 ── */
+    .cards-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px 0; position: relative; overflow: hidden; }
+    .cards-track { display: flex; width: 100%; height: 100%; transition: transform 0.45s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
     .cards-track.swiping { transition: none; }
-
-    /* ── 개별 카드 슬롯 ── */
-    .intro-card {
-      min-width: 100%; height: 100%;
-      padding: 0 20px;
-      display: flex; align-items: center; justify-content: center;
-    }
+    .intro-card { min-width: 100%; height: 100%; padding: 0 20px; display: flex; align-items: center; justify-content: center; }
 
     /* 카드 박스 */
     .card-box {
       width: 100%;
-      background: var(--color-white);
-      border-radius: 28px;
-      padding: 36px 28px 32px;
-      box-shadow: var(--shadow-card);
+      background: #fff;
+      border-radius: 20px;
+      padding: 32px 24px 28px;
+      box-shadow: var(--card-shadow);
+      border: 0.5px solid var(--card-border);
       position: relative; overflow: hidden;
-      animation: slideInUp 0.45s cubic-bezier(0.4,0,0.2,1) both;
+      animation: slideInUp 0.4s cubic-bezier(0.4,0,0.2,1) both;
     }
-    /* 카드 상단 컬러 라인 */
     .card-box::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; height: 4px;
-      background: var(--card-line, var(--color-primary));
-      border-radius: 4px 4px 0 0;
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: var(--card-line, var(--mate-primary));
+      border-radius: 3px 3px 0 0;
     }
+    @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    @keyframes slideInUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    .card-emoji { font-size: 44px; margin-bottom: 18px; display: block; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
-    /* 이모지 */
-    .card-emoji {
-      font-size: 48px; margin-bottom: 20px;
-      display: block;
-      animation: float 3s ease-in-out infinite;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-7px); }
-    }
-
-    /* 카드 태그 */
     .card-tag {
       display: inline-flex; align-items: center; gap: 5px;
-      padding: 5px 12px;
-      background: var(--color-primary-l);
-      border-radius: 100px;
-      font-size: 12px; font-weight: 600;
-      color: var(--color-primary);
-      margin-bottom: 14px;
-      letter-spacing: 0.2px;
+      padding: 4px 11px;
+      background: var(--mate-primary-light);
+      border-radius: 99px;
+      font-size: 11px; font-weight: 600;
+      color: var(--mate-primary-mid);
+      margin-bottom: 12px;
     }
-
-    /* 카드 제목 */
     .card-title {
-      font-size: 26px; font-weight: 900;
-      line-height: 1.3; letter-spacing: -1px;
-      margin-bottom: 14px; word-break: keep-all;
-      color: var(--color-text);
+      font-size: 24px; font-weight: 700;
+      line-height: 1.35; letter-spacing: -0.8px;
+      margin-bottom: 12px; word-break: keep-all;
+      color: var(--mate-text-dark);
     }
-    .card-title .highlight { color: var(--color-primary); }
+    .card-title .highlight { color: var(--mate-primary); }
+    .card-desc { font-size: 14px; font-weight: 400; line-height: 1.75; color: var(--mate-text-mid); word-break: keep-all; }
+    .card-desc strong { color: var(--mate-text-dark); font-weight: 600; }
 
-    /* 카드 설명 */
-    .card-desc {
-      font-size: 15px; font-weight: 400;
-      line-height: 1.75; color: var(--color-gray1);
-      word-break: keep-all;
-    }
-    .card-desc strong { color: var(--color-text2); font-weight: 600; }
+    .card-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
 
-    /* 리스트 아이템 */
-    .card-list { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
-    .card-list-item {
-      display: flex; align-items: flex-start; gap: 12px;
-      padding: 14px 16px;
-      background: var(--color-bg);
-      border-radius: 14px;
-    }
-    .list-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--dot-color, var(--color-primary));
-      margin-top: 5px; flex-shrink: 0;
-    }
-    .list-text {
-      font-size: 14px; color: var(--color-text2);
-      line-height: 1.55; word-break: keep-all;
-    }
-    .list-text strong { color: var(--color-text); font-weight: 700; }
-
-    /* CTA 영역 (4번 카드) */
-    .card-cta { margin-top: 26px; }
-
-    /* ── 숫자 쇼크 블록 (1번 카드) ── */
+    /* 숫자 강조 블록 */
     .stat-block {
-      margin-top: 20px;
-      background: var(--color-bg);
-      border-radius: 16px; padding: 18px 20px;
-      border: 1.5px solid rgba(0,196,122,0.20);
+      margin-top: 18px;
+      background: var(--mate-primary-light);
+      border-radius: 14px; padding: 16px 18px;
+      border: 1px solid rgba(27,79,58,0.12);
     }
-    .stat-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 6px; }
-    .stat-num {
-      font-size: 38px; font-weight: 900;
-      color: var(--color-primary); letter-spacing: -2px; line-height: 1;
-    }
-    .stat-unit { font-size: 16px; font-weight: 700; color: var(--color-primary); }
-    .stat-label { font-size: 12px; color: var(--color-gray1); line-height: 1.5; }
-    .stat-divider { height: 1px; background: var(--color-gray2); margin: 12px 0; }
-    .stat-note { font-size: 11px; color: var(--color-gray1); display: flex; align-items: center; gap: 4px; }
+    .stat-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 5px; }
+    .stat-num { font-size: 36px; font-weight: 700; color: var(--mate-primary); letter-spacing: -2px; line-height: 1; }
+    .stat-unit { font-size: 16px; font-weight: 700; color: var(--mate-primary); }
+    .stat-label { font-size: 12px; color: var(--mate-text-mid); line-height: 1.6; }
+    .stat-divider { height: 1px; background: rgba(27,79,58,0.12); margin: 10px 0; }
+    .stat-note { font-size: 11px; color: var(--mate-primary-mid); display: flex; align-items: center; gap: 4px; font-weight: 500; }
 
-    /* ── 공감 리스트 강조 (2번 카드) ── */
-    .empathy-item {
-      display: flex; align-items: flex-start; gap: 10px;
-      padding: 12px 14px; border-radius: 14px;
-      background: var(--color-bg);
-    }
-    .emp-icon { font-size: 18px; flex-shrink: 0; line-height: 1.3; }
-    .emp-text { font-size: 14px; color: var(--color-text2); line-height: 1.6; word-break: keep-all; }
-    .emp-text strong { color: var(--color-text); font-weight: 700; }
+    /* 공감 아이템 */
+    .empathy-item { display: flex; align-items: flex-start; gap: 10px; padding: 11px 13px; border-radius: 12px; background: var(--mate-bg); border: 0.5px solid var(--card-border); }
+    .emp-icon { font-size: 17px; flex-shrink: 0; line-height: 1.3; }
+    .emp-text { font-size: 13px; color: var(--mate-text-mid); line-height: 1.6; word-break: keep-all; }
+    .emp-text strong { color: var(--mate-text-dark); font-weight: 600; }
 
-    /* ── 해결책 카드 (3번 카드) ── */
-    .solution-item {
-      display: flex; align-items: center; gap: 14px;
-      padding: 13px 14px; border-radius: 14px;
-      background: var(--color-bg);
-    }
-    .sol-icon-wrap {
-      width: 40px; height: 40px; flex-shrink: 0;
-      border-radius: 12px; display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-    }
-    .sol-body {}
-    .sol-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
-    .sol-desc { font-size: 12px; color: var(--color-gray1); line-height: 1.4; word-break: keep-all; }
+    /* 해결책 아이템 */
+    .solution-item { display: flex; align-items: center; gap: 13px; padding: 12px 13px; border-radius: 12px; background: var(--mate-bg); border: 0.5px solid var(--card-border); }
+    .sol-icon-wrap { width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 19px; }
+    .sol-title { font-size: 13px; font-weight: 600; color: var(--mate-text-dark); margin-bottom: 2px; }
+    .sol-desc { font-size: 11px; color: var(--color-gray1); line-height: 1.5; word-break: keep-all; }
 
-    /* ── CTA 강조 (4번 카드) ── */
-    .cta-urgency {
-      background: rgba(255,80,80,0.06);
-      border: 1.5px solid rgba(255,80,80,0.15);
-      border-radius: 12px; padding: 10px 14px;
-      font-size: 12px; color: #DC2626;
-      display: flex; align-items: center; gap: 6px;
-      margin-bottom: 20px; line-height: 1.5; word-break: keep-all;
-    }
+    .card-cta { margin-top: 22px; }
 
-    /* ── 하단 영역 ── */
-    .bottom-area {
-      padding: 0 20px 40px;
-      flex-shrink: 0;
-    }
-    .dots-container {
-      display: flex; align-items: center; justify-content: center;
-      gap: 6px; margin-bottom: 18px;
-    }
-    .dot {
-      width: 7px; height: 7px;
-      border-radius: 100px;
-      background: var(--color-gray2);
-      transition: all 0.3s ease;
-    }
-    .dot.active {
-      width: 22px;
-      background: var(--color-primary);
-    }
+    /* 하단 */
+    .bottom-area { padding: 0 20px 40px; flex-shrink: 0; }
+    .dots-container { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 16px; }
+    .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--color-gray2); transition: all 0.3s; }
+    .dot.active { width: 20px; background: var(--mate-primary); }
 
-    /* 이전 / 다음 버튼 */
-    .nav-btn {
-      display: flex; align-items: center;
-      justify-content: space-between; gap: 10px;
-    }
+    .nav-btn { display: flex; align-items: center; gap: 10px; }
     .prev-btn {
-      width: 52px; height: 52px;
-      border-radius: 14px;
-      background: var(--color-white);
-      border: 1.5px solid var(--color-gray2);
-      color: var(--color-gray1);
-      font-size: 18px; cursor: pointer;
+      width: 50px; height: 50px; border-radius: 13px;
+      background: #fff; border: 1px solid var(--color-gray2);
+      color: var(--color-gray1); font-size: 17px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: all 0.2s; flex-shrink: 0;
-      box-shadow: var(--shadow-card);
+      box-shadow: var(--card-shadow);
     }
-    .prev-btn:active { border-color: var(--color-primary); color: var(--color-primary); }
+    .prev-btn:active { border-color: var(--mate-primary); color: var(--mate-primary); }
     .prev-btn:disabled { opacity: 0.3; cursor: default; }
-
     .next-btn {
-      flex: 1; height: 52px;
-      border-radius: 14px;
-      background: var(--color-primary);
-      border: none; color: white;
-      font-family: var(--font-main);
-      font-size: 16px; font-weight: 700;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      transition: all 0.2s;
-      box-shadow: var(--shadow-btn);
-      letter-spacing: -0.3px;
+      flex: 1; height: 50px; border-radius: 13px;
+      background: var(--mate-primary); border: none; color: #fff;
+      font-family: var(--font-main); font-size: 15px; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.2s; box-shadow: var(--shadow-btn); letter-spacing: -0.2px;
     }
-    .next-btn:active { transform: scale(0.98); box-shadow: 0 3px 10px rgba(0,196,122,0.25); }
+    .next-btn:active { transform: scale(0.98); opacity: 0.92; }
   </style>
 </head>
 <body>
