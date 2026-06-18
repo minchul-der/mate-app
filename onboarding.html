@@ -4,27 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>메이트 — 기본 정보</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
   <style>
     :root {
-      --bg:       #F7F8FA;
+      --bg:       #F7F9F8;
       --surface:  #FFFFFF;
-      --surface2: #F2F5F9;
-      --green:    #00C47A;
-      --green-d:  #00A868;
-      --green-l:  #E6F7F1;
-      --amber:    #F59E0B;
-      --amber-l:  #FEF3C7;
+      --surface2: #F7F9F8;
+      --green:    #1B4F3A;
+      --green-d:  #2D7A5F;
+      --green-l:  #E1F5EE;
+      --amber:    #F6AD55;
+      --amber-l:  #FFF8EC;
       --blue:     #3B82F6;
       --blue-l:   #EFF6FF;
-      --navy:     #1A2332;
+      --navy:     #1A1A2E;
       --text2:    #4A5568;
       --text3:    #8896A6;
-      --border:   #DDE4EE;
-      --radius:   16px;
-      --font:     'Noto Sans KR', sans-serif;
-      --shadow:   0 2px 16px rgba(0,0,0,0.07);
+      --border:   #E4EAE7;
+      --radius:   14px;
+      --font:     'Pretendard', 'Noto Sans KR', sans-serif;
+      --shadow:   0 2px 12px rgba(0,0,0,0.06);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -79,14 +78,14 @@
     .slide.exit      { opacity: 0; transform: translateX(-40px); }
     .slide.exit-back { opacity: 0; transform: translateX(40px); }
 
-    .slide-title { font-size: 21px; font-weight: 900; letter-spacing: -0.8px; line-height: 1.3; margin-bottom: 3px; word-break: keep-all; }
+    .slide-title { font-size: 21px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.35; margin-bottom: 3px; word-break: keep-all; }
     .slide-title .hi { color: var(--green); }
     .slide-sub { font-size: 12px; color: var(--text3); margin-bottom: 16px; line-height: 1.5; word-break: keep-all; }
 
     .sec { margin-bottom: 14px; }
     .sec-label {
       display: flex; align-items: center; gap: 6px;
-      font-size: 11px; font-weight: 800; color: var(--text2);
+      font-size: 11px; font-weight: 700; color: var(--text2);
       letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 7px;
     }
     .sec-label::before { content: ''; display: block; width: 3px; height: 12px; background: var(--green); border-radius: 2px; }
@@ -137,14 +136,13 @@
     }
     .wp-item.near2 { color: rgba(26,35,50,0.42); transform: scale(0.90); }
     .wp-item.near1 { color: rgba(26,35,50,0.65); font-weight: 500; transform: scale(1.05); }
-    .wp-item.sel   { color: var(--navy); font-weight: 900; transform: scale(1.38); }
+    .wp-item.sel   { color: var(--navy); font-weight: 700; transform: scale(1.32); }
 
-    /* z-index 제거: 글자가 초록 밴드 위에 렌더링됨 */
     .wheel-hl {
       position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
       height: 36px; background: var(--green-l);
-      border-top: 1.5px solid rgba(0,168,107,0.28);
-      border-bottom: 1.5px solid rgba(0,168,107,0.28);
+      border-top: 1px solid rgba(45,122,95,0.25);
+      border-bottom: 1px solid rgba(45,122,95,0.25);
       pointer-events: none;
     }
     .wheel-fade-t, .wheel-fade-b {
@@ -232,7 +230,7 @@
       background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius);
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .asset-wrap.focused { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,168,107,0.10); }
+    .asset-wrap.focused { border-color: var(--green); box-shadow: 0 0 0 3px rgba(27,79,58,0.10); }
     .asset-input {
       flex: 1; background: none; border: none; outline: none;
       color: var(--navy); font-family: var(--font); font-size: 22px; font-weight: 700;
@@ -324,12 +322,12 @@
     .next-btn {
       width: 100%; height: 52px; border-radius: var(--radius);
       background: var(--green); border: none; color: white;
-      font-family: var(--font); font-size: 16px; font-weight: 700;
+      font-family: var(--font); font-size: 16px; font-weight: 600;
       cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
       transition: all 0.2s; letter-spacing: -0.3px;
-      box-shadow: 0 6px 20px rgba(0,168,107,0.30);
+      box-shadow: 0 4px 16px rgba(27,79,58,0.28);
     }
-    .next-btn:active { transform: scale(0.98); box-shadow: 0 3px 10px rgba(0,168,107,0.2); }
+    .next-btn:active { transform: scale(0.98); opacity: 0.92; }
     .next-btn:disabled { background: var(--border); color: var(--text3); box-shadow: none; cursor: not-allowed; }
 
     /* ── 완료 화면 ── */
@@ -341,14 +339,14 @@
     .complete-screen.show { opacity: 1; pointer-events: auto; }
     .complete-emoji { font-size: 58px; margin-bottom: 18px; animation: popIn 0.5s ease; }
     @keyframes popIn { 0% { transform: scale(0.4); opacity: 0; } 70% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
-    .complete-title { font-size: 24px; font-weight: 900; letter-spacing: -1px; text-align: center; margin-bottom: 10px; line-height: 1.3; }
+    .complete-title { font-size: 23px; font-weight: 700; letter-spacing: -0.8px; text-align: center; margin-bottom: 10px; line-height: 1.35; }
     .complete-title span { color: var(--green); }
     .complete-desc { font-size: 14px; color: var(--text3); text-align: center; line-height: 1.7; margin-bottom: 32px; word-break: keep-all; }
     .complete-btn {
       width: 100%; height: 52px; border-radius: var(--radius);
       background: var(--green); border: none; color: white;
-      font-family: var(--font); font-size: 16px; font-weight: 900;
-      cursor: pointer; box-shadow: 0 6px 20px rgba(0,168,107,0.35); transition: all 0.2s;
+      font-family: var(--font); font-size: 16px; font-weight: 700;
+      cursor: pointer; box-shadow: 0 4px 16px rgba(27,79,58,0.28); transition: all 0.2s;
     }
     .complete-btn:active { transform: scale(0.98); }
   </style>
