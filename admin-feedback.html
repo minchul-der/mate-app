@@ -114,7 +114,16 @@
       color: var(--text2); cursor: pointer; transition: all 0.15s;
     }
     .export-btn:active { border-color: var(--green); background: var(--green-l); }
-    .toolbar { display: flex; gap: 8px; margin-bottom: 16px; }
+    .toolbar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+
+    /* 삭제 버튼 */
+    .fb-delete-btn {
+      font-size: 11px; font-weight: 600; color: #EF4444;
+      background: none; border: 1px solid #FEE2E2; border-radius: 8px;
+      padding: 5px 10px; cursor: pointer; transition: all 0.15s;
+      font-family: var(--font);
+    }
+    .fb-delete-btn:active { background: #FEE2E2; }
   </style>
 </head>
 <body>
@@ -170,7 +179,16 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-<script src="scripts/firebase-config.js"></script>
+<script>
+if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+  firebase.initializeApp({
+    apiKey:"AIzaSyCKIndlAxNuQuNtSi6ddZwPTEytuRMJ2v8",authDomain:"mate-app-d2f06.firebaseapp.com",
+    projectId:"mate-app-d2f06",storageBucket:"mate-app-d2f06.firebasestorage.app",
+    messagingSenderId:"355984297741",appId:"1:355984297741:web:8a1cb8159c49f504742a44",
+    measurementId:"G-9F4R2738XF"
+  });
+}
+</script>
 
 <script>
 const auth = firebase.auth();
@@ -253,46 +271,72 @@ function renderList() {
     const choiceItems = [
       { key: 'q2', label: 'Q2 온보딩 경험' },
       { key: 'q5', label: 'Q5 알림 사용 의향' },
-      { key: 'q7', label: 'Q7 원하는 기능' },
+      { key: 'q7', label: 'Q7 이용 의향' },
+      { key: 'q8', label: 'Q8 수익 모델 선호' },
+      { key: 'q9', label: 'Q9 원하는 기능' },
     ].filter(s => a[s.key]).map(s => {
       const val = Array.isArray(a[s.key]) ? a[s.key].join(', ') : a[s.key];
       return `<div class="fb-answer"><div class="fb-answer-q">${s.label}</div><div class="fb-answer-v">${val}</div></div>`;
     }).join('');
 
+    const notifyItem = a.notify_contact
+      ? `<div class="fb-answer"><div class="fb-answer-q">출시 알림 신청</div><div class="fb-answer-v">${a.notify_contact}</div></div>`
+      : '';
+
     const textItems = [
-      { key: 'q8', label: 'Q8 불편한 점' },
-      { key: 'q9', label: 'Q9 개선 요청' },
-      { key: 'q10', label: 'Q10 한 마디' },
+      { key: 'q10', label: 'Q10 불편한 점' },
+      { key: 'q11', label: 'Q11 개선 요청' },
+      { key: 'q12', label: 'Q12 한 마디' },
     ].filter(s => a[s.key]).map(s =>
       `<div class="fb-text-box"><div class="fb-text-q">${s.label}</div><div class="fb-text-v">${a[s.key]}</div></div>`
     ).join('');
 
     return `
-      <div class="fb-card">
+      <div class="fb-card" id="card-${fb.id}">
         <div class="fb-card-header">
           <div class="fb-card-date">#${_feedbacks.length - idx} · ${date}</div>
-          <div class="fb-card-profile">${ageChip}${chips}</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="fb-card-profile">${ageChip}${chips}</div>
+            <button class="fb-delete-btn" onclick="deleteFeedback('${fb.id}')">삭제</button>
+          </div>
         </div>
         ${scaleItems ? `<div class="fb-scores">${scaleItems}</div>` : ''}
         ${choiceItems}
+        ${notifyItem}
         ${textItems}
       </div>`;
   }).join('');
 }
 
+async function deleteFeedback(docId) {
+  if (!confirm('이 피드백을 삭제할까요?')) return;
+  try {
+    await db.collection('feedback').doc(docId).delete();
+    const card = document.getElementById('card-' + docId);
+    if (card) card.remove();
+    _feedbacks = _feedbacks.filter(fb => fb.id !== docId);
+    document.getElementById('totalCount').textContent = _feedbacks.length + '건';
+    renderSummary();
+  } catch (e) {
+    alert('삭제에 실패했어요: ' + e.message);
+  }
+}
+
 function exportCSV() {
   if (!_feedbacks.length) return;
-  const headers = ['날짜','나이','직업','지역','소득','Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10'];
+  const headers = ['날짜','나이','직업','지역','소득','Q1','Q2','Q3','Q4','Q5','Q6','Q7 이용의향','Q8 수익모델','Q9 원하는기능','Q10 불편한점','Q11 개선요청','Q12 한마디','출시알림연락처'];
   const rows = _feedbacks.map(fb => {
     const a = fb.answers || {};
     const p = fb.profile || {};
     const date = fb.created_at?.toDate
       ? fb.created_at.toDate().toLocaleString('ko-KR') : '';
     const age = p.birthYear ? (new Date().getFullYear() - p.birthYear) : '';
-    const q7 = Array.isArray(a.q7) ? a.q7.join(' / ') : (a.q7 || '');
+    const q9 = Array.isArray(a.q9) ? a.q9.join(' / ') : (a.q9 || '');
     return [date, age, p.job||'', p.sido||'', p.income||'',
-      a.q1||'', a.q2||'', a.q3||'', a.q4||'', a.q5||'', a.q6||'', q7,
-      (a.q8||'').replace(/\n/g,' '), (a.q9||'').replace(/\n/g,' '), (a.q10||'').replace(/\n/g,' ')
+      a.q1||'', a.q2||'', a.q3||'', a.q4||'', a.q5||'', a.q6||'',
+      a.q7||'', a.q8||'', q9,
+      (a.q10||'').replace(/\n/g,' '), (a.q11||'').replace(/\n/g,' '), (a.q12||'').replace(/\n/g,' '),
+      a.notify_contact||''
     ];
   });
 

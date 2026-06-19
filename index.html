@@ -209,6 +209,19 @@
       transition: all 0.2s; box-shadow: var(--shadow-btn); letter-spacing: -0.3px;
     }
     .next-btn:active { transform: scale(0.98); opacity: 0.92; }
+
+    /* ── 모바일 여백 최적화 ── */
+    @media (max-width: 480px) {
+      .top-bar { padding-top: 44px; }
+      .cards-area { padding-top: 6px; }
+      .intro-card { padding: 4px 18px 10px; }
+      .card-box { padding: 20px 18px 16px; }
+      .card-emoji { width: 44px; height: 44px; margin-bottom: 12px; }
+      .card-tag { margin-bottom: 10px; }
+      .card-title { font-size: 21px; margin-bottom: 10px; }
+      .bottom-area { padding: 0 20px 28px; }
+      .dots-container { margin-bottom: 10px; }
+    }
   </style>
 </head>
 <body>

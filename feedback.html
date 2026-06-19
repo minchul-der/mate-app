@@ -125,6 +125,30 @@
       box-shadow: inset 0 0 0 1.5px var(--green);
     }
 
+    /* 출시 알림 박스 */
+    .notify-box {
+      margin-top: 12px; padding: 14px 16px;
+      background: var(--green-l); border: 1.5px solid rgba(13,92,70,0.15);
+      border-radius: 12px;
+      display: none;
+      animation: hintIn 0.3s ease both;
+    }
+    @keyframes hintIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .notify-box.show { display: block; }
+    .notify-label {
+      font-size: 12px; font-weight: 700; color: var(--green-d);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 5px;
+    }
+    .notify-label::before { content: '💡'; }
+    .notify-input {
+      width: 100%; padding: 11px 14px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: var(--font); font-size: 14px; color: var(--navy);
+      background: #fff; outline: none; transition: border-color 0.2s;
+    }
+    .notify-input:focus { border-color: var(--green); }
+    .notify-input::placeholder { color: var(--text3); }
+
     /* 텍스트 입력 */
     .fb-textarea {
       width: 100%; border: 1.5px solid var(--border); border-radius: 10px;
@@ -279,8 +303,35 @@
 
       <div class="fb-q">
         <div class="fb-q-num">Q7</div>
+        <div class="fb-q-text">메이트가 정식 서비스로 출시된다면 사용할 의향이 있으신가요?</div>
+        <div class="choice-col" data-key="q7">
+          <button class="choice-btn" data-val="바로 사용">출시되면 바로 써볼 것 같아요</button>
+          <button class="choice-btn" data-val="지켜볼게요">관심은 있지만 좀 더 지켜볼래요</button>
+          <button class="choice-btn" data-val="잘 모르겠어요">아직 잘 모르겠어요</button>
+          <button class="choice-btn" data-val="사용 안 할 것 같아요">사용하지 않을 것 같아요</button>
+        </div>
+        <div class="notify-box" id="notifyBox">
+          <div class="notify-label">출시되면 가장 먼저 알려드릴게요 (선택)</div>
+          <input class="notify-input" id="notifyContact" type="text"
+            placeholder="이메일 또는 전화번호" />
+        </div>
+      </div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q8</div>
+        <div class="fb-q-text">메이트가 지속적으로 운영되려면 수익이 필요해요. 아래 중 가장 괜찮은 방식은 무엇인가요?</div>
+        <div class="choice-col" data-key="q8">
+          <button class="choice-btn" data-val="금융상품 추천 (제휴)">무료로 쓰고, 내 조건에 맞는 금융상품을 추천받는 방식 (토스처럼)</button>
+          <button class="choice-btn" data-val="광고 포함">무료로 쓰되, 간단한 광고가 포함되는 방식</button>
+          <button class="choice-btn" data-val="프리미엄 구독">기본 기능은 무료, 상세 분석·맞춤 알림은 월 구독 (1,900원)</button>
+          <button class="choice-btn" data-val="전부 무료">전부 무료였으면 좋겠어요</button>
+        </div>
+      </div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q9</div>
         <div class="fb-q-text">앞으로 어떤 기능이 추가되면 더 자주 사용할 것 같나요? (복수 선택)</div>
-        <div class="choice-col" data-key="q7" data-multi="true">
+        <div class="choice-col" data-key="q9" data-multi="true">
           <button class="choice-btn" data-val="맞춤 저축법 추천">맞춤 저축법 추천</button>
           <button class="choice-btn" data-val="투자 공부 콘텐츠">투자 공부 콘텐츠</button>
           <button class="choice-btn" data-val="내 지출 분석">내 지출 분석</button>
@@ -295,21 +346,21 @@
       <div class="fb-sec-label">자유 의견</div>
 
       <div class="fb-q">
-        <div class="fb-q-num">Q8</div>
-        <div class="fb-q-text">사용하면서 불편하거나 이상했던 점이 있었나요?</div>
-        <textarea class="fb-textarea" data-key="q8" placeholder="자유롭게 작성해주세요..."></textarea>
-      </div>
-
-      <div class="fb-q">
-        <div class="fb-q-num">Q9</div>
-        <div class="fb-q-text">메이트에 꼭 있었으면 하는 기능이나 개선점이 있다면?</div>
-        <textarea class="fb-textarea" data-key="q9" placeholder="어떤 의견이든 환영해요!"></textarea>
-      </div>
-
-      <div class="fb-q">
         <div class="fb-q-num">Q10</div>
+        <div class="fb-q-text">사용하면서 불편하거나 이상했던 점이 있었나요?</div>
+        <textarea class="fb-textarea" data-key="q10" placeholder="자유롭게 작성해주세요..."></textarea>
+      </div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q11</div>
+        <div class="fb-q-text">메이트에 꼭 있었으면 하는 기능이나 개선점이 있다면?</div>
+        <textarea class="fb-textarea" data-key="q11" placeholder="어떤 의견이든 환영해요!"></textarea>
+      </div>
+
+      <div class="fb-q">
+        <div class="fb-q-num">Q12</div>
         <div class="fb-q-text">메이트를 한 마디로 표현한다면?</div>
-        <textarea class="fb-textarea" data-key="q10" style="min-height:48px" placeholder="예: 유용하다, 신선하다, 복잡하다..."></textarea>
+        <textarea class="fb-textarea" data-key="q12" style="min-height:48px" placeholder="예: 유용하다, 신선하다, 복잡하다..."></textarea>
       </div>
     </div>
 
@@ -331,7 +382,16 @@
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-<script src="scripts/firebase-config.js"></script>
+<script>
+if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+  firebase.initializeApp({
+    apiKey:"AIzaSyCKIndlAxNuQuNtSi6ddZwPTEytuRMJ2v8",authDomain:"mate-app-d2f06.firebaseapp.com",
+    projectId:"mate-app-d2f06",storageBucket:"mate-app-d2f06.firebasestorage.app",
+    messagingSenderId:"355984297741",appId:"1:355984297741:web:8a1cb8159c49f504742a44",
+    measurementId:"G-9F4R2738XF"
+  });
+}
+</script>
 
 <script>
 const db = firebase.firestore();
@@ -365,6 +425,17 @@ document.querySelectorAll('.choice-col').forEach(col => {
         btn.classList.add('selected');
         answers[key] = btn.dataset.val;
       }
+
+      // Q7: "바로 사용" 선택 시 알림 박스 노출
+      if (key === 'q7') {
+        const box = document.getElementById('notifyBox');
+        if (btn.dataset.val === '바로 사용') {
+          box.classList.add('show');
+        } else {
+          box.classList.remove('show');
+          document.getElementById('notifyContact').value = '';
+        }
+      }
     });
   });
 });
@@ -377,6 +448,10 @@ async function submitFeedback() {
   document.querySelectorAll('.fb-textarea').forEach(ta => {
     if (ta.value.trim()) answers[ta.dataset.key] = ta.value.trim();
   });
+
+  // 출시 알림 연락처 수집 (선택)
+  const notifyContact = document.getElementById('notifyContact').value.trim();
+  if (notifyContact) answers.notify_contact = notifyContact;
 
   // 필수 항목 체크 (Q1, Q3, Q6 스케일)
   if (!answers.q1 || !answers.q3 || !answers.q6) {

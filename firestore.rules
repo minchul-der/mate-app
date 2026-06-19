@@ -15,10 +15,10 @@ service cloud.firestore {
         request.auth.uid == request.resource.data.user_id;
     }
 
-    // feedback 컬렉션 — 누구나 작성, 로그인 사용자만 조회
+    // feedback 컬렉션 — 누구나 작성, 로그인 사용자만 조회·삭제
     match /feedback/{docId} {
       allow create: if true;
-      allow read: if request.auth != null;
+      allow read, delete: if request.auth != null;
     }
   }
 }
