@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>body{margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#111}</style>
+</head>
+<body>
+<canvas id="c" width="1200" height="630"></canvas>
+<script>
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+const W = 1200, H = 630;
+
+// ── 배경: 딥 그린 그라데이션 ──
+const bg = ctx.createLinearGradient(0, 0, W, H);
+bg.addColorStop(0, '#041F17');
+bg.addColorStop(0.4, '#0A3D2E');
+bg.addColorStop(1, '#072E22');
+ctx.fillStyle = bg;
+ctx.fillRect(0, 0, W, H);
+
+// ── 우상단 글로우 ──
+const g1 = ctx.createRadialGradient(950, 100, 20, 950, 100, 350);
+g1.addColorStop(0, 'rgba(0,201,138,0.15)');
+g1.addColorStop(1, 'rgba(0,201,138,0)');
+ctx.fillStyle = g1;
+ctx.fillRect(0, 0, W, H);
+
+// ── 좌하단 글로우 ──
+const g2 = ctx.createRadialGradient(200, 530, 20, 200, 530, 280);
+g2.addColorStop(0, 'rgba(0,201,138,0.08)');
+g2.addColorStop(1, 'rgba(0,0,0,0)');
+ctx.fillStyle = g2;
+ctx.fillRect(0, 0, W, H);
+
+// ── 좌측 레이아웃 ──
+const LX = 80;
+
+// 로고
+ctx.fillStyle = '#fff';
+ctx.beginPath();
+ctx.roundRect(LX, 60, 48, 48, 12);
+ctx.fill();
+
+ctx.fillStyle = '#0A3D2E';
+ctx.font = '800 22px Pretendard, Arial, sans-serif';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.fillText('M', LX + 24, 86);
+
+// 브랜드
+ctx.fillStyle = '#fff';
+ctx.font = '700 24px Pretendard, Arial, sans-serif';
+ctx.textAlign = 'left';
+ctx.textBaseline = 'middle';
+ctx.fillText('mate', LX + 60, 78);
+ctx.fillStyle = '#00C98A';
+ctx.fillText('.', LX + 60 + ctx.measureText('mate').width, 78);
+
+// ── 메인 카피 ──
+ctx.textBaseline = 'top';
+
+// 1줄: "당신만의"
+ctx.fillStyle = 'rgba(255,255,255,0.5)';
+ctx.font = '500 32px Pretendard, Arial, sans-serif';
+ctx.fillText('당신만의', LX, 190);
+
+// 2줄: "경제적 자유로 가는 길"
+ctx.fillStyle = '#fff';
+ctx.font = '800 52px Pretendard, Arial, sans-serif';
+ctx.fillText('경제적 자유로 가는 길', LX, 236);
+
+// "경제적 자유" 밑에 악센트 라인
+const econW = ctx.measureText('경제적 자유').width;
+ctx.strokeStyle = '#00C98A';
+ctx.lineWidth = 3;
+ctx.beginPath();
+ctx.moveTo(LX, 296);
+ctx.lineTo(LX + econW, 296);
+ctx.stroke();
+
+// 3줄: "메이트가 찾아드릴게요"
+ctx.fillStyle = '#00C98A';
+ctx.font = '700 40px Pretendard, Arial, sans-serif';
+ctx.fillText('메이트가 찾아드릴게요', LX, 320);
+
+// ── 하단 태그들 ──
+const tags = ['맞춤 정부혜택', '절세 전략', '자산관리'];
+let tagX = LX;
+const tagY = 430;
+
+tags.forEach(tag => {
+  ctx.font = '600 16px Pretendard, Arial, sans-serif';
+  const tw = ctx.measureText(tag).width + 28;
+
+  // pill 배경
+  ctx.fillStyle = 'rgba(0,201,138,0.12)';
+  ctx.beginPath();
+  ctx.roundRect(tagX, tagY, tw, 34, 17);
+  ctx.fill();
+
+  // pill 테두리
+  ctx.strokeStyle = 'rgba(0,201,138,0.25)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(tagX, tagY, tw, 34, 17);
+  ctx.stroke();
+
+  // 텍스트
+  ctx.fillStyle = '#00C98A';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(tag, tagX + 14, tagY + 17);
+
+  tagX += tw + 10;
+});
+
+// ── 하단 서브 ──
+ctx.fillStyle = 'rgba(255,255,255,0.3)';
+ctx.font = '400 15px Pretendard, Arial, sans-serif';
+ctx.textBaseline = 'top';
+ctx.fillText('가입 없이 · 무료 · 3분이면 확인', LX, 490);
+
+// ── 우측: 앱 UI 미리보기 느낌 ──
+const RX = 750, RY = 120, RW = 370, RH = 420;
+
+// 폰 프레임
+ctx.fillStyle = 'rgba(255,255,255,0.06)';
+ctx.beginPath();
+ctx.roundRect(RX, RY, RW, RH, 28);
+ctx.fill();
+
+ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+ctx.lineWidth = 1;
+ctx.beginPath();
+ctx.roundRect(RX, RY, RW, RH, 28);
+ctx.stroke();
+
+// 상단 바
+ctx.fillStyle = 'rgba(255,255,255,0.1)';
+ctx.fillRect(RX + 20, RY + 20, RW - 40, 32);
+
+// 카드 1
+drawCard(RX + 20, RY + 68, RW - 40, 80, '#00C98A', '청년도약계좌', '월 70만원 저축 → 정부기여금 + 비과세', '바로 신청 가능');
+// 카드 2
+drawCard(RX + 20, RY + 160, RW - 40, 80, '#3B82F6', '청년 주택드림 청약', '24개월 뒤 1순위 청약 자격', '조건 확인 필요');
+// 카드 3
+drawCard(RX + 20, RY + 252, RW - 40, 80, '#8B5CF6', 'ISA 계좌', '이자·배당 200만원까지 비과세', '바로 신청 가능');
+
+// 하단 blur
+const fade = ctx.createLinearGradient(RX, RY + RH - 60, RX, RY + RH);
+fade.addColorStop(0, 'rgba(7,46,34,0)');
+fade.addColorStop(1, 'rgba(7,46,34,0.95)');
+ctx.fillStyle = fade;
+ctx.fillRect(RX, RY + RH - 60, RW, 60);
+
+function drawCard(x, y, w, h, accent, title, desc, badge) {
+  // 카드 배경
+  ctx.fillStyle = 'rgba(255,255,255,0.07)';
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, 14);
+  ctx.fill();
+
+  // 좌측 라인
+  ctx.fillStyle = accent;
+  ctx.beginPath();
+  ctx.roundRect(x, y + 10, 3, h - 20, 2);
+  ctx.fill();
+
+  // 제목
+  ctx.fillStyle = '#fff';
+  ctx.font = '700 16px Pretendard, Arial, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText(title, x + 16, y + 14);
+
+  // 설명
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.font = '400 12px Pretendard, Arial, sans-serif';
+  ctx.fillText(desc, x + 16, y + 38);
+
+  // 뱃지
+  ctx.fillStyle = accent;
+  ctx.font = '700 11px Pretendard, Arial, sans-serif';
+  const bw = ctx.measureText(badge).width + 16;
+  ctx.globalAlpha = 0.15;
+  ctx.beginPath();
+  ctx.roundRect(x + 16, y + 56, bw, 20, 10);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = accent;
+  ctx.fillText(badge, x + 24, y + 60);
+}
+
+// ── 다운로드 ──
+setTimeout(() => {
+  const a = document.createElement('a');
+  a.download = 'og-thumbnail.png';
+  a.href = c.toDataURL('image/png');
+  a.click();
+}, 800);
+</script>
+</body>
+</html>

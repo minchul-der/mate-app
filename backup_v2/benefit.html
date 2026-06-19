@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>메이트 — 혜택 상세</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root {
+      --bg:       #F7F9F8;
+      --surface:  #FFFFFF;
+      --surface2: #F7F9F8;
+      --green:    #1B4F3A;
+      --green-d:  #2D7A5F;
+      --green-l:  #E1F5EE;
+      --amber:    #F6AD55;
+      --amber-l:  #FFF8EC;
+      --navy:     #1A1A2E;
+      --text2:    #4A5568;
+      --text3:    #8896A6;
+      --border:   #E4EAE7;
+      --radius:   16px;
+      --font:     'Pretendard', 'Noto Sans KR', sans-serif;
+      --shadow:   0 2px 12px rgba(0,0,0,0.06);
+      --shadow-btn: 0 4px 16px rgba(27,79,58,0.25);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      width: 100%;
+      background: var(--bg); font-family: var(--font);
+      color: var(--navy); overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    .app {
+      width: 100%; max-width: 430px; min-height: 100dvh;
+      margin: 0 auto; display: flex; flex-direction: column;
+      background: var(--bg);
+    }
+
+    /* ── 상단 바 ── */
+    .top-bar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(247,249,248,0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; gap: 12px;
+      padding: 52px 20px 16px;
+    }
+    .back-btn {
+      width: 40px; height: 40px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 18px; flex-shrink: 0;
+      transition: all 0.15s; color: var(--navy);
+    }
+    .back-btn:active { background: var(--surface2); transform: scale(0.96); }
+    .top-logo { font-size: 16px; font-weight: 700; letter-spacing: -0.5px; color: var(--navy); }
+
+    /* ── 히어로 배너 ── */
+    .hero-banner {
+      margin: 4px 20px 20px;
+      border-radius: 16px;
+      padding: 22px 18px 18px;
+      position: relative; overflow: hidden;
+      border: 0.5px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .hero-color-bar {
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      border-radius: 4px 4px 0 0;
+    }
+    .hero-category {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 100px;
+      font-size: 11px; font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .hero-name {
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.6px; line-height: 1.3;
+      margin-bottom: 6px; color: var(--navy);
+    }
+    .hero-source { font-size: 12px; color: var(--text3); font-weight: 600; }
+
+    /* ── 공통 섹션 ── */
+    .section {
+      margin: 0 20px 12px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      border: 0.5px solid var(--border);
+    }
+    .sec-title {
+      font-size: 11px; font-weight: 700; color: var(--text3);
+      letter-spacing: 0.4px; text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .sec-title::before {
+      content: ''; display: block; width: 3px; height: 12px;
+      background: var(--green); border-radius: 2px;
+    }
+    .desc-text {
+      font-size: 14px; color: var(--text2);
+      line-height: 1.75; word-break: keep-all;
+    }
+
+    /* ── Before / After ── */
+    .before-after {
+      display: flex; gap: 8px; align-items: stretch;
+    }
+    .ba-box {
+      flex: 1; padding: 14px 12px; border-radius: 12px;
+    }
+    .ba-box.before { background: #FEF2F2; }
+    .ba-box.after  { background: var(--green-l); }
+    .ba-label { font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+    .ba-box.before .ba-label { color: #DC2626; }
+    .ba-box.after  .ba-label { color: var(--green-d); }
+    .ba-value { font-size: 17px; font-weight: 700; margin-bottom: 4px; line-height: 1.2; }
+    .ba-box.before .ba-value { color: var(--navy); }
+    .ba-box.after  .ba-value { color: var(--green-d); }
+    .ba-sub { font-size: 10px; color: var(--text3); line-height: 1.4; }
+    .ba-arrow {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: var(--green); flex-shrink: 0;
+    }
+
+    /* ── 조건 체크 ── */
+    .cond-list { display: flex; flex-direction: column; gap: 8px; }
+    .cond-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      background: var(--surface2);
+      font-size: 13px; color: var(--text2);
+    }
+    .cond-icon { font-size: 15px; flex-shrink: 0; }
+    .cond-meet { color: var(--green-d); font-weight: 700; }
+    .cond-fail { color: #DC2626; font-weight: 700; }
+
+    /* ── 신청 단계 ── */
+    .step-list { display: flex; flex-direction: column; gap: 12px; }
+    .step-item { display: flex; gap: 12px; align-items: flex-start; }
+    .step-num {
+      width: 28px; height: 28px; flex-shrink: 0;
+      background: var(--green-l); color: var(--green-d);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; margin-top: 1px;
+    }
+    .step-body {}
+    .step-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+    .step-desc { font-size: 12px; color: var(--text3); line-height: 1.6; word-break: keep-all; }
+
+    /* ── 면책 고지 ── */
+    .disclaimer {
+      margin: 0 20px 16px;
+      padding: 14px 16px;
+      background: var(--amber-l);
+      border-radius: 12px;
+      border-left: 3px solid var(--amber);
+      font-size: 12px; color: var(--text2);
+      line-height: 1.7; word-break: keep-all;
+    }
+    .disclaimer strong { color: var(--navy); }
+
+    /* ── 신청 버튼 ── */
+    .apply-wrap { padding: 0 20px 48px; }
+    .apply-btn {
+      width: 100%; padding: 17px;
+      background: var(--green); color: white;
+      border: none; border-radius: var(--radius);
+      font-family: var(--font); font-size: 16px; font-weight: 700;
+      cursor: pointer; letter-spacing: -0.3px;
+      box-shadow: var(--shadow-btn);
+      transition: all 0.15s; line-height: 1;
+    }
+    .apply-btn:active { transform: scale(0.98); box-shadow: none; }
+    .apply-note {
+      text-align: center; font-size: 11px; color: var(--text3);
+      margin-top: 10px;
+    }
+
+    /* ── 오류 화면 ── */
+    .error-wrap {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 20px; text-align: center;
+    }
+    .error-icon { font-size: 48px; margin-bottom: 16px; }
+    .error-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .error-sub { font-size: 13px; color: var(--text3); margin-bottom: 24px; line-height: 1.6; }
+    .error-btn {
+      padding: 12px 24px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; font-family: var(--font); font-size: 14px;
+      font-weight: 700; cursor: pointer; color: var(--navy);
+    }
+
+    /* ── 신청 기간 배지 ── */
+    .apply-period {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 10px; border-radius: 8px;
+      background: #FEF3C7; color: #B45309;
+      font-size: 11px; font-weight: 700;
+      margin-top: 12px;
+    }
+
+    /* ── 필요 서류 체크리스트 ── */
+    .doc-list { display: flex; flex-direction: column; gap: 10px; }
+    .doc-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 14px; border-radius: 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+    }
+    .doc-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .doc-body { flex: 1; min-width: 0; }
+    .doc-name {
+      font-size: 13px; font-weight: 700; color: var(--navy);
+      margin-bottom: 3px; line-height: 1.4;
+    }
+    .doc-validity {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      color: #DC2626; background: #FEF2F2;
+      padding: 1px 6px; border-radius: 4px; margin-bottom: 5px;
+    }
+    .doc-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; color: var(--green-d); font-weight: 700;
+      text-decoration: none;
+      padding: 3px 8px; border-radius: 6px;
+      background: var(--green-l);
+      transition: opacity 0.15s;
+    }
+    .doc-link:active { opacity: 0.7; }
+    .doc-link-plain {
+      font-size: 11px; color: var(--text3); font-weight: 500;
+    }
+    .doc-tip {
+      margin-top: 12px; padding: 10px 12px;
+      background: var(--green-l); border-radius: 10px;
+      font-size: 12px; color: var(--green-d); line-height: 1.6;
+    }
+
+    /* ── 등장 애니메이션 ── */
+    .fade-up {
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .fade-up.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="top-bar">
+    <div class="back-btn" onclick="goBack()">←</div>
+    <span class="top-logo">mate.</span>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+const INCOME_MAP = {
+  '100만원 미만':50, '100~200만원':150, '200~300만원':250,
+  '300~400만원':350, '400~500만원':450, '500만원 이상':600,
+  '없음':0, '50만원 미만':25, '50~100만원':75,
+  '아르바이트 병행':75, '기타':100
+};
+
+const FALLBACK = [
+  {id:'youth_savings_account',name:'청년도약계좌',category:'금융',source:'금융위원회',apply_url:'https://ylaccount.kinfa.or.kr',color:'#1B4F3A',category_icon:'💰',category_label:'청년 저축',cat_bg:'#E1F5EE',cat_color:'#2D7A5F',description:'월 최대 70만원 납입 시 정부가 매달 최대 2만4천원을 보태주는 청년 전용 적금. 5년 만기 시 최대 5,000만원.',before_label:'일반 적금',before_value:'연 3%대',before_sub:'시중 은행 적금 기준',after_label:'청년도약계좌',after_value:'연 6%+ 효과',after_sub:'정부 기여금 포함 시',apply_period:'매월 1~10일 (은행 앱에서 신청)',required_docs:[{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'},{name:'소득확인증명서',validity:'직전 연도 기준',issue_site:'홈택스',issue_url:'https://www.hometax.go.kr'}],filter:{age_min:19,age_max:34,jobs:['직장인','자영업','프리랜서'],regions:[],housing_types:[],income_max_monthly:625,goals:['비상금','노후준비','여행취미']},condition_checks:[{text:'나이: 만 19~34세',field:'age',rule:'range',min:19,max:34},{text:'소득: 총급여 7,500만원 이하',field:'income_monthly',rule:'max',value:625},{text:'직업: 근로·사업소득 필수',field:'job',rule:'include',values:['직장인','자영업','프리랜서']}],priority_boost:15},
+  {id:'youth_tomorrow_savings',name:'청년내일저축계좌',category:'금융',source:'보건복지부',apply_url:'https://www.bokjiro.go.kr',color:'#1B4F3A',category_icon:'💰',category_label:'복지 저축',cat_bg:'#E1F5EE',cat_color:'#2D7A5F',description:'월 10만원 저축하면 정부가 10~30만원을 추가 적립. 3년 만기 시 최대 1,440만원 형성.',before_label:'본인 저축만',before_value:'360만원',before_sub:'월 10만원 × 36개월',after_label:'정부 매칭 포함',after_value:'최대 1,440만원',after_sub:'정부 최대 1,080만원 추가',apply_period:'연 1~2회 공고 (복지로 공지 확인)',required_docs:[{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'},{name:'가족관계증명서',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'}],filter:{age_min:15,age_max:34,jobs:['직장인','자영업','프리랜서'],regions:[],housing_types:[],income_max_monthly:222,goals:['비상금','노후준비']},condition_checks:[{text:'나이: 만 15~34세',field:'age',rule:'range',min:15,max:34},{text:'소득: 기준 중위소득 100% 이하',field:'income_monthly',rule:'max',value:222},{text:'직업: 근로·사업소득 필수',field:'job',rule:'include',values:['직장인','자영업','프리랜서']}],priority_boost:8},
+  {id:'haessallon_youth',name:'햇살론Youth',category:'금융',source:'서민금융진흥원',apply_url:'https://www.kinfa.or.kr',color:'#F97316',category_icon:'✂️',category_label:'부채 전환',cat_bg:'#FFF0E6',cat_color:'#C2410C',description:'고금리 대출을 저금리로 전환해주는 청년 전용 서민금융 상품. 연 3.5% 수준으로 최대 1,200만원.',before_label:'현재 대출',before_value:'연 15~20%',before_sub:'카드론·저축은행 기준',after_label:'햇살론Youth',after_value:'연 3.5%',after_sub:'이자 부담 대폭 경감',apply_period:'상시 신청 가능 (은행·농협·신협 방문)',required_docs:[{name:'신분증',validity:'유효 기간 내',issue_site:'지참 (발급 불필요)',issue_url:''},{name:'소득증빙서류',validity:'직전 연도 기준',issue_site:'홈택스',issue_url:'https://www.hometax.go.kr'}],filter:{age_min:19,age_max:34,jobs:[],regions:[],housing_types:[],income_max_monthly:292,goals:['부채상환']},condition_checks:[{text:'나이: 만 34세 이하',field:'age',rule:'range',min:19,max:34},{text:'소득: 연 3,500만원 이하 또는 신용점수 하위 20%',field:'income_monthly',rule:'max',value:292},{text:'한도: 최대 1,200만원',field:'info',rule:'none'}],priority_boost:20},
+  {id:'isa_account',name:'ISA 계좌 (개인종합자산관리)',category:'금융',source:'금융감독원',apply_url:'https://www.fss.or.kr',color:'#8B5CF6',category_icon:'📊',category_label:'세금 절약',cat_bg:'#F3F0FF',cat_color:'#6D28D9',description:'예·적금·펀드·ETF를 한 계좌에서 운용하며 이자·배당 200만원까지 비과세. 누구나 가입 가능.',before_label:'일반 투자',before_value:'이자세 15.4%',before_sub:'수익에 세금 발생',after_label:'ISA 계좌',after_value:'200만원 비과세',after_sub:'초과분도 9.9% 분리과세',apply_period:'상시 (증권사·은행 앱에서 즉시 개설)',required_docs:[{name:'신분증',validity:'유효 기간 내',issue_site:'지참 (발급 불필요)',issue_url:''}],filter:{age_min:19,age_max:65,jobs:[],regions:[],housing_types:[],income_max_monthly:0,goals:['노후준비','여행취미','기타']},condition_checks:[{text:'나이: 만 19세 이상 누구나',field:'age',rule:'range',min:19,max:65},{text:'소득·직업 제한 없음',field:'info',rule:'none'},{text:'의무 보유 3년',field:'info',rule:'none'}],priority_boost:5},
+  {id:'youth_tomorrow_fill',name:'청년내일채움공제',category:'금융',source:'고용노동부·중소벤처기업부',apply_url:'https://www.work.go.kr',color:'#1B4F3A',category_icon:'🏢',category_label:'재직 청년 지원',cat_bg:'#E1F5EE',cat_color:'#2D7A5F',description:'중소기업 재직 청년이 2년간 400만원 납입하면 기업+정부가 600만원을 보태 총 1,000만원 형성.',before_label:'본인 저축만',before_value:'400만원',before_sub:'2년간 납입액',after_label:'기업·정부 보태면',after_value:'1,000만원',after_sub:'2년 만기 수령액',apply_period:'상시 (입사 후 6개월 이내 신청 필수)',required_docs:[{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'},{name:'재직증명서',validity:'1개월 이내',issue_site:'회사 인사팀',issue_url:''}],filter:{age_min:15,age_max:34,jobs:['직장인'],regions:[],housing_types:[],income_max_monthly:350,goals:['노후준비','비상금']},condition_checks:[{text:'나이: 만 34세 이하',field:'age',rule:'range',min:15,max:34},{text:'직업: 중소·중견기업 재직 중',field:'job',rule:'include',values:['직장인']},{text:'소득: 월 급여 350만원 이하',field:'income_monthly',rule:'max',value:350}],priority_boost:12},
+  {id:'youth_dream_account',name:'청년 주택드림 청약통장',category:'주거',source:'주택도시기금',apply_url:'https://nhuf.molit.go.kr',color:'#3B82F6',category_icon:'🏠',category_label:'내 집 마련',cat_bg:'#EFF6FF',cat_color:'#1D4ED8',description:'청약 준비 + 최대 연 4.5% 금리를 동시에. 24개월 유지 시 청약 1순위 자격 획득.',before_label:'청약 없음',before_value:'막막한 상태',before_sub:'내 집 마련 준비 없음',after_label:'24개월 뒤',after_value:'1순위 청약 자격',after_sub:'연 4.5% 금리 + 청약 가점',apply_period:'상시 (은행 앱 또는 영업점 방문)',required_docs:[{name:'신분증',validity:'유효 기간 내',issue_site:'지참 (발급 불필요)',issue_url:''},{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'}],filter:{age_min:19,age_max:34,jobs:[],regions:[],housing_types:['월세','전세','공공임대','비주택','무상거주'],income_max_monthly:625,goals:['내집마련']},condition_checks:[{text:'나이: 만 19~34세',field:'age',rule:'range',min:19,max:34},{text:'주거: 무주택자 (자가 제외)',field:'housing',rule:'include',values:['월세','전세','공공임대','비주택','무상거주']},{text:'소득: 연 7,500만원 이하',field:'income_monthly',rule:'max',value:625}],priority_boost:20},
+  {id:'seoul_youth_rent',name:'서울 청년월세 지원',category:'주거',source:'서울특별시',apply_url:'https://youth.seoul.go.kr',color:'#3B82F6',category_icon:'🏙️',category_label:'서울 주거 지원',cat_bg:'#EFF6FF',cat_color:'#1D4ED8',description:'서울 거주 청년에게 월 최대 20만원, 최장 12개월 월세를 직접 지원.',before_label:'월세 전액',before_value:'100% 자부담',before_sub:'매달 지출로만 사라짐',after_label:'지원 받으면',after_value:'월 최대 -20만원',after_sub:'12개월 최대 240만원 지원',apply_period:'연 1회 (4~5월경, 서울시 몽땅정보통 공고)',required_docs:[{name:'주민등록등본',validity:'3개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'},{name:'임대차계약서 사본',validity:'현재 계약 기준',issue_site:'원본 지참 후 사본 제출',issue_url:''}],filter:{age_min:19,age_max:39,jobs:[],regions:['서울'],housing_types:['월세'],income_max_monthly:333,goals:['비상금','내집마련']},condition_checks:[{text:'나이: 만 19~39세',field:'age',rule:'range',min:19,max:39},{text:'거주지: 서울특별시 거주 필수',field:'region',rule:'include',values:['서울']},{text:'주거: 월세 거주 (보증금 5,000만원 이하)',field:'housing',rule:'include',values:['월세']}],priority_boost:18},
+  {id:'national_youth_rent',name:'청년 월세 한시 특별지원',category:'주거',source:'국토교통부',apply_url:'https://www.gov.kr',color:'#3B82F6',category_icon:'🏠',category_label:'전국 월세 지원',cat_bg:'#EFF6FF',cat_color:'#1D4ED8',description:'부모와 별도 거주하는 청년에게 월 최대 20만원, 12개월간 월세를 지원하는 국토부 사업.',before_label:'월세 전액',before_value:'100% 자부담',before_sub:'매달 지출',after_label:'지원 받으면',after_value:'월 최대 -20만원',after_sub:'12개월 최대 240만원',apply_period:'공고 확인 필요 (정부24에서 검색)',required_docs:[{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'},{name:'임대차계약서',validity:'현재 계약 기준',issue_site:'원본 지참 후 사본 제출',issue_url:''}],filter:{age_min:19,age_max:34,jobs:[],regions:[],housing_types:['월세'],income_max_monthly:292,goals:['비상금']},condition_checks:[{text:'나이: 만 19~34세',field:'age',rule:'range',min:19,max:34},{text:'주거: 월세 독립 거주 (부모와 별거)',field:'housing',rule:'include',values:['월세']},{text:'소득: 기준 중위소득 60% 이하',field:'income_monthly',rule:'max',value:133}],priority_boost:12},
+  {id:'sme_youth_lease',name:'중소기업 청년 전세대출',category:'주거',source:'주택도시기금',apply_url:'https://nhuf.molit.go.kr',color:'#3B82F6',category_icon:'🏢',category_label:'직장인 전세 지원',cat_bg:'#EFF6FF',cat_color:'#1D4ED8',description:'중소기업 재직 청년에게 전세 보증금을 연 1.5%로 대출. 최대 1억원까지 지원.',before_label:'시중 전세 금리',before_value:'연 3~4%',before_sub:'은행 전세자금대출',after_label:'중소기업 청년 전세',after_value:'연 1.5%',after_sub:'최대 1억원 대출',apply_period:'상시 (우리·신한·국민은행 등 방문)',required_docs:[{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'},{name:'재직증명서',validity:'1개월 이내',issue_site:'회사 인사팀',issue_url:''},{name:'전세계약서',validity:'현재 계약 기준',issue_site:'임대인에게 수령',issue_url:''}],filter:{age_min:19,age_max:34,jobs:['직장인'],regions:[],housing_types:['전세'],income_max_monthly:417,goals:['내집마련']},condition_checks:[{text:'나이: 만 34세 이하',field:'age',rule:'range',min:19,max:34},{text:'직업: 중소기업 재직 중',field:'job',rule:'include',values:['직장인']},{text:'주거: 전세 거주 (보증금 2억원 이하)',field:'housing',rule:'include',values:['전세']}],priority_boost:15},
+  {id:'youth_buttimok',name:'청년 버팀목 전세자금 대출',category:'주거',source:'주택도시기금',apply_url:'https://nhuf.molit.go.kr',color:'#3B82F6',category_icon:'🏠',category_label:'청년 전세 대출',cat_bg:'#EFF6FF',cat_color:'#1D4ED8',description:'청년 무주택자에게 전세 보증금을 연 2.1~2.9%로 대출. 최대 7,000만원.',before_label:'시중 전세 금리',before_value:'연 3~4%',before_sub:'은행 전세자금대출',after_label:'버팀목 대출',after_value:'연 2.1~2.9%',after_sub:'최대 7,000만원',apply_period:'상시 (은행 방문)',required_docs:[{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'},{name:'전세계약서',validity:'현재 계약 기준',issue_site:'임대인에게 수령',issue_url:''}],filter:{age_min:19,age_max:34,jobs:[],regions:[],housing_types:['전세'],income_max_monthly:417,goals:['내집마련']},condition_checks:[{text:'나이: 만 19~34세',field:'age',rule:'range',min:19,max:34},{text:'주거: 전세 거주 예정 (무주택자)',field:'housing',rule:'include',values:['전세']},{text:'소득: 연 5,000만원 이하',field:'income_monthly',rule:'max',value:417}],priority_boost:10},
+  {id:'lh_youth_lease',name:'LH 청년 전세임대주택',category:'주거',source:'LH공사',apply_url:'https://apply.lh.or.kr',color:'#3B82F6',category_icon:'🏗️',category_label:'공공 임대주택',cat_bg:'#EFF6FF',cat_color:'#1D4ED8',description:'LH가 집주인과 전세 계약 후 청년에게 저렴하게 재임대. 시세의 30~40% 수준으로 거주 가능.',before_label:'시세 전세',before_value:'100% 부담',before_sub:'수도권 1~2억원 수준',after_label:'LH 전세임대',after_value:'시세 30~40%',after_sub:'본인 부담 최소화',apply_period:'연 2회 공고 (3월·9월경, LH 청약플러스)',required_docs:[{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'},{name:'가족관계증명서',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'}],filter:{age_min:19,age_max:39,jobs:[],regions:[],housing_types:['월세','전세','비주택','무상거주'],income_max_monthly:292,goals:['내집마련','비상금']},condition_checks:[{text:'나이: 만 19~39세',field:'age',rule:'range',min:19,max:39},{text:'주거: 무주택',field:'housing',rule:'include',values:['월세','전세','비주택','무상거주']},{text:'소득: 기준 중위소득 100% 이하',field:'income_monthly',rule:'max',value:222}],priority_boost:8},
+  {id:'happy_housing',name:'행복주택 (청년·대학생)',category:'주거',source:'LH공사',apply_url:'https://apply.lh.or.kr',color:'#3B82F6',category_icon:'🏘️',category_label:'공공 임대주택',cat_bg:'#EFF6FF',cat_color:'#1D4ED8',description:'대학생·청년·신혼부부를 위한 공공 임대주택. 시세 대비 60~80% 수준 임대료로 역세권 거주 가능.',before_label:'시세 월세',before_value:'100% 부담',before_sub:'서울 평균 월세 60만원+',after_label:'행복주택',after_value:'시세 60~80%',after_sub:'교통 요지 저렴 거주',apply_period:'수시 공고 (LH 청약플러스 앱 알림 설정 권장)',required_docs:[{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'},{name:'가족관계증명서',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'}],filter:{age_min:19,age_max:39,jobs:[],regions:[],housing_types:['월세','비주택','무상거주'],income_max_monthly:0,goals:['내집마련','비상금']},condition_checks:[{text:'나이: 만 19~39세',field:'age',rule:'range',min:19,max:39},{text:'자격: 무주택 청년·대학생',field:'housing',rule:'include',values:['월세','비주택','무상거주']},{text:'기간: 최대 6년 거주 가능',field:'info',rule:'none'}],priority_boost:6},
+  {id:'national_employ_1',name:'국민취업지원제도 1유형',category:'취업',source:'고용노동부',apply_url:'https://www.work24.go.kr',color:'#F59E0B',category_icon:'💼',category_label:'취업 지원',cat_bg:'#FEF3C7',cat_color:'#B45309',description:'저소득 구직자에게 월 50만원 구직촉진수당을 최대 6개월 지급하면서 취업 상담·훈련을 동시 지원.',before_label:'구직 중',before_value:'수입 없음',before_sub:'취업 준비 비용 부담',after_label:'수당 지원',after_value:'월 50만원',after_sub:'최대 6개월 = 300만원',apply_period:'상시 (고용24 온라인 또는 고용센터 방문)',required_docs:[{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'},{name:'가족관계증명서',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'}],filter:{age_min:15,age_max:69,jobs:['기타'],regions:[],housing_types:[],income_max_monthly:133,goals:['비상금','기타']},condition_checks:[{text:'나이: 만 15~69세',field:'age',rule:'range',min:15,max:69},{text:'소득: 기준 중위소득 60% 이하',field:'income_monthly',rule:'max',value:133},{text:'직업: 구직 중·미취업',field:'job',rule:'include',values:['기타']}],priority_boost:15},
+  {id:'national_employ_2',name:'국민취업지원제도 2유형',category:'취업',source:'고용노동부',apply_url:'https://www.work24.go.kr',color:'#F59E0B',category_icon:'💼',category_label:'취업 지원',cat_bg:'#FEF3C7',cat_color:'#B45309',description:'소득 기준 없이 취업이 어려운 청년을 대상으로 취업 지원 서비스와 최대 195만원 조기취업성공수당 지급.',before_label:'구직 중',before_value:'방향 없는 취업 준비',before_sub:'체계적 지원 없음',after_label:'전문 취업 지원',after_value:'최대 195만원',after_sub:'조기 취업 성공 시 수당',apply_period:'상시 (고용24 온라인 또는 고용센터 방문)',required_docs:[{name:'신분증',validity:'유효 기간 내',issue_site:'지참 (발급 불필요)',issue_url:''}],filter:{age_min:15,age_max:69,jobs:['기타'],regions:[],housing_types:[],income_max_monthly:0,goals:['비상금','기타']},condition_checks:[{text:'나이: 만 15~69세',field:'age',rule:'range',min:15,max:69},{text:'직업: 구직 중·미취업',field:'job',rule:'include',values:['기타']},{text:'소득: 소득 기준 없음',field:'info',rule:'none'}],priority_boost:10},
+  {id:'youth_challenge',name:'청년도전지원사업',category:'취업',source:'고용노동부',apply_url:'https://www.work24.go.kr',color:'#F59E0B',category_icon:'🎯',category_label:'취업 도전',cat_bg:'#FEF3C7',cat_color:'#B45309',description:'6개월 이상 취업 포기 청년에게 맞춤형 프로그램·심리 상담·자기개발 지원 + 참여 수당 월 최대 40만원.',before_label:'취업 포기 상태',before_value:'방향 없음',before_sub:'6개월+ 미취업',after_label:'프로그램 참여 시',after_value:'월 40만원 수당',after_sub:'맞춤 취업 지원 동시 제공',apply_period:'상시 (지역 고용센터 방문)',required_docs:[{name:'신분증',validity:'유효 기간 내',issue_site:'지참 (발급 불필요)',issue_url:''},{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'}],filter:{age_min:18,age_max:34,jobs:['기타'],regions:[],housing_types:[],income_max_monthly:0,goals:['비상금','기타']},condition_checks:[{text:'나이: 만 18~34세',field:'age',rule:'range',min:18,max:34},{text:'직업: 6개월 이상 미취업 청년',field:'job',rule:'include',values:['기타']},{text:'참여 기간: 최대 3개월',field:'info',rule:'none'}],priority_boost:8},
+  {id:'youth_job_incentive',name:'청년일자리도약장려금',category:'취업',source:'고용노동부',apply_url:'https://www.work24.go.kr',color:'#F59E0B',category_icon:'📋',category_label:'취업 우대',cat_bg:'#FEF3C7',cat_color:'#B45309',description:'취업 취약 청년을 정규직으로 채용한 중소기업에 정부가 연 최대 720만원 지원 → 채용 기회 확대.',before_label:'채용 문턱 높음',before_value:'취약계층 불리',before_sub:'구직 경험 부족 등',after_label:'기업 지원금 효과',after_value:'채용 기회 ↑',after_sub:'기업에 연 720만원 지급',apply_period:'상시 (기업이 고용24에서 신청)',required_docs:[{name:'기업이 신청하는 지원금 (근로자 서류 불필요)',validity:'',issue_site:'고용24 (기업 담당자 신청)',issue_url:'https://www.work24.go.kr'}],filter:{age_min:15,age_max:39,jobs:['기타'],regions:[],housing_types:[],income_max_monthly:0,goals:['비상금','기타']},condition_checks:[{text:'나이: 만 15~39세',field:'age',rule:'range',min:15,max:39},{text:'자격: 취업 취약계층',field:'job',rule:'include',values:['기타']},{text:'방식: 기업이 신청 → 채용 기회 확대',field:'info',rule:'none'}],priority_boost:6},
+  {id:'youth_startup_school',name:'청년창업사관학교',category:'창업',source:'중소벤처기업부',apply_url:'https://www.kised.or.kr',color:'#F97316',category_icon:'🚀',category_label:'창업 지원',cat_bg:'#FFF0E6',cat_color:'#C2410C',description:'창업 아이디어가 있는 청년에게 사업화 자금 최대 1억원 + 전담 멘토·시설·네트워크 1년 지원.',before_label:'창업 준비',before_value:'자금·멘토 없음',before_sub:'혼자 준비',after_label:'선발 시',after_value:'최대 1억원',after_sub:'자금 + 멘토링 + 시설',apply_period:'연 1회 공고 (1~2월경)',required_docs:[{name:'사업계획서',validity:'신청 시 직접 작성',issue_site:'K-Startup 양식 다운로드',issue_url:'https://www.k-startup.go.kr'}],filter:{age_min:19,age_max:39,jobs:['자영업','기타'],regions:[],housing_types:[],income_max_monthly:0,goals:['여행취미','기타','비상금']},condition_checks:[{text:'나이: 만 39세 이하',field:'age',rule:'range',min:19,max:39},{text:'자격: 창업 3년 이내 또는 예비 창업자',field:'info',rule:'none'},{text:'직업: 자영업·예비창업자 우대',field:'job',rule:'include',values:['자영업','기타']}],priority_boost:15},
+  {id:'startup_package',name:'초기창업패키지',category:'창업',source:'창업진흥원',apply_url:'https://www.k-startup.go.kr',color:'#F97316',category_icon:'📦',category_label:'창업 지원',cat_bg:'#FFF0E6',cat_color:'#C2410C',description:'업력 3년 이내 초기 창업팀에게 사업화 자금 최대 1억원과 교육·멘토링·네트워킹을 패키지로 지원.',before_label:'초기 창업',before_value:'자금 부족',before_sub:'혼자 버티는 상태',after_label:'선발 시',after_value:'최대 1억원',after_sub:'자금 + 교육 + 네트워크',apply_period:'연 1회 공고 (2~3월경)',required_docs:[{name:'사업계획서',validity:'신청 시 직접 작성',issue_site:'K-Startup 양식 다운로드',issue_url:'https://www.k-startup.go.kr'},{name:'사업자등록증',validity:'최신본',issue_site:'홈택스',issue_url:'https://www.hometax.go.kr'}],filter:{age_min:19,age_max:49,jobs:['자영업'],regions:[],housing_types:[],income_max_monthly:0,goals:['여행취미','기타','비상금']},condition_checks:[{text:'나이: 청년 가점 적용',field:'age',rule:'range',min:19,max:49},{text:'직업: 업력 3년 이내 창업자',field:'job',rule:'include',values:['자영업']},{text:'선발 경쟁: 사업계획서 심사',field:'info',rule:'none'}],priority_boost:10},
+  {id:'seoul_youth_allowance',name:'서울 청년수당',category:'복지',source:'서울특별시',apply_url:'https://youth.seoul.go.kr',color:'#8B5CF6',category_icon:'🌱',category_label:'서울 청년 복지',cat_bg:'#F3F0FF',cat_color:'#6D28D9',description:'서울 거주 미취업 청년에게 구직 활동 지원금으로 월 50만원을 최대 6개월 지급.',before_label:'구직 중',before_value:'생활비 부담',before_sub:'서울 거주 취업 준비생',after_label:'수당 지원',after_value:'월 50만원',after_sub:'최대 6개월 = 300만원',apply_period:'연 1~2회 공고 (서울시 몽땅정보통)',required_docs:[{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'}],filter:{age_min:19,age_max:34,jobs:['기타'],regions:['서울'],housing_types:[],income_max_monthly:333,goals:['비상금','기타']},condition_checks:[{text:'나이: 만 19~34세',field:'age',rule:'range',min:19,max:34},{text:'거주지: 서울특별시 거주 필수',field:'region',rule:'include',values:['서울']},{text:'직업: 미취업 상태',field:'job',rule:'include',values:['기타']}],priority_boost:18},
+  {id:'gyeonggi_basic_income',name:'경기 청년기본소득',category:'복지',source:'경기도',apply_url:'https://www.gyeonggi.go.kr',color:'#8B5CF6',category_icon:'🌿',category_label:'경기도 청년 복지',cat_bg:'#F3F0FF',cat_color:'#6D28D9',description:'경기도에 3년 이상 거주한 만 24세 청년에게 분기별 25만원(연 100만원)을 지역화폐로 지급.',before_label:'만 24세',before_value:'없음',before_sub:'경기도 거주',after_label:'신청 시',after_value:'연 100만원',after_sub:'분기별 25만원 지역화폐',apply_period:'분기별 (3월·6월·9월·12월)',required_docs:[{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'}],filter:{age_min:24,age_max:24,jobs:[],regions:['경기'],housing_types:[],income_max_monthly:0,goals:['비상금','여행취미','기타']},condition_checks:[{text:'나이: 만 24세',field:'age',rule:'range',min:24,max:24},{text:'거주지: 경기도 3년 이상',field:'region',rule:'include',values:['경기']},{text:'소득·직업 제한 없음',field:'info',rule:'none'}],priority_boost:20},
+  {id:'housing_benefit',name:'주거급여 (청년 분리지급)',category:'복지',source:'국토교통부·보건복지부',apply_url:'https://www.bokjiro.go.kr',color:'#8B5CF6',category_icon:'🏠',category_label:'기초 주거 지원',cat_bg:'#F3F0FF',cat_color:'#6D28D9',description:'기준 중위소득 48% 이하 가구의 청년에게 실제 월세를 지역·가구원 수에 따라 직접 지원.',before_label:'임차료 전액',before_value:'자부담',before_sub:'저소득 가구 주거비 부담',after_label:'주거급여 수급 시',after_value:'임차료 일부~전액',after_sub:'지역·가구별 차등 지급',apply_period:'상시 (주민센터 방문 또는 복지로 온라인)',required_docs:[{name:'주민등록등본',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'},{name:'임대차계약서',validity:'현재 계약 기준',issue_site:'원본 지참',issue_url:''},{name:'금융정보 제공 동의서',validity:'신청 시 작성',issue_site:'주민센터에서 수령·작성',issue_url:''}],filter:{age_min:19,age_max:65,jobs:[],regions:[],housing_types:['월세','전세','비주택'],income_max_monthly:107,goals:['비상금','기타']},condition_checks:[{text:'소득: 기준 중위소득 48% 이하',field:'income_monthly',rule:'max',value:107},{text:'나이: 만 19세 이상 독립 거주',field:'age',rule:'range',min:19,max:65},{text:'주거: 임차 거주 (월세·전세 등)',field:'housing',rule:'include',values:['월세','전세','비주택']}],priority_boost:12},
+  {id:'youth_mental_health',name:'청년 마음건강 바우처',category:'복지',source:'보건복지부',apply_url:'https://www.bokjiro.go.kr',color:'#8B5CF6',category_icon:'🧠',category_label:'심리 건강 지원',cat_bg:'#F3F0FF',cat_color:'#6D28D9',description:'우울·불안 등 어려움을 겪는 청년에게 전문 심리 상담 10회를 바우처로 지원.',before_label:'심리 상담 비용',before_value:'회당 5~10만원',before_sub:'민간 상담센터 기준',after_label:'바우처 지원 시',after_value:'10회 무료~저렴',after_sub:'본인 부담 최소화',apply_period:'상시 (정신건강복지센터 방문 또는 복지로)',required_docs:[{name:'신분증',validity:'유효 기간 내',issue_site:'지참 (발급 불필요)',issue_url:''}],filter:{age_min:19,age_max:34,jobs:[],regions:[],housing_types:[],income_max_monthly:0,goals:['비상금','기타']},condition_checks:[{text:'나이: 만 19~34세',field:'age',rule:'range',min:19,max:34},{text:'소득·직업 제한 없음',field:'info',rule:'none'},{text:'신청: 정신건강복지센터 또는 복지로',field:'info',rule:'none'}],priority_boost:8},
+  {id:'culture_nuri',name:'문화누리카드',category:'복지',source:'문화체육관광부',apply_url:'https://www.mnuri.co.kr',color:'#EC4899',category_icon:'🎭',category_label:'문화·여가 지원',cat_bg:'#FDF2F8',cat_color:'#9D174D',description:'기초생활수급자·차상위계층에게 연 13만원 문화·여행·스포츠 바우처 지급.',before_label:'문화생활 비용',before_value:'100% 자부담',before_sub:'영화·공연·여행 비용',after_label:'누리카드 사용 시',after_value:'연 13만원 지원',after_sub:'문화·여행·스포츠 바우처',apply_period:'매년 2~3월 (주민센터 또는 문화누리 앱)',required_docs:[{name:'신분증',validity:'유효 기간 내',issue_site:'지참 (발급 불필요)',issue_url:''},{name:'수급자 증명서',validity:'최신본',issue_site:'주민센터 방문',issue_url:''}],filter:{age_min:6,age_max:65,jobs:[],regions:[],housing_types:[],income_max_monthly:107,goals:['여행취미','기타','비상금']},condition_checks:[{text:'자격: 기초생활수급자 또는 차상위계층',field:'income_monthly',rule:'max',value:107},{text:'나이: 6세 이상 누구나',field:'age',rule:'range',min:6,max:65},{text:'사용처: 영화·공연·전시·숙박·스포츠',field:'info',rule:'none'}],priority_boost:10},
+  {id:'national_scholarship',name:'국가장학금 I·II유형',category:'교육',source:'한국장학재단',apply_url:'https://www.kosaf.go.kr',color:'#EC4899',category_icon:'🎓',category_label:'학비 지원',cat_bg:'#FDF2F8',cat_color:'#9D174D',description:'소득 8구간 이하 대학생에게 연 최대 700만원 등록금 장학금 지원. C학점 이상이면 신청 가능.',before_label:'등록금 전액',before_value:'100% 자부담',before_sub:'연평균 400~700만원',after_label:'장학금 지원 시',after_value:'최대 연 700만원',after_sub:'소득 구간별 차등 지급',apply_period:'연 2회 (1학기: 11~12월 / 2학기: 5~6월)',required_docs:[{name:'재학증명서',validity:'1개월 이내',issue_site:'학교 포털',issue_url:''},{name:'가족관계증명서',validity:'1개월 이내',issue_site:'정부24',issue_url:'https://www.gov.kr'}],filter:{age_min:17,age_max:35,jobs:['학생'],regions:[],housing_types:[],income_max_monthly:0,goals:['비상금','기타']},condition_checks:[{text:'직업: 대학교 재학·입학 예정자',field:'job',rule:'include',values:['학생']},{text:'나이: 대학 재학 기간',field:'age',rule:'range',min:17,max:35},{text:'성적: C학점 이상 (80점 이상)',field:'info',rule:'none'}],priority_boost:18}
+];
+
+function condStatus(cond, profile, age, monthly) {
+  if (cond.field === 'age')
+    return (age >= cond.min && age <= cond.max) ? 'meet' : 'fail';
+  if (cond.field === 'income_monthly') {
+    if (!monthly) return 'info';
+    return monthly <= cond.value ? 'meet' : 'fail';
+  }
+  if (cond.field === 'job')
+    return cond.values && cond.values.includes(profile.job) ? 'meet' : 'info';
+  if (cond.field === 'housing')
+    return cond.values && cond.values.includes(profile.housing) ? 'meet' : 'info';
+  return 'info';
+}
+
+function icon(status) {
+  return status === 'meet' ? '✅' : status === 'fail' ? '❌' : '🔸';
+}
+function cls(status) {
+  return status === 'meet' ? 'cond-meet' : status === 'fail' ? 'cond-fail' : '';
+}
+
+async function loadBenefits() {
+  try {
+    const r = await fetch('data/benefits.json');
+    if (!r.ok) throw 0;
+    const d = await r.json();
+    return d.benefits || FALLBACK;
+  } catch { return FALLBACK; }
+}
+
+async function init() {
+  const id = new URLSearchParams(location.search).get('id');
+  const benefits = await loadBenefits();
+  const b = id ? benefits.find(x => x.id === id) : null;
+  const el = document.getElementById('content');
+
+  if (!b) {
+    el.innerHTML = `
+      <div class="error-wrap">
+        <div class="error-icon">🔍</div>
+        <div class="error-title">혜택 정보를 찾을 수 없어요</div>
+        <div class="error-sub">결과 화면으로 돌아가서<br>다시 카드를 선택해 주세요.</div>
+        <button class="error-btn" onclick="goBack()">← 결과로 돌아가기</button>
+      </div>`;
+    return;
+  }
+
+  const raw     = localStorage.getItem('mateAnswers');
+  const profile = raw ? JSON.parse(raw) : {};
+  const age     = profile.birthYear ? new Date().getFullYear() - profile.birthYear : null;
+  const monthly = INCOME_MAP[profile.income] || 0;
+  document.title = `메이트 — ${b.name}`;
+
+  const checks = (b.condition_checks || []).map(c => ({
+    text: c.text,
+    st: age !== null ? condStatus(c, profile, age, monthly) : 'info'
+  }));
+
+  const steps = [
+    { n:1, title:'신청 자격 확인',
+      desc:'아래 조건 항목을 내 상황과 비교해 보세요. 🔸 항목은 기관에 직접 문의하면 빠릅니다.',
+      url: '' },
+    { n:2, title:'필요 서류 미리 준비',
+      desc:'아래 서류 목록을 보고 발급처 링크에서 미리 준비하세요. 유효기간에 주의하세요!',
+      url: '' },
+    { n:3, title:`${b.source} 공식 사이트에서 신청`,
+      desc:'아래 신청 버튼으로 공식 홈페이지에 접속해 신청서를 작성하고 서류를 첨부하세요.',
+      url: b.apply_url },
+  ];
+
+  /* 서류 체크리스트 HTML */
+  function renderDocs(docs) {
+    if (!docs || !docs.length) return '';
+    const items = docs.map(d => {
+      const validBadge = d.validity
+        ? `<span class="doc-validity">⏰ ${d.validity}</span><br>`
+        : '';
+      const link = d.issue_url
+        ? `<a class="doc-link" href="${d.issue_url}" target="_blank" rel="noopener">🔗 ${d.issue_site}에서 발급</a>`
+        : `<span class="doc-link-plain">${d.issue_site}</span>`;
+      return `
+        <div class="doc-item">
+          <div class="doc-icon">📄</div>
+          <div class="doc-body">
+            <div class="doc-name">${d.name}</div>
+            ${validBadge}${link}
+          </div>
+        </div>`;
+    }).join('');
+    return `
+      <div class="section fade-up">
+        <div class="sec-title">필요 서류 체크리스트</div>
+        <div class="doc-list">${items}</div>
+        <div class="doc-tip">💡 서류 유효기간 초과 시 반려될 수 있어요. 신청 당일 또는 직전에 발급하는 것이 안전합니다.</div>
+      </div>`;};
+
+  el.innerHTML = `
+    <div class="hero-banner fade-up">
+      <div class="hero-color-bar" style="background:${b.color}"></div>
+      <div class="hero-category" style="background:${b.cat_bg};color:${b.cat_color}">
+        ${b.category_icon} ${b.category_label}
+      </div>
+      <div class="hero-name">${b.name}</div>
+      <div class="hero-source">${b.source} 제공</div>
+      ${b.apply_period ? `<div class="apply-period">📅 신청 기간: ${b.apply_period}</div>` : ''}
+    </div>
+
+    <div class="section fade-up">
+      <div class="sec-title">혜택 소개</div>
+      <p class="desc-text">${b.description}</p>
+    </div>
+
+    <div class="section fade-up">
+      <div class="sec-title">Before / After</div>
+      <div class="before-after">
+        <div class="ba-box before">
+          <div class="ba-label">${b.before_label}</div>
+          <div class="ba-value">${b.before_value}</div>
+          <div class="ba-sub">${b.before_sub}</div>
+        </div>
+        <div class="ba-arrow">→</div>
+        <div class="ba-box after">
+          <div class="ba-label">${b.after_label}</div>
+          <div class="ba-value">${b.after_value}</div>
+          <div class="ba-sub">${b.after_sub}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section fade-up">
+      <div class="sec-title">지원 조건</div>
+      <div class="cond-list">
+        ${checks.map(c => `
+          <div class="cond-item">
+            <span class="cond-icon">${icon(c.st)}</span>
+            <span class="${cls(c.st)}">${c.text}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    ${renderDocs(b.required_docs)}
+
+    <div class="section fade-up">
+      <div class="sec-title">신청 방법</div>
+      <div class="step-list">
+        ${steps.map(s => `
+          <div class="step-item">
+            <div class="step-num">${s.n}</div>
+            <div class="step-body">
+              <div class="step-title">${s.title}</div>
+              <div class="step-desc">${s.desc}</div>
+              ${s.url ? `<a class="doc-link" style="margin-top:6px;display:inline-flex;" href="${s.url}" target="_blank" rel="noopener">🔗 공식 사이트 바로가기</a>` : ''}
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="disclaimer fade-up">
+      <strong>⚠️ 참고용 정보입니다.</strong><br>
+      이 화면의 내용은 참고용이며, 실제 지원 조건·금액·기간은 변경될 수 있습니다.
+      정확한 정보는 <strong>${b.source} 공식 사이트</strong>에서 반드시 확인하세요.
+    </div>
+
+    <div class="apply-wrap fade-up">
+      <button class="apply-btn" onclick="window.open('${b.apply_url}','_blank')">
+        ${b.source}에서 신청하기 →
+      </button>
+      <p class="apply-note">버튼을 누르면 외부 공식 사이트로 이동합니다</p>
+    </div>
+  `;
+
+  setTimeout(() => {
+    document.querySelectorAll('.fade-up').forEach((el, i) => {
+      setTimeout(() => el.classList.add('show'), 40 + i * 70);
+    });
+  }, 50);
+}
+
+function goBack() {
+  document.querySelector('.app').style.cssText = 'opacity:0;transition:opacity 0.25s';
+  setTimeout(() => { location.href = 'result.html'; }, 250);
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

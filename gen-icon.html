@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>body{margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#111;gap:40px;flex-wrap:wrap}</style>
+</head>
+<body>
+<canvas id="c1024" width="1024" height="1024"></canvas>
+<canvas id="c192" width="192" height="192"></canvas>
+<canvas id="c512" width="512" height="512"></canvas>
+<script>
+function drawIcon(canvas) {
+  const S = canvas.width;
+  const ctx = canvas.getContext('2d');
+  const r = S * 0.22; // corner radius
+
+  // ── 배경: 그라데이션 ──
+  const bg = ctx.createLinearGradient(0, 0, S, S);
+  bg.addColorStop(0, '#0A4433');
+  bg.addColorStop(0.5, '#0D5C46');
+  bg.addColorStop(1, '#072E22');
+  ctx.fillStyle = bg;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, S, S, r);
+  ctx.fill();
+
+  // ── 글로우 ──
+  const g = ctx.createRadialGradient(S*0.5, S*0.38, S*0.05, S*0.5, S*0.38, S*0.55);
+  g.addColorStop(0, 'rgba(0,201,138,0.18)');
+  g.addColorStop(1, 'rgba(0,201,138,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, S, S, r);
+  ctx.fill();
+
+  // ── M 글자 ──
+  ctx.fillStyle = '#fff';
+  ctx.font = `800 ${S * 0.48}px Pretendard, Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('M', S * 0.5, S * 0.47);
+
+  // ── 하단 도트 (accent) ──
+  ctx.fillStyle = '#00C98A';
+  ctx.beginPath();
+  ctx.arc(S * 0.5, S * 0.76, S * 0.045, 0, Math.PI * 2);
+  ctx.fill();
+
+  // ── 도트 글로우 ──
+  const dg = ctx.createRadialGradient(S*0.5, S*0.76, 0, S*0.5, S*0.76, S*0.1);
+  dg.addColorStop(0, 'rgba(0,201,138,0.3)');
+  dg.addColorStop(1, 'rgba(0,201,138,0)');
+  ctx.fillStyle = dg;
+  ctx.beginPath();
+  ctx.arc(S * 0.5, S * 0.76, S * 0.1, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+// 3가지 사이즈 생성
+['c1024', 'c192', 'c512'].forEach(id => drawIcon(document.getElementById(id)));
+
+// 다운로드
+setTimeout(() => {
+  [['c1024', 'icon-1024.png'], ['c512', 'icon-512.png'], ['c192', 'icon-192.png']].forEach(([id, name]) => {
+    const a = document.createElement('a');
+    a.download = name;
+    a.href = document.getElementById(id).toDataURL('image/png');
+    a.click();
+  });
+}, 800);
+</script>
+</body>
+</html>

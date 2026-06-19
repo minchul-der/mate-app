@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0D5C46"/>
+  <rect x="40" y="40" width="1120" height="550" rx="32" fill="white" fill-opacity="0.07"/>
+  <!-- Logo -->
+  <rect x="480" y="160" width="72" height="72" rx="18" fill="white"/>
+  <text x="516" y="212" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#0D5C46" text-anchor="middle">M</text>
+  <!-- Brand name -->
+  <text x="600" y="310" font-family="Arial,sans-serif" font-size="64" font-weight="800" fill="white" text-anchor="middle" letter-spacing="-2">mate.</text>
+  <!-- Tagline -->
+  <text x="600" y="380" font-family="Arial,sans-serif" font-size="28" font-weight="500" fill="#00C98A" text-anchor="middle">내 조건에 맞는 정부혜택, 3분이면 확인</text>
+  <!-- Sub -->
+  <text x="600" y="440" font-family="Arial,sans-serif" font-size="20" fill="white" fill-opacity="0.5" text-anchor="middle">지원금 · 청년정책 · 절세 혜택 한번에</text>
+</svg>

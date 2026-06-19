@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>메이트 — 기본 정보</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root {
+      --bg:       #F7F9F8;
+      --surface:  #FFFFFF;
+      --surface2: #F7F9F8;
+      --green:    #1B4F3A;
+      --green-d:  #2D7A5F;
+      --green-l:  #E1F5EE;
+      --amber:    #F6AD55;
+      --amber-l:  #FFF8EC;
+      --blue:     #3B82F6;
+      --blue-l:   #EFF6FF;
+      --navy:     #1A1A2E;
+      --text2:    #4A5568;
+      --text3:    #8896A6;
+      --border:   #E4EAE7;
+      --radius:   14px;
+      --font:     'Pretendard', 'Noto Sans KR', sans-serif;
+      --shadow:   0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg); font-family: var(--font);
+      color: var(--navy); overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app {
+      position: relative; width: 100%; max-width: 430px;
+      height: 100dvh; margin: 0 auto;
+      display: flex; flex-direction: column;
+      overflow: hidden; background: var(--bg);
+    }
+
+    /* ── 헤더 ── */
+    .header {
+      background: var(--surface); padding: 48px 20px 14px;
+      flex-shrink: 0; box-shadow: 0 1px 0 var(--border); position: relative; z-index: 2;
+    }
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .back-btn {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: var(--surface2); border: none; color: var(--text3);
+      font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .back-btn:active { background: var(--border); color: var(--navy); }
+    .back-btn:disabled { opacity: 0.3; cursor: default; }
+    .step-badge {
+      font-size: 12px; font-weight: 700; color: var(--green);
+      background: var(--green-l); padding: 5px 12px; border-radius: 100px; letter-spacing: 0.3px;
+    }
+    .progress-wrap { display: flex; gap: 4px; }
+    .prog-seg { flex: 1; height: 4px; border-radius: 100px; background: var(--border); transition: background 0.4s; }
+    .prog-seg.done   { background: var(--green); }
+    .prog-seg.active { background: linear-gradient(90deg, var(--green), var(--amber)); }
+
+    /* ── 슬라이드 ── */
+    .slides-area { flex: 1; position: relative; min-height: 0; overflow: hidden; z-index: 1; }
+    .slide {
+      position: absolute; inset: 0; padding: 16px 20px 4px;
+      display: flex; flex-direction: column;
+      opacity: 0; transform: translateX(40px);
+      transition: opacity 0.32s ease, transform 0.32s ease;
+      pointer-events: none; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    }
+    .slide.active  { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .slide.exit      { opacity: 0; transform: translateX(-40px); }
+    .slide.exit-back { opacity: 0; transform: translateX(40px); }
+
+    .slide-title { font-size: 21px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.35; margin-bottom: 3px; word-break: keep-all; }
+    .slide-title .hi { color: var(--green); }
+    .slide-sub { font-size: 12px; color: var(--text3); margin-bottom: 16px; line-height: 1.5; word-break: keep-all; }
+
+    .sec { margin-bottom: 14px; }
+    .sec-label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; color: var(--text2);
+      letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 7px;
+    }
+    .sec-label::before { content: ''; display: block; width: 3px; height: 12px; background: var(--green); border-radius: 2px; }
+    .sec-hint { font-size: 11px; color: var(--text3); margin-bottom: 7px; line-height: 1.4; }
+
+    /* 슬라이드 1 직업 선택 스크롤 유도 */
+    .scroll-nudge {
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      font-size: 11px; color: var(--green); font-weight: 700;
+      margin-bottom: 6px; animation: nudgeBounce 1.6s ease-in-out infinite;
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .scroll-nudge.show { opacity: 1; }
+    @keyframes nudgeBounce { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(4px); } }
+
+    /* ════════════════════════════
+       생년월일 3열 휠 피커
+       ════════════════════════════ */
+    .date-picker-wrap {
+      position: relative; display: flex; height: 184px;
+      background: var(--surface); border-radius: var(--radius);
+      overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border);
+      touch-action: none;
+    }
+    .date-col {
+      flex: 1; position: relative;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      /* (컨테이너 184px - 항목 36px) / 2 = 74px — 선택 항목이 정중앙에 위치 */
+      padding: 74px 0;
+      cursor: ns-resize; user-select: none;
+      box-sizing: border-box;
+      contain: layout;
+      scroll-snap-type: y mandatory;
+    }
+    .date-col::-webkit-scrollbar { display: none; }
+    .date-col + .date-col { border-left: 1px solid var(--border); }
+
+    .wp-item {
+      height: 36px; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 400; color: rgba(26,26,46,0.28);
+      transform: scale(1); transform-origin: center;
+      transition: color 0.15s ease, transform 0.5s cubic-bezier(0.34, 1.9, 0.64, 1);
+      will-change: transform, color;
+      scroll-snap-align: center;
+      cursor: pointer;
+    }
+    .wp-item.near2 { color: rgba(26,26,46,0.42); transform: scale(0.90); }
+    .wp-item.near1 { color: rgba(26,26,46,0.65); font-weight: 500; transform: scale(1.05); }
+    .wp-item.sel   { color: var(--navy); font-weight: 700; transform: scale(1.32); }
+
+    .wheel-hl {
+      position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+      height: 36px; background: var(--green-l);
+      border-top: 1px solid rgba(45,122,95,0.25);
+      border-bottom: 1px solid rgba(45,122,95,0.25);
+      pointer-events: none;
+    }
+    .wheel-fade-t, .wheel-fade-b {
+      position: absolute; left: 0; right: 0; height: 38px; pointer-events: none; z-index: 4;
+    }
+    .wheel-fade-t { top: 0; background: linear-gradient(to bottom, var(--surface) 0%, transparent 100%); }
+    .wheel-fade-b { bottom: 0; background: linear-gradient(to top, var(--surface) 0%, transparent 100%); }
+
+    /* ════════════════════════════
+       직업 라디오 리스트
+       ════════════════════════════ */
+    .radio-list { display: flex; flex-direction: column; gap: 6px; }
+    .radio-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: var(--radius); color: var(--text2);
+      font-family: var(--font); font-size: 14px; font-weight: 500;
+      cursor: pointer; text-align: left; transition: all 0.18s;
+    }
+    .radio-item:active { transform: scale(0.99); }
+    .radio-item.selected { border-color: var(--green); background: var(--green-l); color: var(--navy); }
+    .radio-icon { font-size: 18px; flex-shrink: 0; }
+    .radio-check {
+      width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border);
+      margin-left: auto; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.18s; font-size: 11px; color: transparent;
+    }
+    .radio-item.selected .radio-check { background: var(--green); border-color: var(--green); color: white; }
+
+    /* ════════════════════════════
+       지역 2패널 피커
+       ════════════════════════════ */
+    .region-picker {
+      display: flex; height: 232px;
+      background: var(--surface); border-radius: var(--radius);
+      overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border);
+    }
+    .rg-col { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .rg-sido { flex: 0 0 38%; border-right: 1px solid var(--border); }
+    .rg-sigungu { flex: 1; }
+    .rg-item {
+      padding: 11px 12px; font-size: 13px; font-weight: 500;
+      color: var(--text2); cursor: pointer;
+      border-bottom: 1px solid #F0F3F8; transition: all 0.15s;
+    }
+    .rg-item:last-child { border-bottom: none; }
+    .rg-sido .rg-item.active { background: var(--green-l); color: var(--green-d); font-weight: 700; border-right: 2px solid var(--green); }
+    .rg-sigungu .rg-item.active { background: var(--green-l); color: var(--green-d); font-weight: 700; }
+    .rg-sigungu .rg-item:active { background: var(--green-l); }
+    .rg-empty { padding: 20px 10px; font-size: 12px; color: var(--text3); text-align: center; line-height: 1.6; }
+
+    .region-badge {
+      margin-top: 10px; padding: 10px 14px;
+      background: var(--surface); border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 13px; color: var(--text3);
+      display: flex; align-items: center; gap: 6px; min-height: 40px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .region-badge.filled { border-color: var(--green); background: var(--green-l); }
+    .region-badge.filled .rg-val { color: var(--green-d); font-weight: 700; }
+
+    /* ════════════════════════════
+       2열 칩 그리드 (소득)
+       ════════════════════════════ */
+    .chip-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+    .chip-btn {
+      padding: 14px 8px; background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 14px; color: var(--text2);
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      cursor: pointer; text-align: center; transition: all 0.18s; line-height: 1.5;
+    }
+    .chip-btn:active { transform: scale(0.97); }
+    .chip-btn.selected { background: var(--green-l); border-color: var(--green); color: var(--green-d); font-weight: 700; }
+    .chip-btn.chip-full { grid-column: 1 / -1; }
+    .chip-sub { display: block; font-size: 10px; color: var(--text3); font-weight: 400; margin-top: 2px; }
+    .chip-btn.selected .chip-sub { color: rgba(45,122,95,0.7); }
+
+    /* ════════════════════════════
+       자산 입력
+       ════════════════════════════ */
+    .asset-wrap {
+      display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+      background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .asset-wrap.focused { border-color: var(--green); box-shadow: 0 0 0 3px rgba(27,79,58,0.10); }
+    .asset-input {
+      flex: 1; background: none; border: none; outline: none;
+      color: var(--navy); font-family: var(--font); font-size: 22px; font-weight: 700;
+      letter-spacing: -0.5px; min-width: 0;
+    }
+    .asset-input::placeholder { color: var(--border); }
+    .asset-unit { font-size: 14px; color: var(--text3); font-weight: 600; flex-shrink: 0; }
+    .asset-note { font-size: 11px; color: var(--text3); margin-top: 5px; text-align: right; }
+
+    /* ════════════════════════════
+       2열 그리드 (주거)
+       ════════════════════════════ */
+    .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .grid-item {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 5px; padding: 13px 6px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: var(--radius); color: var(--text2);
+      font-family: var(--font); font-size: 12px; font-weight: 600;
+      cursor: pointer; text-align: center; transition: all 0.18s; word-break: keep-all;
+    }
+    .grid-item:active { transform: scale(0.97); }
+    .grid-item.selected { background: var(--green-l); border-color: var(--green); color: var(--green-d); }
+    .grid-icon { font-size: 22px; }
+    .grid-sub { font-size: 10px; color: var(--text3); font-weight: 400; margin-top: 1px; }
+    .grid-item.selected .grid-sub { color: rgba(45,122,95,0.7); }
+
+    /* ════════════════════════════
+       세로 pill 리스트 (가족)
+       ════════════════════════════ */
+    .pill-list { display: flex; flex-direction: column; gap: 6px; }
+    .pill-btn {
+      display: flex; align-items: center; gap: 10px; padding: 11px 16px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 100px; color: var(--text2);
+      font-family: var(--font); font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all 0.18s; width: 100%; text-align: left;
+    }
+    .pill-btn:active { transform: scale(0.99); }
+    .pill-btn.selected { background: var(--green-l); border-color: var(--green); color: var(--green-d); font-weight: 700; }
+    .pill-icon { font-size: 16px; flex-shrink: 0; }
+
+    /* ════════════════════════════
+       목표 카드 그리드
+       ════════════════════════════ */
+    .goal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .goal-card {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 6px; padding: 15px 8px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: var(--radius); color: var(--text2);
+      font-family: var(--font); font-size: 12px; font-weight: 600;
+      cursor: pointer; text-align: center; transition: all 0.18s; word-break: keep-all;
+    }
+    .goal-card:active { transform: scale(0.97); }
+    .goal-card.selected { background: var(--green-l); border-color: var(--green); color: var(--green-d); }
+    .goal-icon { font-size: 24px; }
+    /* 6번째 카드도 동일 크기 — full 클래스 미사용 */
+
+    /* ════════════════════════════
+       성향 카드
+       ════════════════════════════ */
+    .style-list { display: flex; flex-direction: column; gap: 7px; }
+    .style-card {
+      display: flex; flex-direction: column; gap: 4px; padding: 13px 16px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: var(--radius); cursor: pointer; transition: all 0.18s;
+      position: relative; overflow: hidden;
+    }
+    .style-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--green); border-radius: 0 3px 3px 0; transition: width 0.2s; }
+    .style-card.selected { border-color: var(--green); background: var(--green-l); }
+    .style-card.selected::before { width: 3px; }
+    .style-title-row { display: flex; align-items: center; gap: 8px; }
+    .style-icon { font-size: 16px; }
+    .style-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .style-badge { margin-left: auto; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 100px; }
+    .badge-low  { background: #DCFCE7; color: #15803D; }
+    .badge-mid  { background: var(--blue-l); color: var(--blue); }
+    .badge-high { background: #FEE2E2; color: #DC2626; }
+    .style-desc { font-size: 12px; color: var(--text3); line-height: 1.5; padding-left: 24px; word-break: keep-all; }
+    .style-card.selected .style-desc { color: var(--text2); }
+
+    /* ── 하단 버튼 ── */
+    .bottom-area {
+      flex-shrink: 0; padding: 8px 20px 34px;
+      background: linear-gradient(to bottom, transparent 0%, var(--bg) 30%);
+      position: relative; z-index: 2;
+    }
+    .next-btn {
+      width: 100%; height: 52px; border-radius: var(--radius);
+      background: var(--green); border: none; color: white;
+      font-family: var(--font); font-size: 16px; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.2s; letter-spacing: -0.3px;
+      box-shadow: 0 4px 16px rgba(27,79,58,0.28);
+    }
+    .next-btn:active { transform: scale(0.98); opacity: 0.92; }
+    .next-btn:disabled { background: var(--border); color: var(--text3); box-shadow: none; cursor: not-allowed; }
+
+    /* ── 완료 화면 ── */
+    .complete-screen {
+      position: absolute; inset: 0; background: var(--bg);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 40px 24px; z-index: 10; opacity: 0; pointer-events: none; transition: opacity 0.5s;
+    }
+    .complete-screen.show { opacity: 1; pointer-events: auto; }
+    .complete-emoji { font-size: 58px; margin-bottom: 18px; animation: popIn 0.5s ease; }
+    @keyframes popIn { 0% { transform: scale(0.4); opacity: 0; } 70% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
+    .complete-title { font-size: 23px; font-weight: 700; letter-spacing: -0.8px; text-align: center; margin-bottom: 10px; line-height: 1.35; }
+    .complete-title span { color: var(--green); }
+    .complete-desc { font-size: 14px; color: var(--text3); text-align: center; line-height: 1.7; margin-bottom: 32px; word-break: keep-all; }
+    .complete-btn {
+      width: 100%; height: 52px; border-radius: var(--radius);
+      background: var(--green); border: none; color: white;
+      font-family: var(--font); font-size: 16px; font-weight: 700;
+      cursor: pointer; box-shadow: 0 4px 16px rgba(27,79,58,0.28); transition: all 0.2s;
+    }
+    .complete-btn:active { transform: scale(0.98); }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="header-top">
+      <button class="back-btn" id="backBtn" onclick="prevSlide()">←</button>
+      <span class="step-badge" id="stepBadge">1단계 · 기본 정보</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="prog-seg active" id="prog1"></div>
+      <div class="prog-seg" id="prog2"></div>
+      <div class="prog-seg" id="prog3"></div>
+      <div class="prog-seg" id="prog4"></div>
+      <div class="prog-seg" id="prog5"></div>
+    </div>
+  </div>
+
+  <div class="slides-area">
+
+    <!-- ▶ 화면 1: 생년월일 + 직업 -->
+    <div class="slide active" id="slide1">
+      <div class="slide-title">기본 정보를<br /><span class="hi">알려주세요</span></div>
+      <div class="slide-sub">내 나이에 맞는 혜택을 찾는 데만 써요 🔒</div>
+
+      <div class="sec">
+        <div class="sec-label">생년월일</div>
+        <div class="sec-hint">위아래로 천천히 밀면 날짜가 바뀌어요</div>
+        <div class="date-picker-wrap" id="datePicker">
+          <div class="wheel-hl"></div>
+          <div class="wheel-fade-t"></div>
+          <div class="wheel-fade-b"></div>
+          <div class="date-col" id="yearCol"></div>
+          <div class="date-col" id="monthCol"></div>
+          <div class="date-col" id="dayCol"></div>
+        </div>
+      </div>
+
+      <div class="scroll-nudge" id="scrollNudge">⬇ 아래로 스크롤해서 직업도 선택해 주세요</div>
+      <div class="sec" id="jobSec">
+        <div class="sec-label">직업</div>
+        <div class="radio-list">
+          <button class="radio-item" onclick="pick(this,'job','직장인')">
+            <span class="radio-icon">💼</span>직장인 · 회사원
+            <span class="radio-check">✓</span>
+          </button>
+          <button class="radio-item" onclick="pick(this,'job','자영업')">
+            <span class="radio-icon">🏪</span>자영업자 · 사업자
+            <span class="radio-check">✓</span>
+          </button>
+          <button class="radio-item" onclick="pick(this,'job','프리랜서')">
+            <span class="radio-icon">💻</span>프리랜서 · 계약직
+            <span class="radio-check">✓</span>
+          </button>
+          <button class="radio-item" onclick="pick(this,'job','학생')">
+            <span class="radio-icon">📚</span>학생 · 취업준비생
+            <span class="radio-check">✓</span>
+          </button>
+          <button class="radio-item" onclick="pick(this,'job','기타')">
+            <span class="radio-icon">✦</span>기타
+            <span class="radio-check">✓</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ▶ 화면 2: 시/도 + 시·군·구 -->
+    <div class="slide" id="slide2">
+      <div class="slide-title">거주 지역을<br /><span class="hi">선택해 주세요</span></div>
+      <div class="slide-sub">시·군·구까지 선택하면 더 정확한 지역 지원 혜택을 확인할 수 있어요</div>
+
+      <div class="region-picker">
+        <div class="rg-col rg-sido" id="sidoList"></div>
+        <div class="rg-col rg-sigungu" id="sigunguList">
+          <div class="rg-empty">← 왼쪽에서<br/>시 / 도를 먼저<br/>선택해 주세요<br/><br/>시·군·구까지<br/>선택하면 완료!</div>
+        </div>
+      </div>
+
+      <div class="region-badge" id="regionBadge">
+        📍 <span id="regionVal">선택된 지역이 없어요</span>
+      </div>
+    </div>
+
+    <!-- ▶ 화면 3: 소득 + 자산 -->
+    <div class="slide" id="slide3">
+      <div class="slide-title">재무 현황을<br /><span class="hi">알려주세요</span></div>
+
+      <div class="sec">
+        <div class="sec-label">월 소득</div>
+        <div class="sec-hint">세후 실수령액 기준이에요 (대략적으로도 괜찮아요)</div>
+        <div class="chip-grid">
+          <button class="chip-btn" onclick="pickChip(this,'income','100만원 미만')">
+            100만원 미만<span class="chip-sub">알바·무소득·장학금</span>
+          </button>
+          <button class="chip-btn" onclick="pickChip(this,'income','100~250만원')">
+            100~250만원<span class="chip-sub">정부 지원 다수 해당</span>
+          </button>
+          <button class="chip-btn" onclick="pickChip(this,'income','250~400만원')">
+            250~400만원<span class="chip-sub">근로장려금·청년지원</span>
+          </button>
+          <button class="chip-btn" onclick="pickChip(this,'income','400~600만원')">
+            400~600만원<span class="chip-sub">청년도약계좌 가능</span>
+          </button>
+          <button class="chip-btn chip-full" onclick="pickChip(this,'income','600만원 이상')">
+            600만원 이상<span class="chip-sub">일반 금융상품 위주로 추천</span>
+          </button>
+          <!-- 학생 선택 시 표시 (adaptIncomeChips가 관리) -->
+          <button class="chip-btn chip-full" style="display:none" onclick="pickChip(this,'income','기타')">
+            기타<span class="chip-sub">기타</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-label">현재 자산</div>
+        <div class="sec-hint">예·적금, 저축 등 보유 자산 합계 기준이에요</div>
+        <div class="asset-wrap" id="assetWrap">
+          <input class="asset-input" id="assetInput" type="text" inputmode="numeric" placeholder="0"
+            oninput="onAssetInput(this)"
+            onfocus="document.getElementById('assetWrap').classList.add('focused')"
+            onblur="document.getElementById('assetWrap').classList.remove('focused'); onAssetBlur(this)" />
+          <span class="asset-unit">만원</span>
+        </div>
+        <div class="asset-note">자산이 없으시면 0을 입력하거나 그냥 두세요</div>
+      </div>
+    </div>
+
+    <!-- ▶ 화면 4: 주거 + 가족 구성 -->
+    <div class="slide" id="slide4">
+      <div class="slide-title">주거 형태와<br /><span class="hi">가구 구성을 알려주세요</span></div>
+      <div class="slide-sub">정부지원 주거·가족 정책 요건 확인에 활용됩니다</div>
+
+      <div class="sec">
+        <div class="sec-label">주거 형태</div>
+        <div class="grid-2col">
+          <button class="grid-item" onclick="pickGrid(this,'housing','자가')">
+            <span class="grid-icon">🏠</span>자가
+            <span class="grid-sub">내 집에 살아요</span>
+          </button>
+          <button class="grid-item" onclick="pickGrid(this,'housing','전세')">
+            <span class="grid-icon">🔑</span>전세
+            <span class="grid-sub">보증금 계약</span>
+          </button>
+          <button class="grid-item" onclick="pickGrid(this,'housing','월세')">
+            <span class="grid-icon">📋</span>월세
+            <span class="grid-sub">매달 월세 납부</span>
+          </button>
+          <button class="grid-item" onclick="pickGrid(this,'housing','공공임대')">
+            <span class="grid-icon">🏛️</span>공공임대
+            <span class="grid-sub">LH·SH 등</span>
+          </button>
+          <button class="grid-item" onclick="pickGrid(this,'housing','비주택')">
+            <span class="grid-icon">🏢</span>고시원·기숙사
+            <span class="grid-sub">오피스텔 포함</span>
+          </button>
+          <button class="grid-item" onclick="pickGrid(this,'housing','무상거주')">
+            <span class="grid-icon">👨‍👩‍👧</span>가족·지인 집
+            <span class="grid-sub">무상 거주</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-label">가구 구성</div>
+        <div class="sec-hint">청년·신혼부부·한부모 등 정책 요건 확인에 사용됩니다</div>
+        <div class="pill-list">
+          <button class="pill-btn" onclick="pickPill(this,'family','1인가구')">
+            <span class="pill-icon">🧑</span>1인 가구 — 혼자 살아요
+          </button>
+          <button class="pill-btn" onclick="pickPill(this,'family','가족동거미혼')">
+            <span class="pill-icon">👨‍👩‍👧</span>가족과 함께 (미혼)
+          </button>
+          <button class="pill-btn" onclick="pickPill(this,'family','신혼부부')">
+            <span class="pill-icon">💑</span>신혼부부 · 배우자와 단둘이
+          </button>
+          <button class="pill-btn" onclick="pickPill(this,'family','자녀있는가구')">
+            <span class="pill-icon">👨‍👩‍👧‍👦</span>자녀 있는 가구
+          </button>
+          <button class="pill-btn" onclick="pickPill(this,'family','한부모')">
+            <span class="pill-icon">👩‍👧</span>한부모 가구
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ▶ 화면 5: 목표 + 성향 -->
+    <div class="slide" id="slide5">
+      <div class="slide-title">재무 목표와<br /><span class="hi">투자 성향을 알려주세요</span></div>
+
+      <div class="sec">
+        <div class="sec-label">주요 재무 목표</div>
+        <div class="goal-grid">
+          <!-- 카카오페이·토스·KB금융 2024 20-40대 재무목표 빈도 순 -->
+          <button class="goal-card" onclick="pickGoal(this,'비상금')">
+            <span class="goal-icon">🛡️</span>비상금 마련
+          </button>
+          <button class="goal-card" onclick="pickGoal(this,'내집마련')">
+            <span class="goal-icon">🏠</span>내 집 마련
+          </button>
+          <button class="goal-card" onclick="pickGoal(this,'노후준비')">
+            <span class="goal-icon">🌅</span>노후·연금 준비
+          </button>
+          <button class="goal-card" onclick="pickGoal(this,'여행취미')">
+            <span class="goal-icon">✈️</span>여행·자기계발
+          </button>
+          <button class="goal-card" onclick="pickGoal(this,'부채상환')">
+            <span class="goal-icon">✂️</span>대출·부채 정리
+          </button>
+          <button class="goal-card" onclick="pickGoal(this,'기타')">
+            <span class="goal-icon">🎯</span>기타 목표
+          </button>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-label">저축 · 투자 성향</div>
+        <div class="style-list">
+          <button class="style-card" onclick="pickStyle(this,'안전')">
+            <div class="style-title-row">
+              <span class="style-icon">🛡️</span>
+              <span class="style-name">안전 추구형</span>
+              <span class="style-badge badge-low">안심형</span>
+            </div>
+            <div class="style-desc">수익이 낮더라도 원금을 지키는 게 더 중요해요</div>
+          </button>
+          <button class="style-card" onclick="pickStyle(this,'균형')">
+            <div class="style-title-row">
+              <span class="style-icon">⚖️</span>
+              <span class="style-name">균형 추구형</span>
+              <span class="style-badge badge-mid">균형형</span>
+            </div>
+            <div class="style-desc">안정성과 수익성을 균형 있게 고려해요</div>
+          </button>
+          <button class="style-card" onclick="pickStyle(this,'적극')">
+            <div class="style-title-row">
+              <span class="style-icon">🚀</span>
+              <span class="style-name">수익 추구형</span>
+              <span class="style-badge badge-high">도전형</span>
+            </div>
+            <div class="style-desc">리스크를 감수하고 높은 수익을 목표로 해요</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /slides-area -->
+
+  <div class="bottom-area">
+    <button class="next-btn" id="nextBtn" onclick="nextSlide()" disabled>다음으로 →</button>
+  </div>
+
+  <div class="complete-screen" id="completeScreen">
+    <div class="complete-emoji">🎉</div>
+    <h2 class="complete-title">다 됐어요!<br /><span>맞춤 혜택</span>을 찾는 중이에요</h2>
+    <p class="complete-desc">입력하신 정보를 바탕으로<br />지금 받을 수 있는 혜택을<br />정리하고 있습니다</p>
+    <button class="complete-btn" onclick="goToResult()">내 맞춤 혜택 보기 →</button>
+  </div>
+
+</div>
+
+<script>
+const IH = 36;
+
+function initWheelCol(col, items, defaultIdx, onChange) {
+  function makeItem(text, idx) {
+    const d = document.createElement('div');
+    d.className = 'wp-item';
+    d.textContent = text;
+    d.addEventListener('click', () => {
+      col.scrollTo({ top: idx * IH, behavior: 'smooth' });
+    });
+    return d;
+  }
+
+  col.innerHTML = '';
+  items.forEach((text, idx) => col.appendChild(makeItem(text, idx)));
+
+  const getIdx = () =>
+    Math.max(0, Math.min(Math.round(col.scrollTop / IH), items.length - 1));
+
+  const setHL = (idx) => {
+    col.querySelectorAll('.wp-item').forEach((el, i) => {
+      const d = Math.abs(i - idx);
+      el.className = 'wp-item' + (d===0?' sel':d===1?' near1':d===2?' near2':'');
+    });
+  };
+
+  const popHL = (idx) => {
+    const nodes = col.querySelectorAll('.wp-item');
+    nodes.forEach((el, i) => {
+      const d = Math.abs(i - idx);
+      el.className = 'wp-item' + (d===0?' near1':d===1?' near2':'');
+    });
+    void getComputedStyle(nodes[idx]).transform;
+    setHL(idx);
+  };
+
+  let skipPop    = false;
+  let skipScroll = false; // rebuild 중 setHL도 차단
+  let popTimer;
+
+  col.addEventListener('scroll', () => {
+    if (!skipScroll) setHL(getIdx());
+    clearTimeout(popTimer);
+    popTimer = setTimeout(() => {
+      if (skipPop) { skipPop = false; return; }
+      const fi = getIdx();
+      col.scrollTop = fi * IH;
+      popHL(fi);
+      onChange(fi, items[fi]);
+    }, 150);
+  }, { passive: true });
+
+  // ── 터치 (모바일) — sensitivity 0.75 ──
+  let tY = 0, tS = 0;
+  col.addEventListener('touchstart', e => {
+    tY = e.touches[0].clientY; tS = col.scrollTop;
+  }, { passive: true });
+  col.addEventListener('touchmove', e => {
+    e.preventDefault();
+    col.scrollTop = tS + (tY - e.touches[0].clientY) * 0.75;
+  }, { passive: false });
+  col.addEventListener('touchend', () => {
+    col.scrollTo({ top: getIdx() * IH, behavior: 'smooth' });
+  });
+
+  // ── 마우스 드래그 (데스크톱) — sensitivity 0.75 ──
+  let mY = 0, mS = 0, didDrag = false;
+  col.addEventListener('mousedown', e => {
+    e.preventDefault();
+    mY = e.clientY; mS = col.scrollTop; didDrag = false;
+    const move = ev => {
+      if (Math.abs(ev.clientY - mY) > 3) didDrag = true;
+      col.scrollTop = mS + (mY - ev.clientY) * 0.75;
+    };
+    const up = () => {
+      if (didDrag) col.scrollTo({ top: getIdx() * IH, behavior: 'smooth' });
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('mouseup',   up);
+    };
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup',   up);
+  });
+
+  // ── 초기 위치 ──
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    skipPop = true;
+    col.scrollTop = defaultIdx * IH;
+    setHL(defaultIdx);
+    onChange(defaultIdx, items[defaultIdx]);
+  }));
+
+  // ── 항목 재구성 (월별 일수 변경) ──
+  col._rebuild = (newItems, newDefaultIdx) => {
+    items = newItems;
+    skipPop    = true;
+    skipScroll = true;
+    col.style.opacity = '0';
+    col.innerHTML = '';
+    newItems.forEach((text, idx) => col.appendChild(makeItem(text, idx)));
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      col.scrollTop = newDefaultIdx * IH;
+      setHL(newDefaultIdx);
+      col.style.opacity = '';
+      skipScroll = false;
+      onChange(newDefaultIdx, newItems[newDefaultIdx]);
+    }));
+  };
+}
+
+/* ══════════════════════════════════
+   지역 데이터 (시/도 → 시·군·구)
+   ══════════════════════════════════ */
+const REGION = {
+  '서울':['강남구','강동구','강북구','강서구','관악구','광진구','구로구','금천구','노원구','도봉구','동대문구','동작구','마포구','서대문구','서초구','성동구','성북구','송파구','양천구','영등포구','용산구','은평구','종로구','중구','중랑구'],
+  '경기':['수원시','성남시','의정부시','안양시','부천시','광명시','평택시','동두천시','안산시','고양시','과천시','구리시','남양주시','오산시','시흥시','군포시','의왕시','하남시','용인시','파주시','이천시','안성시','김포시','화성시','광주시','양주시','포천시','여주시','연천군','가평군','양평군'],
+  '인천':['중구','동구','미추홀구','연수구','남동구','부평구','계양구','서구','강화군','옹진군'],
+  '부산':['중구','서구','동구','영도구','부산진구','동래구','남구','북구','해운대구','사하구','금정구','강서구','연제구','수영구','사상구','기장군'],
+  '대구':['중구','동구','서구','남구','북구','수성구','달서구','달성군','군위군'],
+  '광주':['동구','서구','남구','북구','광산구'],
+  '대전':['동구','중구','서구','유성구','대덕구'],
+  '울산':['중구','남구','동구','북구','울주군'],
+  '세종':['세종시 전체'],
+  '강원':['춘천시','원주시','강릉시','동해시','태백시','속초시','삼척시','홍천군','횡성군','영월군','평창군','정선군','철원군','화천군','양구군','인제군','고성군','양양군'],
+  '충북':['청주시 상당구','청주시 서원구','청주시 흥덕구','청주시 청원구','충주시','제천시','보은군','옥천군','영동군','증평군','진천군','괴산군','음성군','단양군'],
+  '충남':['천안시 동남구','천안시 서북구','공주시','보령시','아산시','서산시','논산시','계룡시','당진시','금산군','부여군','서천군','청양군','홍성군','예산군','태안군'],
+  '전북':['전주시 완산구','전주시 덕진구','군산시','익산시','정읍시','남원시','김제시','완주군','진안군','무주군','장수군','임실군','순창군','고창군','부안군'],
+  '전남':['목포시','여수시','순천시','나주시','광양시','담양군','곡성군','구례군','고흥군','보성군','화순군','장흥군','강진군','해남군','영암군','무안군','함평군','영광군','장성군','완도군','진도군','신안군'],
+  '경북':['포항시 남구','포항시 북구','경주시','김천시','안동시','구미시','영주시','영천시','상주시','문경시','경산시','의성군','청송군','영양군','영덕군','청도군','고령군','성주군','칠곡군','예천군','봉화군','울진군','울릉군'],
+  '경남':['창원시 의창구','창원시 성산구','창원시 마산합포구','창원시 마산회원구','창원시 진해구','진주시','통영시','사천시','김해시','밀양시','거제시','양산시','의령군','함안군','창녕군','고성군','남해군','하동군','산청군','함양군','거창군','합천군'],
+  '제주':['제주시','서귀포시'],
+};
+
+/* ══════════════════════════════════
+   앱 상태
+   ══════════════════════════════════ */
+let curSlide = 1;
+const TOTAL  = 5;
+
+const ans = {
+  birthYear:1993, birthMonth:1, birthDay:1,
+  job:null,
+  sido:null, sigungu:null,
+  income:null, asset:0,
+  housing:null, family:null,
+  goal:null, style:null,
+};
+
+const REQ = {
+  1:['job'],
+  2:['sido','sigungu'],
+  3:['income'],
+  4:['housing','family'],
+  5:['goal','style'],
+};
+
+const LABELS = {
+  1:'1단계 · 기본 정보', 2:'2단계 · 거주 지역',
+  3:'3단계 · 재무 현황', 4:'4단계 · 주거 · 가족',
+  5:'5단계 · 목표 · 성향',
+};
+
+/* ══════════════════════════════════
+   생년월일 휠 피커 초기화
+   ══════════════════════════════════ */
+const YEARS  = Array.from({length:111},(_,i)=>(2010-i)+'년'); // 2010~1900
+const MONTHS = Array.from({length:12},(_,i)=>(i+1)+'월');
+const getDays = (y,m) => { const max=new Date(y,m,0).getDate(); return Array.from({length:max},(_,i)=>(i+1)+'일'); };
+
+const yearCol  = document.getElementById('yearCol');
+const monthCol = document.getElementById('monthCol');
+const dayCol   = document.getElementById('dayCol');
+
+initWheelCol(yearCol, YEARS, 2010 - 1993, (idx) => {
+  ans.birthYear = 2010 - idx;
+  rebuildDays();
+  checkSlide();
+});
+initWheelCol(monthCol, MONTHS, 0, (idx) => {
+  ans.birthMonth = idx + 1;
+  rebuildDays();
+  checkSlide();
+});
+initWheelCol(dayCol, getDays(1993, 1), 0, (idx) => {
+  ans.birthDay = idx + 1;
+  checkSlide();
+});
+
+function rebuildDays() {
+  const days = getDays(ans.birthYear, ans.birthMonth);
+  const cur  = Math.min(ans.birthDay, days.length) - 1;
+  dayCol._rebuild(days, cur);
+  ans.birthDay = cur + 1;
+}
+
+/* ══════════════════════════════════
+   지역 피커 초기화
+   ══════════════════════════════════ */
+(function initRegion() {
+  const sidoEl = document.getElementById('sidoList');
+  Object.keys(REGION).forEach(sido => {
+    const el = document.createElement('div');
+    el.className = 'rg-item';
+    el.textContent = sido;
+    el.addEventListener('click', () => {
+      sidoEl.querySelectorAll('.rg-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+      ans.sido = sido; ans.sigungu = null;
+      renderSigungu(sido);
+      updateBadge();
+      checkSlide();
+    });
+    sidoEl.appendChild(el);
+  });
+})();
+
+function renderSigungu(sido) {
+  const el  = document.getElementById('sigunguList');
+  el.innerHTML = '';
+  const all = REGION[sido] || [];
+  // 시·군·구 전체 가나다순 정렬
+  const sorted = [...all].sort((a,b) => a.localeCompare(b,'ko'));
+  sorted.forEach(sg => {
+    const d = document.createElement('div');
+    d.className = 'rg-item';
+    d.textContent = sg;
+    d.addEventListener('click', () => {
+      el.querySelectorAll('.rg-item').forEach(i => i.classList.remove('active'));
+      d.classList.add('active');
+      ans.sigungu = sg;
+      updateBadge();
+      checkSlide();
+    });
+    el.appendChild(d);
+  });
+  el.scrollTop = 0;
+}
+
+function updateBadge() {
+  const b = document.getElementById('regionBadge');
+  const v = document.getElementById('regionVal');
+  if (ans.sido && ans.sigungu) {
+    b.classList.add('filled');
+    v.innerHTML = `<span class="rg-val">${ans.sido} ${ans.sigungu}</span>`;
+  } else if (ans.sido) {
+    b.classList.remove('filled');
+    v.textContent = `${ans.sido} 선택됨 → 시·군·구를 선택해 주세요`;
+  } else {
+    b.classList.remove('filled');
+    v.textContent = '선택된 지역이 없어요';
+  }
+}
+
+/* ══════════════════════════════════
+   선택 핸들러
+   ══════════════════════════════════ */
+/* 학생 선택 시 슬라이드 3 소득 칩 범위 변환 */
+const DEFAULT_INCOME_LABELS = [
+  '100만원 미만|알바·무소득·장학금',
+  '100~250만원|정부 지원 다수 해당',
+  '250~400만원|근로장려금·청년지원',
+  '400~600만원|청년도약계좌 가능',
+  '600만원 이상|일반 금융상품 위주'
+];
+const DEFAULT_INCOME_VALS = ['100만원 미만','100~250만원','250~400만원','400~600만원','600만원 이상'];
+const STUDENT_INCOME_LABELS = ['없음·장학금|소득 없음','50만원\n미만|아르바이트','50~100\n만원|알바 병행','100~200\n만원|인턴·파트타임','아르바이트\n병행|복수 소득','기타|기타'];
+const STUDENT_INCOME_VALS   = ['없음','50만원 미만','50~100만원','100~200만원','아르바이트 병행','기타'];
+
+function adaptIncomeChips(isStudent) {
+  const chips  = document.querySelectorAll('#slide3 .chip-btn');
+  const labels = isStudent ? STUDENT_INCOME_LABELS : DEFAULT_INCOME_LABELS;
+  const vals   = isStudent ? STUDENT_INCOME_VALS   : DEFAULT_INCOME_VALS;
+  chips.forEach((chip, i) => {
+    if (i >= labels.length) { chip.style.display = 'none'; return; }
+    chip.style.display = '';
+    const [main, sub] = labels[i].split('|');
+    chip.innerHTML = main.replace('\n','<br/>') + (sub ? `<span class="chip-sub">${sub}</span>` : '');
+    chip.onclick = () => pickChip(chip, 'income', vals[i]);
+    chip.classList.remove('selected');
+  });
+  // 학생용은 6개, 기본용은 5개 — 6번째 chip 표시/숨김
+  const all = document.querySelectorAll('#slide3 .chip-btn');
+  if (all[5]) all[5].style.display = isStudent ? '' : 'none';
+  ans.income = null; checkSlide();
+}
+
+/* 성향 추론 알고리즘 */
+function deriveProfile() {
+  const age = new Date().getFullYear() - ans.birthYear;
+  let safe = 0, aggr = 0;
+  if (['비상금','부채상환'].includes(ans.goal)) safe += 3;
+  if (ans.goal === '여행취미') aggr += 2;
+  const incScore = {
+    '100만원 미만':-2,'100~250만원':-1,'250~400만원':0,'400~600만원':2,'600만원 이상':3,
+    '없음':-3,'50만원 미만':-2,'50~100만원':-1,'100~200만원':-1,'아르바이트 병행':-1,'기타':0
+  }[ans.income]||0;
+  if (incScore < 0) safe += Math.abs(incScore); else aggr += incScore;
+  if (age < 27) aggr += 2; else if (age > 33) safe += 1;
+  if (['월세','공공임대','비주택'].includes(ans.housing)) safe += 2;
+  if (ans.housing === '자가') aggr += 1;
+  if (['프리랜서','학생'].includes(ans.job)) safe += 2;
+  if (!ans.style) {
+    ans._derivedStyle = safe >= 5 ? '안전' : aggr >= 5 ? '적극' : '균형';
+  }
+}
+
+function pick(btn,key,val) {
+  btn.closest('.radio-list').querySelectorAll('.radio-item').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected'); ans[key]=val;
+  if (key === 'job') adaptIncomeChips(val === '학생');
+  deriveProfile(); checkSlide();
+}
+function pickChip(btn,key,val) {
+  btn.closest('.chip-grid').querySelectorAll('.chip-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected'); ans[key]=val; deriveProfile(); checkSlide();
+}
+function pickGrid(btn,key,val) {
+  btn.closest('.grid-2col').querySelectorAll('.grid-item').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected'); ans[key]=val; checkSlide();
+}
+function pickPill(btn,key,val) {
+  btn.closest('.pill-list').querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected'); ans[key]=val; checkSlide();
+}
+function pickGoal(btn,val) {
+  btn.closest('.goal-grid').querySelectorAll('.goal-card').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected'); ans.goal=val; checkSlide();
+}
+function pickStyle(btn,val) {
+  btn.closest('.style-list').querySelectorAll('.style-card').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected'); ans.style=val; checkSlide();
+}
+
+/* ══════════════════════════════════
+   자산 입력
+   ══════════════════════════════════ */
+function onAssetInput(input) {
+  const raw = input.value.replace(/[^0-9]/g,'');
+  if (!raw) { input.value=''; ans.asset=0; return; }
+  const n = parseInt(raw,10);
+  input.value = n.toLocaleString('ko-KR');
+  ans.asset = n;
+  checkSlide();
+}
+function onAssetBlur(input) {
+  if (!input.value.trim()) { input.value='0'; ans.asset=0; }
+  checkSlide();
+}
+
+/* ══════════════════════════════════
+   유효성 + 버튼 상태
+   ══════════════════════════════════ */
+function checkSlide() {
+  const ok = (REQ[curSlide]||[]).every(k=>!!ans[k]);
+  const btn = document.getElementById('nextBtn');
+  btn.disabled = !ok;
+  btn.textContent = curSlide===TOTAL ? '완료 · 내 혜택 확인하기 →' : '다음으로 →';
+}
+
+/* ══════════════════════════════════
+   슬라이드 전환
+   ══════════════════════════════════ */
+function nextSlide() {
+  if (curSlide===TOTAL) { showComplete(); return; }
+  goTo(curSlide+1, false);
+}
+function prevSlide() {
+  if (curSlide<=1) {
+    document.querySelector('.app').style.cssText = 'opacity:0;transition:opacity 0.25s';
+    setTimeout(() => { location.href = 'index.html'; }, 250);
+    return;
+  }
+  goTo(curSlide-1, true);
+}
+function goTo(target, back) {
+  const cur  = document.getElementById('slide'+curSlide);
+  const next = document.getElementById('slide'+target);
+  cur.classList.add(back ? 'exit-back' : 'exit');
+  cur.classList.remove('active');
+  const startX = back ? '-40px' : '40px';
+  next.style.cssText = `opacity:0;transform:translateX(${startX});transition:none;`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    next.style.cssText='';
+    next.classList.add('active');
+  }));
+  setTimeout(()=>cur.classList.remove('exit','exit-back'),360);
+  curSlide = target;
+  updateHeader();
+  checkSlide();
+}
+
+function updateHeader() {
+  document.getElementById('stepBadge').textContent = LABELS[curSlide];
+  document.getElementById('backBtn').disabled = false;
+  for(let i=1;i<=TOTAL;i++){
+    const s = document.getElementById('prog'+i);
+    s.className='prog-seg'+(i<curSlide?' done':i===curSlide?' active':'');
+  }
+}
+
+/* ══════════════════════════════════
+   완료
+   ══════════════════════════════════ */
+function showComplete() {
+  deriveProfile();
+  localStorage.setItem('mateAnswers', JSON.stringify(ans));
+  document.getElementById('completeScreen').classList.add('show');
+}
+function goToResult() {
+  document.querySelector('.app').style.cssText='opacity:0;transition:opacity 0.3s';
+  setTimeout(()=>{ window.location.href='result.html'; },300);
+}
+
+updateHeader();
+checkSlide();
+
+/* 슬라이드 1: 날짜 피커 조작 후 직업 스크롤 넛지 표시 */
+(function() {
+  const nudge = document.getElementById('scrollNudge');
+  const slide1 = document.getElementById('slide1');
+  let nudgeShown = false;
+  function maybeShowNudge() {
+    if (nudgeShown || ans.job) return;
+    nudgeShown = true;
+    nudge.classList.add('show');
+    setTimeout(() => { nudge.classList.remove('show'); }, 4000);
+  }
+  [yearCol, monthCol, dayCol].forEach(col => {
+    col.addEventListener('touchend', maybeShowNudge, { passive: true });
+    col.addEventListener('mouseup', maybeShowNudge);
+  });
+  slide1.addEventListener('scroll', () => { nudge.classList.remove('show'); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+/* =============================================
+   메이트(Mate) — 디자인 시스템 v2
+   Pretendard + 다크그린 브랜드
+   ============================================= */
+
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
+/* ── 브랜드 컬러 변수 ── */
+:root {
+  /* 신규 브랜드 팔레트 */
+  --mate-primary:       #1B4F3A;
+  --mate-primary-mid:   #2D7A5F;
+  --mate-primary-light: #E1F5EE;
+  --mate-bg:            #F7F9F8;
+  --mate-accent:        #FF6B35;
+  --mate-text-dark:     #1A1A2E;
+  --mate-text-mid:      #4A5568;
+  --mate-danger:        #E53E3E;
+  --mate-warning:       #F6AD55;
+  --mate-purple:        #534AB7;
+  --mate-purple-light:  #EEEDFE;
+
+  /* 카드 시스템 */
+  --card-bg:     #FFFFFF;
+  --card-border: rgba(0,0,0,0.07);
+  --card-radius: 16px;
+  --card-shadow: 0 2px 12px rgba(0,0,0,0.06);
+
+  /* 레거시 호환 (기존 HTML에서 참조) */
+  --color-bg:        #F7F9F8;
+  --color-bg2:       #FFFFFF;
+  --color-primary:   #1B4F3A;
+  --color-primary-d: #2D7A5F;
+  --color-primary-l: #E1F5EE;
+  --color-secondary: #FF6B35;
+  --color-text:      #1A1A2E;
+  --color-text2:     #4A5568;
+  --color-gray1:     #8896A6;
+  --color-gray2:     #E4EAE7;
+  --color-white:     #FFFFFF;
+  --radius-card:     16px;
+  --radius-btn:      14px;
+  --font-main:       'Pretendard', 'Noto Sans KR', sans-serif;
+  --shadow-card:     0 2px 12px rgba(0,0,0,0.06);
+  --shadow-btn:      0 4px 16px rgba(27,79,58,0.25);
+}
+
+/* ── 기본 리셋 ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0; padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  font-family: var(--font-main);
+  background: var(--mate-bg);
+  color: var(--mate-text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.2px;
+}
+
+/* ── 앱 래퍼 ── */
+.app-wrapper {
+  position: relative;
+  width: 100%; max-width: 430px;
+  height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--mate-bg);
+}
+
+/* ── 공통 버튼 ── */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 17px 24px;
+  background: var(--mate-primary);
+  border: none;
+  border-radius: var(--radius-btn);
+  color: #fff;
+  font-family: var(--font-main);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+  box-shadow: var(--shadow-btn);
+  letter-spacing: -0.3px;
+}
+.btn-primary:active {
+  transform: scale(0.97);
+  opacity: 0.92;
+}
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 16px 24px;
+  background: var(--mate-primary-light);
+  border: none;
+  border-radius: var(--radius-btn);
+  color: var(--mate-primary-mid);
+  font-family: var(--font-main);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-secondary:active {
+  opacity: 0.85;
+}
+
+.btn-ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 16px 24px;
+  background: transparent;
+  border: 1px solid var(--color-gray2);
+  border-radius: var(--radius-btn);
+  color: var(--color-gray1);
+  font-family: var(--font-main);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:active {
+  border-color: var(--mate-primary);
+  color: var(--mate-primary);
+}
+
+/* ── 공통 카드 ── */
+.mate-card {
+  background: var(--card-bg);
+  border: 0.5px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+}
+
+/* ── 섹션 레이블 ── */
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-gray1);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding: 0 2px;
+}
+
+/* ── 배지 공통 ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* ── 입력 공통 ── */
+.input-base {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--color-gray2);
+  border-radius: 12px;
+  font-family: var(--font-main);
+  font-size: 15px;
+  color: var(--mate-text-dark);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.input-base::placeholder { color: var(--color-gray1); }
+.input-base:focus { border-color: var(--mate-primary); }
