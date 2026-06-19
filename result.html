@@ -621,8 +621,17 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-<script src="scripts/firebase-config.js"></script>
-<script src="scripts/auth.js"></script>
+<script>
+if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+  firebase.initializeApp({
+    apiKey:"AIzaSyCKIndlAxNuQuNtSi6ddZwPTEytuRMJ2v8",authDomain:"mate-app-d2f06.firebaseapp.com",
+    projectId:"mate-app-d2f06",storageBucket:"mate-app-d2f06.firebasestorage.app",
+    messagingSenderId:"355984297741",appId:"1:355984297741:web:8a1cb8159c49f504742a44",
+    measurementId:"G-9F4R2738XF"
+  });
+}
+</script>
+<script src="scripts/auth.js?v=3"></script>
 <script src="scripts/alarm.js"></script>
 
 <script>

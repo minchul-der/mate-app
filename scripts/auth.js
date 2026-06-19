@@ -4,18 +4,19 @@
    ============================================================ */
 
 const MateAuth = (() => {
-  /* ── 내부 상태 ── */
-  let _auth = null;
-  let _db   = null;
   let _currentUser = null;
   const _listeners = [];
 
+  function _auth() {
+    return firebase.auth();
+  }
+  function _db() {
+    return firebase.firestore();
+  }
+
   /* ── 초기화 ── */
   function init() {
-    _auth = firebase.auth();
-    _db   = firebase.firestore();
-
-    _auth.onAuthStateChanged(user => {
+    _auth().onAuthStateChanged(user => {
       _currentUser = user;
       _listeners.forEach(fn => fn(user));
     });
@@ -23,10 +24,10 @@ const MateAuth = (() => {
 
   /* ── 회원가입 ── */
   async function signUp(name, email, password, phone, onboardingData) {
-    const cred = await _auth.createUserWithEmailAndPassword(email, password);
+    const cred = await _auth().createUserWithEmailAndPassword(email, password);
     await cred.user.updateProfile({ displayName: name });
 
-    await _db.collection('users').doc(cred.user.uid).set({
+    await _db().collection('users').doc(cred.user.uid).set({
       name,
       email,
       phone,
@@ -39,36 +40,35 @@ const MateAuth = (() => {
 
   /* ── 로그인 ── */
   async function signIn(email, password) {
-    const cred = await _auth.signInWithEmailAndPassword(email, password);
+    const cred = await _auth().signInWithEmailAndPassword(email, password);
     return cred.user;
   }
 
   /* ── 로그아웃 ── */
   async function signOut() {
-    await _auth.signOut();
+    await _auth().signOut();
   }
 
   /* ── 비밀번호 재설정 이메일 발송 ── */
   async function sendPasswordReset(email) {
-    await _auth.sendPasswordResetEmail(email);
+    await _auth().sendPasswordResetEmail(email);
   }
 
   /* ── 이메일 재설정 (마이페이지용) ── */
   async function updatePassword(newPassword) {
-    const user = _auth.currentUser;
+    const user = _auth().currentUser;
     if (!user) throw new Error('로그인이 필요합니다');
     await user.updatePassword(newPassword);
   }
 
   /* ── 회원탈퇴 ── */
   async function deleteAccount() {
-    const user = _auth.currentUser;
+    const user = _auth().currentUser;
     if (!user) throw new Error('로그인이 필요합니다');
-    await _db.collection('users').doc(user.uid).delete();
-    // 알림 데이터 삭제
-    const alarms = await _db.collection('user_alarms')
+    await _db().collection('users').doc(user.uid).delete();
+    const alarms = await _db().collection('user_alarms')
       .where('user_id', '==', user.uid).get();
-    const batch = _db.batch();
+    const batch = _db().batch();
     alarms.docs.forEach(d => batch.delete(d.ref));
     await batch.commit();
     await user.delete();
@@ -78,15 +78,15 @@ const MateAuth = (() => {
   async function getUserProfile(uid) {
     const uid_ = uid || (_currentUser && _currentUser.uid);
     if (!uid_) return null;
-    const doc = await _db.collection('users').doc(uid_).get();
+    const doc = await _db().collection('users').doc(uid_).get();
     return doc.exists ? { id: doc.id, ...doc.data() } : null;
   }
 
   /* ── 온보딩 데이터 업데이트 ── */
   async function updateOnboarding(data) {
-    const user = _auth.currentUser;
+    const user = _auth().currentUser;
     if (!user) throw new Error('로그인이 필요합니다');
-    await _db.collection('users').doc(user.uid).update({ onboarding: data });
+    await _db().collection('users').doc(user.uid).update({ onboarding: data });
   }
 
   /* ── 현재 유저 ── */
@@ -97,9 +97,8 @@ const MateAuth = (() => {
   /* ── 상태 변경 리스너 등록 ── */
   function onAuthStateChanged(fn) {
     _listeners.push(fn);
-    // 이미 상태가 결정되어 있으면 즉시 호출
-    if (_auth) {
-      _auth.onAuthStateChanged(fn);
+    if (typeof firebase !== 'undefined' && firebase.apps.length) {
+      _auth().onAuthStateChanged(fn);
     }
   }
 
