@@ -131,7 +131,7 @@
       height: 36px; display: flex; align-items: center; justify-content: center;
       font-size: 14px; font-weight: 400; color: rgba(26,26,46,0.28);
       transform: scale(1); transform-origin: center;
-      transition: color 0.15s ease, transform 0.5s cubic-bezier(0.34, 1.9, 0.64, 1);
+      transition: color 0.12s ease, transform 0.18s ease-out;
       will-change: transform, color;
       scroll-snap-align: center;
       cursor: pointer;
@@ -651,12 +651,16 @@
 const IH = 36;
 
 function initWheelCol(col, items, defaultIdx, onChange) {
+  let animFrame = null;
+  let lastReportedIdx = -1;
+
   function makeItem(text, idx) {
     const d = document.createElement('div');
     d.className = 'wp-item';
     d.textContent = text;
     d.addEventListener('click', () => {
-      col.scrollTo({ top: idx * IH, behavior: 'smooth' });
+      cancelMomentum();
+      smoothScrollTo(idx * IH);
     });
     return d;
   }
@@ -667,6 +671,9 @@ function initWheelCol(col, items, defaultIdx, onChange) {
   const getIdx = () =>
     Math.max(0, Math.min(Math.round(col.scrollTop / IH), items.length - 1));
 
+  const clampScroll = () =>
+    Math.max(0, Math.min(col.scrollTop, (items.length - 1) * IH));
+
   const setHL = (idx) => {
     col.querySelectorAll('.wp-item').forEach((el, i) => {
       const d = Math.abs(i - idx);
@@ -674,86 +681,167 @@ function initWheelCol(col, items, defaultIdx, onChange) {
     });
   };
 
-  const popHL = (idx) => {
-    const nodes = col.querySelectorAll('.wp-item');
-    nodes.forEach((el, i) => {
-      const d = Math.abs(i - idx);
-      el.className = 'wp-item' + (d===0?' near1':d===1?' near2':'');
-    });
-    void getComputedStyle(nodes[idx]).transform;
-    setHL(idx);
-  };
+  function fireChange(idx) {
+    if (idx !== lastReportedIdx) {
+      lastReportedIdx = idx;
+      onChange(idx, items[idx]);
+    }
+  }
 
-  let skipPop    = false;
-  let skipScroll = false; // rebuild 중 setHL도 차단
-  let popTimer;
+  function smoothScrollTo(target, duration) {
+    cancelMomentum();
+    duration = duration || 260;
+    const start = col.scrollTop;
+    const diff = target - start;
+    if (Math.abs(diff) < 1) { col.scrollTop = target; setHL(getIdx()); fireChange(getIdx()); return; }
+    const startTime = performance.now();
+    function tick(now) {
+      const t = Math.min((now - startTime) / duration, 1);
+      const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      col.scrollTop = start + diff * ease;
+      setHL(getIdx());
+      if (t < 1) { animFrame = requestAnimationFrame(tick); }
+      else { col.scrollTop = target; setHL(getIdx()); fireChange(getIdx()); }
+    }
+    animFrame = requestAnimationFrame(tick);
+  }
 
-  col.addEventListener('scroll', () => {
-    if (!skipScroll) setHL(getIdx());
-    clearTimeout(popTimer);
-    popTimer = setTimeout(() => {
-      if (skipPop) { skipPop = false; return; }
-      const fi = getIdx();
-      col.scrollTop = fi * IH;
-      popHL(fi);
-      onChange(fi, items[fi]);
-    }, 150);
-  }, { passive: true });
+  function cancelMomentum() { if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; } }
 
-  // ── 터치 (모바일) — sensitivity 0.75 ──
+  // ── 터치 (모바일) — 관성 스크롤 ──
   let tY = 0, tS = 0;
+  let trackHistory = [];
+
   col.addEventListener('touchstart', e => {
-    tY = e.touches[0].clientY; tS = col.scrollTop;
+    cancelMomentum();
+    tY = e.touches[0].clientY;
+    tS = col.scrollTop;
+    trackHistory = [{ y: tY, t: performance.now() }];
   }, { passive: true });
+
   col.addEventListener('touchmove', e => {
     e.preventDefault();
-    col.scrollTop = tS + (tY - e.touches[0].clientY) * 0.75;
+    const y = e.touches[0].clientY;
+    col.scrollTop = tS + (tY - y);
+    col.scrollTop = clampScroll();
+    setHL(getIdx());
+    const now = performance.now();
+    trackHistory.push({ y, t: now });
+    if (trackHistory.length > 6) trackHistory.shift();
   }, { passive: false });
+
   col.addEventListener('touchend', () => {
-    col.scrollTo({ top: getIdx() * IH, behavior: 'smooth' });
+    let velocity = 0;
+    if (trackHistory.length >= 2) {
+      const last = trackHistory[trackHistory.length - 1];
+      const prev = trackHistory[Math.max(0, trackHistory.length - 3)];
+      const dt = last.t - prev.t;
+      if (dt > 0 && dt < 300) {
+        velocity = (prev.y - last.y) / dt;
+      }
+    }
+
+    if (Math.abs(velocity) > 0.4) {
+      const friction = 0.965;
+      const tick = () => {
+        velocity *= friction;
+        col.scrollTop += velocity * 16;
+        col.scrollTop = clampScroll();
+        setHL(getIdx());
+        if (Math.abs(velocity) > 0.08) {
+          animFrame = requestAnimationFrame(tick);
+        } else {
+          const fi = getIdx();
+          smoothScrollTo(fi * IH, 180);
+        }
+      };
+      animFrame = requestAnimationFrame(tick);
+    } else {
+      const fi = getIdx();
+      smoothScrollTo(fi * IH, 180);
+    }
   });
 
-  // ── 마우스 드래그 (데스크톱) — sensitivity 0.75 ──
-  let mY = 0, mS = 0, didDrag = false;
+  // ── 마우스 드래그 (데스크톱) — 관성 스크롤 ──
   col.addEventListener('mousedown', e => {
     e.preventDefault();
-    mY = e.clientY; mS = col.scrollTop; didDrag = false;
+    cancelMomentum();
+    const mY = e.clientY, mS = col.scrollTop;
+    let didDrag = false;
+    const mHist = [{ y: mY, t: performance.now() }];
+
     const move = ev => {
       if (Math.abs(ev.clientY - mY) > 3) didDrag = true;
-      col.scrollTop = mS + (mY - ev.clientY) * 0.75;
+      col.scrollTop = mS + (mY - ev.clientY);
+      col.scrollTop = clampScroll();
+      setHL(getIdx());
+      const now = performance.now();
+      mHist.push({ y: ev.clientY, t: now });
+      if (mHist.length > 6) mHist.shift();
     };
     const up = () => {
-      if (didDrag) col.scrollTo({ top: getIdx() * IH, behavior: 'smooth' });
       document.removeEventListener('mousemove', move);
-      document.removeEventListener('mouseup',   up);
+      document.removeEventListener('mouseup', up);
+      if (!didDrag) return;
+      let vel = 0;
+      if (mHist.length >= 2) {
+        const last = mHist[mHist.length - 1];
+        const prev = mHist[Math.max(0, mHist.length - 3)];
+        const dt = last.t - prev.t;
+        if (dt > 0 && dt < 300) vel = (prev.y - last.y) / dt;
+      }
+      if (Math.abs(vel) > 0.4) {
+        const friction = 0.965;
+        const tick = () => {
+          vel *= friction;
+          col.scrollTop += vel * 16;
+          col.scrollTop = clampScroll();
+          setHL(getIdx());
+          if (Math.abs(vel) > 0.08) { animFrame = requestAnimationFrame(tick); }
+          else { smoothScrollTo(getIdx() * IH, 180); }
+        };
+        animFrame = requestAnimationFrame(tick);
+      } else {
+        smoothScrollTo(getIdx() * IH, 180);
+      }
     };
     document.addEventListener('mousemove', move);
-    document.addEventListener('mouseup',   up);
+    document.addEventListener('mouseup', up);
   });
 
   // ── 초기 위치 ──
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    skipPop = true;
     col.scrollTop = defaultIdx * IH;
     setHL(defaultIdx);
+    lastReportedIdx = defaultIdx;
     onChange(defaultIdx, items[defaultIdx]);
   }));
 
-  // ── 항목 재구성 (월별 일수 변경) ──
+  // ── 항목 재구성 (깜빡임 없이) ──
   col._rebuild = (newItems, newDefaultIdx) => {
+    cancelMomentum();
     items = newItems;
-    skipPop    = true;
-    skipScroll = true;
-    col.style.opacity = '0';
-    col.innerHTML = '';
-    newItems.forEach((text, idx) => col.appendChild(makeItem(text, idx)));
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      col.scrollTop = newDefaultIdx * IH;
-      setHL(newDefaultIdx);
-      col.style.opacity = '';
-      skipScroll = false;
-      onChange(newDefaultIdx, newItems[newDefaultIdx]);
-    }));
+    const existing = col.querySelectorAll('.wp-item');
+    const diff = newItems.length - existing.length;
+
+    existing.forEach((el, i) => {
+      if (i < newItems.length) el.textContent = newItems[i];
+    });
+
+    if (diff > 0) {
+      for (let i = existing.length; i < newItems.length; i++) {
+        col.appendChild(makeItem(newItems[i], i));
+      }
+    } else if (diff < 0) {
+      for (let i = existing.length - 1; i >= newItems.length; i--) {
+        existing[i].remove();
+      }
+    }
+
+    col.scrollTop = newDefaultIdx * IH;
+    setHL(newDefaultIdx);
+    lastReportedIdx = -1;
+    fireChange(newDefaultIdx);
   };
 }
 
@@ -996,7 +1084,7 @@ const INCOME_HINTS = {
     type: 'finance',
     title: '💰 절세 · 자산관리로 돈 불리기',
     items: [
-      '<strong>연금저축 + IRP 세액공제</strong> — 연 최대 148.5만원 환급 (연말정산 필수)',
+      '<strong>연금저축+IRP 세액공제</strong> — 연 최대 148.5만원 환급',
       '<strong>ISA 계좌</strong> — 이자·배당 비과세 200만원 + 분리과세 9.9%',
       '<strong>청년도약계좌</strong> — 연 소득 7,500만원 이하 가입 가능',
       '<strong>자동 투자·적금</strong> — 토스·카카오페이 자동이체 + 파킹통장 활용',

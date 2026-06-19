@@ -3,7 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>메이트 — 돈의 길, 아무도 안 알려줬잖아요</title>
+  <title>메이트 — 당신만의 경제적 자유로 가는 길</title>
+
+  <!-- Open Graph (카카오톡·SNS 공유) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="메이트 — 당신만의 경제적 자유로 가는 길" />
+  <meta property="og:description" content="맞춤 정부혜택 · 절세 전략 · 자산관리까지, 메이트가 찾아드릴게요. 가입 없이 3분이면 확인." />
+  <meta property="og:image" content="https://mate-app-d2f06.web.app/images/og-thumbnail.png" />
+  <meta property="og:url" content="https://mate-app-d2f06.web.app" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="메이트 — 당신만의 경제적 자유로 가는 길" />
+  <meta name="twitter:description" content="맞춤 정부혜택 · 절세 전략 · 자산관리까지, 메이트가 찾아드릴게요." />
+  <meta name="twitter:image" content="https://mate-app-d2f06.web.app/images/og-thumbnail.png" />
+
   <link rel="stylesheet" href="css/style.css" />
 
   <style>
@@ -53,7 +67,7 @@
     .btn-return:active { background: var(--mate-primary-light); }
 
     /* ── 카드 슬라이드 ── */
-    .cards-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px 0 0; position: relative; overflow: hidden; }
+    .cards-area { flex: 1; min-height: 0; display: flex; align-items: stretch; justify-content: center; padding: 12px 0 0; position: relative; overflow: hidden; }
     .cards-track { display: flex; width: 100%; height: 100%; transition: transform 0.45s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
     .cards-track.swiping { transition: none; }
     .intro-card {
@@ -74,8 +88,9 @@
       padding: 24px 22px 20px;
       box-shadow: 0 2px 16px rgba(0,0,0,0.06);
       border: 1px solid var(--mate-border);
-      position: relative; overflow: hidden;
+      position: relative; overflow: visible;
       animation: slideInUp 0.4s cubic-bezier(0.4,0,0.2,1) both;
+      flex-shrink: 0;
     }
     .card-box::before {
       content: ''; position: absolute;
@@ -194,6 +209,19 @@
       transition: all 0.2s; box-shadow: var(--shadow-btn); letter-spacing: -0.3px;
     }
     .next-btn:active { transform: scale(0.98); opacity: 0.92; }
+
+    /* ── 모바일 여백 최적화 ── */
+    @media (max-width: 480px) {
+      .top-bar { padding-top: 44px; }
+      .cards-area { padding-top: 6px; }
+      .intro-card { padding: 4px 18px 10px; }
+      .card-box { padding: 20px 18px 16px; }
+      .card-emoji { width: 44px; height: 44px; margin-bottom: 12px; }
+      .card-tag { margin-bottom: 10px; }
+      .card-title { font-size: 21px; margin-bottom: 10px; }
+      .bottom-area { padding: 0 20px 28px; }
+      .dots-container { margin-bottom: 10px; }
+    }
   </style>
 </head>
 <body>
@@ -238,7 +266,7 @@
               돈 이야기
             </h1>
             <p class="card-intro-lead">
-              그래서 직접 찾아봤어요 — 유튜브, 책, 블로그엔 방법이 넘쳐나요.
+              그래도 직접 찾아봤어요.<br />유튜브, 책, 블로그엔 방법이 너무 넘쳐나요.
             </p>
             <p class="card-intro-tension">
               근데 정작 내 나이, 내 소득, 내 상황에<br />
@@ -494,11 +522,12 @@
   }
 
   /* ── 스와이프 ── */
-  let touchStartX = 0, isDragging = false;
+  let touchStartX = 0, touchStartY = 0, isDragging = false;
   const cardsArea = document.querySelector('.cards-area');
 
   cardsArea.addEventListener('touchstart', e => {
     touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
     isDragging = true;
     track.classList.add('swiping');
   }, { passive: true });
@@ -506,6 +535,8 @@
   cardsArea.addEventListener('touchmove', e => {
     if (!isDragging) return;
     const diffX = e.touches[0].clientX - touchStartX;
+    const diffY = e.touches[0].clientY - touchStartY;
+    if (Math.abs(diffY) > Math.abs(diffX)) return;
     const baseX = -(currentCard * 100);
     const pct   = (diffX / window.innerWidth) * 100;
     const resist = (currentCard === 0 && diffX > 0) ||
@@ -518,10 +549,10 @@
     isDragging = false;
     track.classList.remove('swiping');
     const diffX = e.changedTouches[0].clientX - touchStartX;
-    const diffY = e.changedTouches[0].clientY - touchStartX;
+    const diffY = e.changedTouches[0].clientY - touchStartY;
     if (Math.abs(diffY) > Math.abs(diffX)) { goToCard(currentCard); return; }
-    if (diffX < -50) nextCard();
-    else if (diffX > 50) prevCard();
+    if (diffX < -40) nextCard();
+    else if (diffX > 40) prevCard();
     else goToCard(currentCard);
   }, { passive: true });
 

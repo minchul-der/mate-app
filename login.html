@@ -382,7 +382,7 @@
       </div>
 
       <div class="field-group">
-        <label class="field-label">휴대폰 번호 <span style="font-weight:400;color:var(--color-gray1)">(선택)</span></label>
+        <label class="field-label">휴대폰 번호 <span style="font-weight:700;color:#EF4444;font-size:12px">(필수)</span></label>
         <input class="field-input" type="tel" id="regPhone"
           placeholder="010-0000-0000" autocomplete="tel" maxlength="13"
           oninput="formatPhone(this)" />
@@ -417,6 +417,9 @@
             <div class="agree-check" id="agreeMarketing"></div>
             <span class="agree-text">[선택] 마케팅 정보 수신 동의</span>
           </div>
+        </div>
+        <div style="margin:-4px 0 6px 30px;font-size:11px;color:var(--accent);line-height:1.5;font-weight:600;word-break:keep-all">
+          💡 신규 정부지원 정책과 맞춤 금융서비스 알림을 받으려면 체크해 주세요
         </div>
         <span class="field-hint error-msg" id="agreeErr" style="display:none"></span>
       </div>
@@ -579,14 +582,39 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <script src="scripts/firebase-config.js"></script>
-  <script src="scripts/auth.js"></script>
+  <script>
+    // Firebase 초기화 (인라인 — 로딩 순서 보장)
+    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+      firebase.initializeApp({
+        apiKey:            "AIzaSyCKIndlAxNuQuNtSi6ddZwPTEytuRMJ2v8",
+        authDomain:        "mate-app-d2f06.firebaseapp.com",
+        projectId:         "mate-app-d2f06",
+        storageBucket:     "mate-app-d2f06.firebasestorage.app",
+        messagingSenderId: "355984297741",
+        appId:             "1:355984297741:web:8a1cb8159c49f504742a44",
+        measurementId:     "G-9F4R2738XF"
+      });
+    }
+  </script>
+  <script src="scripts/auth.js?v=3"></script>
 
   <script>
     const params    = new URLSearchParams(location.search);
     const redirect  = params.get('redirect') || 'result';
     const benefitId = params.get('benefit_id') || '';
 
+    const FIREBASE_CFG = {
+      apiKey:"AIzaSyCKIndlAxNuQuNtSi6ddZwPTEytuRMJ2v8",authDomain:"mate-app-d2f06.firebaseapp.com",
+      projectId:"mate-app-d2f06",storageBucket:"mate-app-d2f06.firebasestorage.app",
+      messagingSenderId:"355984297741",appId:"1:355984297741:web:8a1cb8159c49f504742a44",
+      measurementId:"G-9F4R2738XF"
+    };
+    function ensureFirebase() {
+      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+        firebase.initializeApp(FIREBASE_CFG);
+      }
+    }
+    ensureFirebase();
     MateAuth.init();
     MateAuth.onAuthStateChanged(user => { if (user) gotoRedirect(); });
     if (params.get('tab') === 'register') switchTab('register');
@@ -636,6 +664,7 @@
     /* ── 로그인 ── */
     async function doLogin() {
       clearErr('loginErr');
+      ensureFirebase();
       const email = getEmail('login');
       const pw    = document.getElementById('loginPw').value;
       if (!email) return showErr('loginErr', '이메일을 입력해주세요');
@@ -646,7 +675,8 @@
       try {
         await MateAuth.signIn(email, pw);
       } catch(e) {
-        showErr('loginErr', getFirebaseMsg(e.code));
+        const msg = e.code ? getFirebaseMsg(e.code) : (e.message || e.toString());
+        showErr('loginErr', msg);
         btn.disabled = false; btn.textContent = '로그인';
       }
     }
@@ -654,6 +684,7 @@
     /* ── 회원가입 ── */
     async function doRegister() {
       clearAllErr();
+      ensureFirebase();
       const name  = document.getElementById('regName').value.trim();
       const email = getEmail('reg');
       const pw    = document.getElementById('regPw').value;
@@ -665,7 +696,8 @@
       if (!isValidEmail(email)) { showErr('regEmailErr','이메일을 올바르게 입력해주세요'); ok=false; }
       if (!isStrongPw(pw))      { showErr('regPwErr','8자 이상, 영문+숫자+특수문자 포함'); ok=false; }
       if (pw !== pwc)            { showErr('regPwConfirmErr','비밀번호가 일치하지 않아요'); ok=false; }
-      if (phone && !isValidPhone(phone)) { showErr('regPhoneErr','010-0000-0000 형식으로 입력해주세요'); ok=false; }
+      if (!phone)                  { showErr('regPhoneErr','휴대폰 번호를 입력해주세요'); ok=false; }
+      else if (!isValidPhone(phone)) { showErr('regPhoneErr','010-0000-0000 형식으로 입력해주세요'); ok=false; }
 
       const termsOk   = document.getElementById('agreeTerms').classList.contains('checked');
       const privacyOk = document.getElementById('agreePrivacy').classList.contains('checked');
@@ -678,8 +710,8 @@
         const onboarding = JSON.parse(localStorage.getItem('mateAnswers') || '{}');
         await MateAuth.signUp(name, email, pw, phone, onboarding);
       } catch(e) {
-        console.error('[Firebase signup error]', e.code, e.message);
-        showErr('regEmailErr', getFirebaseMsg(e.code));
+        const msg = e.code ? getFirebaseMsg(e.code) : (e.message || e.toString());
+        showErr('regEmailErr', msg);
         btn.disabled = false; btn.textContent = '가입하기';
       }
     }
@@ -803,11 +835,14 @@
         'auth/too-many-requests':        '너무 많이 시도했어요. 잠시 후 다시 시도해주세요',
         'auth/network-request-failed':   '네트워크 연결을 확인해주세요',
         'auth/invalid-credential':       '이메일 또는 비밀번호를 확인해주세요',
+        'auth/invalid-login-credentials':'이메일 또는 비밀번호를 확인해주세요',
         'auth/operation-not-allowed':    '이메일 로그인이 비활성화되어 있어요. Firebase Console에서 이메일/비밀번호 로그인을 활성화해주세요',
         'auth/configuration-not-found':  'Firebase 설정을 확인해주세요',
         'auth/internal-error':           '서버 오류가 발생했어요. 잠시 후 다시 시도해주세요',
       };
-      return map[code] || `오류가 발생했어요 (${code})`;
+      if (map[code]) return map[code];
+      if (!code) return '오류가 발생했어요. Firebase Console에서 이메일/비밀번호 로그인이 활성화되어 있는지 확인해주세요';
+      return `오류가 발생했어요 [${code}]`;
     }
   </script>
 </body>
